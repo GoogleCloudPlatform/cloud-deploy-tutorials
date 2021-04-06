@@ -1,0 +1,14 @@
+# Ignore common Terraform files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+*tfplan*
+
+# Ignore generated files
+backend.tf
+
+# Ignore cloned directories
+web
+web-helm

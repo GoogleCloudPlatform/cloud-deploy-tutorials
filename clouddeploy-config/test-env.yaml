@@ -1,0 +1,10 @@
+apiVersion: clouddeploy.googleapis.com/v1alpha1
+kind: Environment
+metadata:
+  name: test
+spec:
+  deploymentSpec:
+    gkeCluster:
+    - location: $REGION
+      name: test-$REGION
+      project: None

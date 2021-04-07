@@ -2,6 +2,8 @@
 # Google Confidential, Pre-GA Offering for Google Cloud Platform 
 # (see https://cloud.google.com/terms/service-terms)
 
+CD_CONFIG_DIR=tutorial/clouddeploy-config
+
 echo Enabling GCP APIs, please wait...
 gcloud services enable storage.googleapis.com
 gcloud services enable compute.googleapis.com
@@ -41,4 +43,10 @@ git -c advice.detachedHead=false clone https://github.com/GoogleContainerTools/s
 mv skaffold/examples/microservices/ ./web
 rm -rf skaffold
 
-mkdir -p config
+# Clone tutorial repo and populate variables in clouddeploy-config folder
+echo "Cloning and configuring walkthrough project into 'tutorial' folder"
+git clone https://clouddeploy.googlesource.com/tutorial
+
+for f in $(ls $CD_CONFIG_DIR); do
+  sed -i 's/$REGION/'"$REGION"/g' $CD_CONFIG_DIR/$f
+done

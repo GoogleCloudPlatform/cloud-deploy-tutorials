@@ -39,10 +39,6 @@ cd ..
 # Clone Sample Repo
 git -c advice.detachedHead=false clone https://github.com/GoogleContainerTools/skaffold.git -b v1.14.0
 mv skaffold/examples/microservices/ ./web
-# We should drop the helm example from the initial workflow. We can pick it back up later if we decide it provides 
-# more value than confusion it introduces.
-# b/184084842
-mv skaffold/examples/helm-deployment/ ./web-helm
 rm -rf skaffold
 
 mkdir -p config

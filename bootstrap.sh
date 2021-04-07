@@ -20,9 +20,6 @@ terraform init
 terraform plan -out=terraform.tfplan  -var="project_id=${PROJECT_ID}" -var="region=${REGION}"
 terraform apply -auto-approve terraform.tfplan 
 
-# we're getting the value from ^^ and them setting them to the same thing here. 
-# there's no need is there? b/184068253
-# gcloud config set project ${PROJECT_ID}
 gcloud config set compute/region ${REGION}
 
 gcloud container clusters get-credentials test

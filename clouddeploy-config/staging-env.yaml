@@ -6,5 +6,5 @@ spec:
   deploymentSpec:
     gkeCluster:
     - location: $REGION
-      name: stage-$REGION
+      name: staging-$REGION
       project: None

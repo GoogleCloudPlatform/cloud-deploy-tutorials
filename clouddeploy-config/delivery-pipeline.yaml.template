@@ -1,0 +1,9 @@
+apiVersion: cloudDeploy/beta1
+kind: delivery-pipeline
+name: web-app
+description: web-app delivery pipeline
+serialPipeline:
+ stages:
+ - targetId: test
+ - targetId: staging
+ - targetId: prod˜

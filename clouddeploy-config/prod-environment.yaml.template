@@ -1,0 +1,9 @@
+apiVersion: cloudDeploy/beta1
+kind: target
+name: prod
+delivery-pipeline: web-app
+description: prod cluster
+gkeCluster:
+  project: ${PROJECT_ID}
+  cluster: prod
+  location: ${REGION}

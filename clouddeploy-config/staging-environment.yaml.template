@@ -1,0 +1,9 @@
+apiVersion: cloudDeploy/beta1
+kind: target
+name: staging
+delivery-pipeline: web-app
+description: staging cluster
+gkeCluster:
+  project: ${PROJECT_ID}
+  cluster: staging
+  location: ${REGION}˜

@@ -12,3 +12,6 @@ backend.tf
 # Ignore cloned directories
 web
 web-helm
+
+# Ignore generated files
+clouddeploy-config/clouddeploy.yaml

@@ -1,7 +1,0 @@
-apiVersion: clouddeploy.googleapis.com/v1alpha1
-kind: DeliveryPipeline
-metadata:
-  name: web-app
-spec:
-  environments:
-  - environmentName: staging

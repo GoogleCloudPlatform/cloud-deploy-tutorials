@@ -2,7 +2,7 @@
 # Google Confidential, Pre-GA Offering for Google Cloud Platform 
 # (see https://cloud.google.com/terms/service-terms)
 
-CD_CONFIG_DIR=tutorial/clouddeploy-config
+CD_CONFIG_DIR=clouddeploy-config
 
 echo Enabling GCP APIs, please wait...
 gcloud services enable storage.googleapis.com
@@ -23,16 +23,17 @@ terraform plan -out=terraform.tfplan  -var="project_id=${PROJECT_ID}" -var="regi
 terraform apply -auto-approve terraform.tfplan 
 
 gcloud config set compute/region ${REGION}
+gcloud config set deploy/region ${REGION}
 
-gcloud container clusters get-credentials test
+gcloud container clusters get-credentials test --region ${REGION}
 kubectl config delete-context test
 kubectl config rename-context gke_${PROJECT_ID}_${REGION}_test test
 
-gcloud container clusters get-credentials staging
+gcloud container clusters get-credentials staging --region ${REGION}
 kubectl config delete-context staging
 kubectl config rename-context gke_${PROJECT_ID}_${REGION}_staging staging
 
-gcloud container clusters get-credentials prod
+gcloud container clusters get-credentials prod --region ${REGION}
 kubectl config delete-context prod
 kubectl config rename-context gke_${PROJECT_ID}_${REGION}_prod prod
 
@@ -43,10 +44,6 @@ git -c advice.detachedHead=false clone https://github.com/GoogleContainerTools/s
 mv skaffold/examples/microservices/ ./web
 rm -rf skaffold
 
-# Clone tutorial repo and populate variables in clouddeploy-config folder
-echo "Cloning and configuring walkthrough project into 'tutorial' folder"
-git clone https://clouddeploy.googlesource.com/tutorial
-
-for f in $(ls $CD_CONFIG_DIR); do
-  sed -i 's/$REGION/'"$REGION"/g' $CD_CONFIG_DIR/$f
+for template in $(ls $CD_CONFIG_DIR/*.template); do
+  envsubst < ${template} > ${template%.*}
 done

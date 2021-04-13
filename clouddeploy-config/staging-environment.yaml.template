@@ -6,4 +6,4 @@ description: staging cluster
 gkeCluster:
   project: ${PROJECT_ID}
   cluster: staging
-  location: ${REGION}˜
+  location: ${REGION}

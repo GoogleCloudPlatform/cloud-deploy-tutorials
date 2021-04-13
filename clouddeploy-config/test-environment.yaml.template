@@ -6,4 +6,4 @@ description: test cluster
 gkeCluster:
   project: ${PROJECT_ID}
   cluster: test
-  location: ${REGION}˜
+  location: ${REGION}

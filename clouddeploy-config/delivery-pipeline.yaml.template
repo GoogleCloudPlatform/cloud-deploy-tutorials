@@ -6,4 +6,4 @@ serialPipeline:
  stages:
  - targetId: test
  - targetId: staging
- - targetId: prod˜
+ - targetId: prod

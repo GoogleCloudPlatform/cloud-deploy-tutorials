@@ -14,4 +14,4 @@ web
 web-helm
 
 # Ignore generated files
-clouddeploy-config/clouddeploy.yaml
+clouddeploy-config/*.yaml

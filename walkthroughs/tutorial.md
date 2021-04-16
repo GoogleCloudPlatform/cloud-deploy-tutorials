@@ -1,240 +1,401 @@
 <walkthrough-author
     tutorialname="Cloud Deploy Tutorial"
-    repositoryUrl="https://source.cloud.google.com/cloud-deploy-experiment/mcd-experiment/"
+    repositoryUrl="https://clouddeploy.googlesource.com/tutorial"
     >
 </walkthrough-author>
 
-# Cloud Deploy (Experiment)
+# Cloud Deploy Quickstart
 
-## Welcome!
-This tutorial guides you through setting up and using the **Cloud Deploy** experiment. 
+## Overview
+This tutorial guides you through setting up and using the Google Cloud Deploy service. In the initial guides, you'll create a GCP Project (or use an existing one if you choose) to create a complete **test > staging > production** pipeline using Cloud Deploy.
 
-The tutorial includes commands that you execute in the Shell. Click the Copy to Cloud Shell button next to each command, and press **Enter** in the Cloud Shell prompt.
+<!-- TODO: We need a graphic/logo/something here for impact. Possibly a graphic of the dev > staging > prod pipeline for emphasis? -->
 
-### Setup
-**Configure the experiment with project details**
+<!-- TODO: Will it? If so, add link -->
+### Supporting materials
+
+The User Guide includes a detailed walkthough corresponding to each step in this tutorial, if you want to explore more deeply.
+
+Estimated Duration:
+<walkthrough-tutorial-duration duration="20"></walkthrough-tutorial-duration>
+
+Click the Start button below to begin.
+
+## Configuring Cloud Shell
+
+This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Cloud Deploy. Cloud Shell is an online development and operations environment accessible anywhere with your browser. You can manage your resources with its online terminal preloaded with utilities such as the gcloud command-line tool, kubectl, and more. You can also develop, build, debug, and deploy your cloud-based apps using the online [Cloud Shell Editor](https://ide.cloud.google.com/).
+
+### Selecting a Project
+First, select a Project to deploy Cloud Deploy. You can also create a new Project if you want. This is the Project that will house the Cloud Deploy components as well as the three GKE clusters that will act as your development, staging, and production environments.
+
+_The Cloud Deploy Team highly recommends for you to create a new project for this tutorial. You're not going to be doing anything damaging, but depending on names for infrastructure in an existing project, the tutorial could fail to deploy or you could have unwanted things happen._
 
 <walkthrough-project-setup></walkthrough-project-setup>
 
-Set the project variables to use throughout the tutorial. 
+Next, you'll get your work environment configured in Cloud Shell. Click the Next button below to continue.
+
+## Configuring Cloud Shell
+
+You'll do your work for this tutorial in Cloud Shell. To begin, open Cloud Shell in your browswer window by clicking the Cloud Shell icon <walkthrough-cloud-shell-icon></walkthrough-cloud-shell-icon>. 
+
+If you don't see the Cloud Shell icon in your window, you can also click below to open Cloud Shell.
+
+<walkthrough-open-cloud-shell-button></walkthrough-open-cloud-shell-button>
+
+Next, you'll download the tutorial code base to your Cloud Shell.
+
+### Accessing the Tutorial Code
+
+The source code for this tutorial is housed in a git repository. Your Cloud Shell VM has `git` pre-installed, so you don't need to worry about managing any packages. On your Cloud Shell instance, run the following command to clone the repository to your local disk. 
 
 ```bash
-gcloud config set core/project {{project-id}}
-export PROJECT_ID=$(gcloud config get-value core/project)
+git clone https://clouddeploy.googlesource.com/tutorial
 ```
 
-**Deploy the experiment into the selected project** by running the following command. 
+This clones the tutorial source code you'll use into the `tutorial` folder in your Cloud Shell home directroy. Now it's time to deploy your infrastructure. 
+
+Click the Next button to continue.
+
+## Deploying Infrastructure
+
+You'll deploy three GKE clusters with the following names into your *{{project-id}}* Project: 
+
+GKE Cluster Name | Purpose
+----- | -----
+`test` | Application testing environment
+`staging` | Staging environment prior to production push
+`prod` | Production environment
+
+_If you have an existing GKE cluster in {{project-id} with any of those names, you'll need to select another project to use._
+
+Next, you'll deploy three GKE clusters into individual VPCs in _{{project-id}}_. This is your application deployment infrastructure. 
+
+<!-- TODO: A graphic would help this be undesrtood better. Simple squares with VPCs etc -->
+
+To your GKE clusters and all the additional needed resources for this tutorial, there's a `bootstrap.sh` script in the tutorial source code.  
+
+To execute the `bootstrap.sh` , run the following commands in your Cloud Shell
+
 ```bash
+cd tutorial
 ./bootstrap.sh
-source env.sh
 ```
 
-*Note that it might take 5-10 minutes for `bootstrap.sh` to finish setting up the tutorial.*
+The bootstrap process may take a few minutes to run. Once completed successfully, confirm your GKE clusters are up and functioning by running the following command: 
 
-### Tutorial
-Now click the **Start** button, below, to begin the tutorial.
+```bash
+gcloud container clusters list
+```
 
-## Step 1: Tutorial overview
----
+Your output should look similar to this, and all three clusters should have 3 nodes and have a `RUNNING` status.
 
-This tutorial shows you how to use **Cloud Deploy**. It's divided into two sections:
+```terminal
+NAME     LOCATION     MASTER_VERSION    MASTER_IP       MACHINE_TYPE   NODE_VERSION      NUM_NODES  STATUS
+prod     us-central1  1.17.17-gke.2800  35.194.37.64    n1-standard-2  1.17.17-gke.2800  3          RUNNING
+staging  us-central1  1.17.17-gke.2800  35.232.139.69   n1-standard-2  1.17.17-gke.2800  3          RUNNING
+test     us-central1  1.17.17-gke.2800  35.188.180.217  n1-standard-2  1.17.17-gke.2800  3          RUNNING
+```
 
-* **Basic** (steps 2–8) 
+You're now ready to begin configuring Cloud Deploy. Click the Next button below to proceed.
 
-  Deployment fundamentals 
+## Creating Your Cloud Deploy Environment
 
-* **Advanced** (optional, steps 9–11)
+This tutorial focuses on core concepts and tooling of Cloud Deploy. The primary commands you'll be using are:
 
-  Advanced deployment using Skaffold and Helm
-
-### Concepts and Tooling
-The tutorial is meant to teach the core concepts and tooling of Cloud Deploy, including the following primary resources, definition files, and commands that you will use:
-
+<!-- TODO: update this list of commands -->
 Resource  | Commands
 ------- | --------
-Delivery pipeline | `gcloud-deploy delivery-pipelines`,<br><br> and `gloud-deploy apply`
-Environment | `gcloud-deploy environments`,<br><br> and `gloud-deploy apply`
-Release candidate | `gcloud-deploy release-candidates`,<br><br> and `gcloud-deploy promote`
-Rollout | `gcloud-deploy rollouts`
+Delivery Pipeline | `gcloud alpha deploy delivery-pipelines`
+Targets | `gcloud alpha deploy targets`
+Release candidate | `gcloud alpha deploy release-candidates`
+Rollout | `gcloud alpha deploy rollouts`
 
-### Supporting materials
-The User Guide includes a detailed walkthough corresponding to each step in this tutorial, if you want to explore more deeply.
+<!-- TODO: Keep this updated depending on the app lifecycle -->
+### Enabling the Cloud Deploy API
 
-### Let's Go!
-Click 'Next' to get started!
+<!-- TODO: This may change or be wholly unneeded. I'm leaving it here for current testing if nothing else --jduncan -->
+Because Cloud Deploy is currently a Private Preview product, you need to enable the API. To accomplish this, run the following commands in your Cloud Shell.
 
-## Step 2: Define and register your environment
-The below tasks correspond to the **Define and register a delivery pipeline and an environment** walkthrough in the User Guide.
+```bash
+gcloud config set api_endpoint_overrides/clouddeploy "https://staging-clouddeploy.sandbox.googleapis.com/"
+gcloud services enable staging-clouddeploy.sandbox.googleapis.com --project={{project-id}}
+```
 
----
-In this step you create and configure your first **environment** into which to deliver an application.
+### Configuring Cloud Deploy
 
-First, we define the name of the *environment*. We'll call this first environment *staging*. 
+Some Cloud Deploy parameters can be configured in your `gcloud` SDK to avoid typing them for every command. To set a default Cloud Deploy region for the rest of the commands in this tutoria, run the following command on your Cloud Shell: 
 
-Next, we need to create an Environment definition. We've already pre-generated this for you.
+```bash
+gcloud config set deploy/region $REGION
+```
 
-<walkthrough-editor-select-line filePath="cloudshell_open/mcd-experiment/config/staging-env.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to review the *staging* environment yaml file</walkthrough-editor-select-line>
+This will be used for any additonal Cloud Deploy commands unless your override it using the `--region` parameter. The full list of Cloud Deploy configurations is available at [TODO]. You're ready to deploy your first Cloud Deploy resource in your Project.
+
+Click the Next button to proceed.
+
+## Creating Your Delivery Pipeline
+
+In this section you'll create the environment for your infrastructure. For this tutorial, you're creating a Cloud Deploy environment that consists of one _Delivery Pipeline_ for a web application that progresses through three _Targets_. These targets are your _test, staging, and prod_ GKE clusters.
+
+Cloud Deploy uses YAML files to define resources. For the tutorial, these files are all in the repository you previously cloned to your Cloud Shell. The first resource you need to create is the Delivery Pipeline. 
+
+<walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/delivery-pipeline.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to review the Delivery Pipeline yaml file.</walkthrough-editor-select-line>
  
-Notice that in the displayed yaml the environment has a unique name, along with the necessary connection details.
+To create your Delivery Pipeline, run the following command in your Cloud Shell. 
 
-Now, let’s *register* the environment with the Cloud Deploy service.
 ```bash
-gcloud-deploy apply config/staging-env.yaml 
+gcloud alpha deploy apply --file=clouddeploy-config/delivery-pipeline.yaml 
 ```
 
-And verify the environment has been created.
+To verify your Delivery Pipeline has been created, run the following command:
+
 ```bash
-gcloud-deploy environments list
+gcloud alpha deploy delivery-pipelines list
 ```
 
-## Step 3: Define and register a delivery pipeline
-The following tasks correspond to the **Define and register a delivery pipeline and an environment** walkthrough in the User Guide.
+The output should look similar to the output below: 
 
+```terminal
 ---
-In this step you define a **delivery pipeline** for an application, and the associated target environment to deploy it to. 
-
-First, we need a name used for the delivery pipeline and application. We'll call the application "web". We've already pre-generated this for you.
-
-<walkthrough-editor-select-line filePath="cloudshell_open/mcd-experiment/config/web-pipeline.yaml" startLine="11" startCharacterOffset="0" endLine="18" endCharacterOffset="99">Click here to review the *web-pipeline* delivery pipeline yaml file</walkthrough-editor-select-line>
-
-Notice that just like environment, the delivery pipeline is given a unique name. The pipeline also includes a promotion sequence of environments (in this case, just one).
-
-Again we use the `gcloud-deploy apply` command to register the delivery pipeline with the Cloud Deploy service. 
-```bash
-gcloud-deploy apply config/web-pipeline.yaml
+createTime: '2021-04-12T18:34:02.614196898Z'
+description: web-app delivery pipeline
+etag: 2539eacd7f5c256d
+name: projects/jduncan-cd-testing/locations/us-central1/deliveryPipelines/web-app
+serialPipeline:
+  stages:
+  - targetId: test
+  - targetId: staging
+  - targetId: prod
+uid: b116d89067e64d7eb63f37fe5e99d1ff
+updateTime: '2021-04-12T18:34:04.936664219Z'
 ```
 
-And verify that the delivery pipeline was created.
+With your Delivery Pipeline confirmed, you're read to create your three Targets. 
+
+Click the Next button to proceed.
+
+## Creating your Testing Target
+
+In Cloud Deploy, a Target is a GKE cluster where an application can be deployed as part of a Delivery Pipeline. In your Delivery Pipeline, the first Target to be deployed to is yout `test` GKE cluster. This is done by applying a YAML file to Cloud Deploy using the `glcoud alpha deploy` command in the SDK.
+
+<walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/test-environment.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view your test Target yaml file.</walkthrough-editor-select-line>
+
+To create your test Target, run the following command in your Cloud Shell.
+
 ```bash
-gcloud-deploy delivery-pipelines list
+gcloud alpha deploy apply --file clouddeploy-config/test-environment.yaml
 ```
 
-## Step 4: Sample application
-The following tasks correspond to the **Create a release candidate** walkthrough in the User Guide.
+Once this completes (a second or two), verify your new Target has been created using the following `gcloud` command to list the existing targets for your `web-app` Delivery Pipeline:
 
+```bash
+gcloud alpha deploy targets list --delivery-pipeline=web-app
+```
+
+The output should look similar to the example below:
+
+```terminal
 ---
-Now that you have a delivery pipeline and environment registered with Cloud Deploy, it's time to create a release candidate.
+createTime: '2021-04-15T13:53:31.094996057Z'
+description: test cluster
+etag: 4c7d828d4f7a3b74
+gkeCluster:
+  cluster: test
+  location: us-central1˜
+  project: jduncan-cd-testing
+name: projects/jduncan-cd-testing/locations/us-central1/deliveryPipelines/web-app/targets/test
+uid: d1d2ca2dc4bf4884a8d16588cfe6d458
+updateTime: '2021-04-15T13:53:31.663277590Z'
+```
 
-For this example, we use the **[Skaffold](http://www.skaffold.dev)** [microservices example](https://github.com/GoogleContainerTools/skaffold/tree/master/examples/microservices), which has been cloned to your Cloud Shell.
+In the following section, you'll create similar Targets for your `staging` and `prod` GKE clusters.
 
-Review the files in the `web` directory to see the application being deployed. In particular, let's look at the `skaffold.yaml` file.
+Click the Next button to proceed.
 
-<walkthrough-editor-open-file filePath="cloudshell_open/mcd-experiment/web/skaffold.yaml">Click here to review the skaffold.yaml file</walkthrough-editor-open-file>
+## Creating Staging and Prod Targets
 
-## Step 5: Create a release candidate
-The following tasks correspond to the **Create a release candidate** walkthrough in the User Guide.
+The process to create your Staging and Prod Targets is the same as the Test target you just created. You'll start with your staging Target. 
 
+<walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/staging-environment.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view your staging Target yaml file.</walkthrough-editor-select-line>
+
+To create the staging Target run the following command in Cloud Shell:
+
+```bash
+gcloud alpha deploy apply --file clouddeploy-config/staging-environment.yaml
+```
+
+With that created, create your prod Target next. 
+
+<walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/prod-environment.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view your prod Target yaml file.</walkthrough-editor-select-line>
+
+To create your Prod Target run the following command in Cloud Shell:
+
+```bash
+gcloud alpha deploy apply --file clouddeploy-config/prod-environment.yaml
+```
+
+With both Targets created, verify everything is correct by looking at all of the Targets for the `web-app` Delivery Pipeline:
+
+```bash
+gcloud alpha deploy targets list --delivery-pipeline=web-app
+```
+
+Your output should look similar to the example below: 
+
+```terminal
 ---
-Now that your delivery pipeline and environment definitions have been created, the next step is to create a **release candidate**.
-
-A release candidate is associated with a delivery pipeline.
-
-First, let’s build and push the application image(s) using **[Skaffold](http://www.skaffold.dev)**.
-```bash
-cd web
-
-skaffold build --default-repo gcr.io/${PROJECT_ID}
-
-cd ..
-```
-
-Now that the application is built and pushed, we use the `gcloud-deploy release-candidates` command to create a release candidate, passing in a reference to the skaffold yaml source directory (the `--source` flag) as well as the list of images built by Skaffold (the `--image` flag). Each release candidate must have a unique name.
-
-Next, call `gcloud-deploy release-candidates create` to create a new release candidate called *release-1*.
-```bash
-GIT_SHA=$(git rev-parse --short HEAD)
-
-gcloud-deploy release-candidates create \
-    --source=web   \
-    --delivery-pipeline=web-app    \
-    --name=release-1   \
-    --image=leeroy-web=gcr.io/${PROJECT_ID}/leeroy-web:${GIT_SHA}-dirty \
-    --image=leeroy-app=gcr.io/${PROJECT_ID}/leeroy-app:${GIT_SHA}-dirty
-```
-
-Finally, verify that the release candidate has been created.
-```bash
-gcloud-deploy release-candidates list
-```
-
-**Skaffold** is not required to build our example application, but it is intergral to Cloud Deploy. A Skaffold yaml file is required in order to **render** configuration.
-
-Rendering is *the process of generating a configuration manifest*, as part of a deployment. When you create a release candidate, the `--source` flag indicates where to find the Skaffold yaml and the associated configuration files. The `gcloud-deploy` command, in turn, bundles the Skaffold yaml and source directory together (stored in a gcs bucket) for rendering when a **rollout** is created, producing a configuration manifest to apply to a target environment.
-
-The release candidate has not been deployed to an environment yet. That happens in the next step where we discuss rollouts.
-
-## Step 6: Create a rollout
-The following tasks correspond to the **Create a rollout** walkthrough in the User Guide.
-
+createTime: '2021-04-15T16:43:59.404939886Z'
+description: staging cluster
+etag: 9c923d5f1dd88c97
+gkeCluster:
+  cluster: staging
+  location: us-central1˜
+  project: jduncan-cd-testing
+name: projects/jduncan-cd-testing/locations/us-central1/deliveryPipelines/web-app/targets/staging
+uid: b1a856d72e5d43de817c2ea8380da39b
+updateTime: '2021-04-15T16:44:00.272725580Z'
 ---
-### Create rollout
-Now that you've created a release candidate, it’s time to perform a **rollout**. A rollout deploys a release candidate into an environment.
-
-Rollouts are performed in either of two ways:
-* As part of creating a release candidate, using the `--target-environment=` flag with `gcloud-deploy release-candidates`
-* Directly, using `gcloud-deploy rollouts create`.
-
-Below we create a rollout directly, deploying release candidate *release-1* to environment *staging* and named *staging-release-1*.
-```bash
-gcloud-deploy rollouts create \
-  --name=staging-release-1 \
-  --release-candidate=release-1 \
-  --environment=staging \
-  --delivery-pipeline=web-app
-```
-
-Like release candidates, each rollout must have a unique name.
-
-Verify that the rollout was created.
-```bash
-gcloud-deploy rollouts list --environment=staging
-```
-
-### Confirm rollout
-Wait a minute or so, then confirm that the rollout has completed by using the command below to check the `Reason`, `Status` and `Type` attributes, of attribute `Rollout Condition`, for **Complete**, **True** and **Complete** respectively. 
-
-***Note**: If the `Rollout Condition` attribute values above are not present, wait a minute or so and then rerun the command.*
-```bash
-gcloud-deploy rollouts describe staging-release-1
-```
-
-Finally, verify that the application was deployed to the target environment. You should see two entries, *leeroy-app* and *leeroy-web*.
-
-***Note**: it may take a moment for the rollout deployment to complete. If you experience 'No resources found in default namespace.', wait and then retry.*
-```bash
-kubectl --context stage get deployments
-```
-
-## Step 7: Adding environments
-The following tasks correspond to the **Create and deploy into ‘test’ and ‘prod’ environments** walkthrough in the User Guide.
-
+createTime: '2021-04-15T13:53:31.094996057Z'
+description: test cluster
+etag: 4c7d828d4f7a3b74
+gkeCluster:
+  cluster: test
+  location: us-central1˜
+  project: jduncan-cd-testing
+name: projects/jduncan-cd-testing/locations/us-central1/deliveryPipelines/web-app/targets/test
+uid: d1d2ca2dc4bf4884a8d16588cfe6d458
+updateTime: '2021-04-15T13:53:31.663277590Z'
 ---
-Now that you've deployed into the staging environment, a logical next question is "How can I deploy to multiple environments using my delivery pipeline?" That's exactly what is demonstrated in this step.
-
-First, create two additional environment definitions for deployment: *test* and *prod*. We have already pre-generated each of these definitions for you.
-
-<walkthrough-editor-select-line startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99" filePath="cloudshell_open/mcd-experiment/config/test-env.yaml">Click here to review the *test* environment definition yaml</walkthrough-editor-select-line>
-
-<walkthrough-editor-select-line startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99" filePath="cloudshell_open/mcd-experiment/config/prod-env.yaml"> Click here to review the *prod* environment definition yaml</walkthrough-editor-select-line>
-
-And register the two new environment definitions with Cloud Deploy.
-```bash
-gcloud-deploy apply config/test-env.yaml
-gcloud-deploy apply config/prod-env.yaml
+createTime: '2021-04-15T16:44:31.295700Z'
+description: prod cluster
+etag: ff1840e2d8c3010a
+gkeCluster:
+  cluster: prod
+  location: us-central1
+  project: jduncan-cd-testing
+name: projects/jduncan-cd-testing/locations/us-central1/deliveryPipelines/web-app/targets/prod
+uid: 0c22c1fb08e546ee9ae569ce501bac95
+updateTime: '2021-04-15T16:44:32.078235982Z'
 ```
 
-We also have to update the **promotion sequence** in the delivery pipeline definition yaml. We've included a `delivery.py` helper script to make this modification for you.
-```bash
-./deliver.py pipeline add-env --app web --env test,prod
-```
-<walkthrough-editor-select-line filePath="cloudshell_open/mcd-experiment/config/web-pipeline.yaml" startLine="15" startCharacterOffset="0" endLine="16" endCharacterOffset="99">Click here to review the updated delivery pipeline definition</walkthrough-editor-select-line>
+You've now created the all of the Cloud Deploy Targets as well as your Delivery Pipeline. Now it's time to build your application in order to create a Release Candidate. 
 
-Notice that in the updated delivery pipeline definition the *test*, and *prod* environments are listed sequentially, following *staging*. This ordering is the delivery pipeline's *promotion sequence*.
+Click the Next button to proceed. 
 
-Finally, let's register the updated delivery pipeline definition with Cloud Deploy using `gcloud-deploy apply`.
+## Building your Application
+
+Cloud Deploy integrates tightly with [`skaffold`](https://skaffold.dev/), a leading open source Continuous Delivery tool. When you ran `bootstrap.sh`, a sample application was cloned from a [Github repository](https://github.com/GoogleContainerTools/skaffold.git) to your Cloud Shell instance in the `web` directory. 
+
+In this section, you'll build that application image so you can progress it through your Delivery Pipeline.
+
+### Configuring Artifact Registry Authentication
+
+The Google Artifact Registry was enabled as part of running `bootstrap.sh`. To push a container image to the registry, you need to enable the `docker` daemon on your Cloud Shell instance to log in to Artifact Registry using your active SDK authentication token. This requires a few commands to be run on your Cloud Shell instance. These commands allow your user to run `docker` commands on Cloud Shell and also configures the local `docker` daemon to authentication using `gcloud` for your Artifact Registry domain.
+
 ```bash
-gcloud-deploy apply config/web-pipeline.yaml
+sudo usermod -a -G docker ${USER}
+gcloud auth configure-docker ${REGION}-docker.pkg.dev
 ```
+
+With these steps complete, authenticate to your Artifact Registry. This allows `skaffold` in the next section to push your created image into Artifact Registry.
+
+```bash
+docker login ${REGION}-docker.pkg.dev
+```
+You're now set to build your application image.
+
+### Building with Skaffold
+
+The example application source code is on your Cloud Shell instance in the `web` directory. That directory contains `skaffold.yaml`. This file contains the instructions for `skaffold` to use to build a container image for your application.
+
+<walkthrough-editor-select-line filePath="tutorial/web/skaffold.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view skaffold.yaml file.</walkthrough-editor-select-line>
+
+Your application images will be called `leeroy-web` and `leeroy-app` when it's deployed. To create these container images for, run the following command in Cloud Shell.
+
+```bash
+cd web/
+skaffold build --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app
+```
+
+If you're familiar with building container images this output should look familiar to you. To confirm your images have been successfully pushed to your Artifact Registry, run the following command. The `--format jason` parameter makes the content output in JSON format to be easier to read:
+
+```bash
+gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format json
+```
+
+Your output should look similar to the example below: 
+
+```terminal
+Listing items under project jduncan-cd-testing, location us-central1, repository web-app.
+
+[
+  {
+    "createTime": "2021-04-15T23:15:15.792959Z",
+    "package": "us-central1-docker.pkg.dev/jduncan-cd-testing/web-app/leeroy-app",    "tags": "63ec18a",
+    "updateTime": "2021-04-15T23:15:15.792959Z",
+    "version": "sha256:80d8a867b82eb402ebe5b48f972c65c2b4cf7657ab30b03dd7b0b21dfc4a6792"
+  },
+  {
+    "createTime": "2021-04-15T23:15:27.320207Z",
+    "package": "us-central1-docker.pkg.dev/jduncan-cd-testing/web-app/leeroy-web",
+    "tags": "63ec18a",
+    "updateTime": "2021-04-15T23:15:27.320207Z",
+    "version": "sha256:30c37ef69eaf759b8c151adea99b6e8cdde85a81b073b101fbc593eab98bc102"
+  }
+]
+```
+
+By default, `skaffold` sets the tag for an image to the same value as the short form of the `git` commit ID. You can use this to verify the image you're adding to a Cloud Deploy Release.
+
+### Verifying your Application Image
+
+To ensure there were no issues when building or pushing your application image, run the following `git` command. This value should match
+
+```bash
+export GIT_SHA=$(git rev-parse --short HEAD)
+```
+
+This value should match the `tags` value in the Artifact Registry output above. For this example, both values should be `63ec18a`.
+
+```bash
+gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format=value"(tags)"
+```
+
+The output should look similar to this: 
+
+```terminal
+Listing items under project jduncan-cd-testing, location us-central1, repository web-app.
+
+63ec18a
+63ec18a
+```
+
+You can confirm this matches the git commit ID.
+```bash
+echo $GIT_SHA
+```
+
+If the values match, your application container images are now built, verified, and ready for Cloud Deploy. In the next section you'll create a release for your application.
+
+Click the Next button to proceed.
+
+## Creating an Application Release
+
+In Cloud Deploy, a Release is a specific version of one or more application images that are associated with a specific Delivery Pipeline. Once created, a Release can be promoted through multiple Targets.
+
+Because this will be the first release of your application stack, call this release `leeroy-001`.
+
+To create a Release, run the following command in your Cloud Shell instance. This command pulls together almost everything you've done so far. It references the Delivery Pipeline as well as the container images:
+
+```bash
+gcloud alpha deploy releases create leeroy-001 --delivery-pipeline web-app --images leeroy-web=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:${WEB_SHA},leeroy-app=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:${APP_SHA}
+```
+
+To confirm your 
+
+
+
+
 
 ## Step 8: Promoting through environments
 The following tasks correspond to the **Create and deploy into 'test' and 'prod' environments** section in the User Guide.

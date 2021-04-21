@@ -9,12 +9,12 @@ This repository contains content and functionality to help you install and try o
 
 ## Internal Testing
 
-_NOTE_: This method is only for MAD Team internal testing. This is not how the appllication will be delivered to users for Private Preview or beyond.
+_NOTE_: This method is only for MAD Team internal testing. This is not how the application will be delivered to users for Private Preview or beyond.
 
 To test out the Cloud Deploy tutorial at any time, follow these instructions: 
 
 * Open Cloud Shell in your browser.
-* Go to https://clouddeploy.googlesource.com/new-customer and follow the instructions to add an authentication cookie to your Cloud Shell instance.
+* Go to https://clouddeploy.googlesource.com/new-password and follow the instructions to add an authentication cookie to your Cloud Shell instance.
 * Clone the repository:
   ```bash
   git clone https://clouddeploy.googlesource.com/tutorial

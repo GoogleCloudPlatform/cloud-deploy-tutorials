@@ -392,4 +392,4 @@ To create a Release, run the following command in your Cloud Shell instance. Thi
 gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --images leeroy-web=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:${WEB_SHA},leeroy-app=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:${APP_SHA}
 ```
 
-To confirm your 
+To confirm your ...

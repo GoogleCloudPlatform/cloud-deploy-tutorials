@@ -4,38 +4,35 @@
     >
 </walkthrough-author>
 
-# Cloud Deploy Quickstart
-
+<!-- descriptive tutorial name? --sanderbogdan -->
+# Cloud Deploy: Private Preview tutorial
 ## Overview
-This tutorial guides you through setting up and using the Google Cloud Deploy service. In the initial guides, you'll create a GCP Project (or use an existing one if you choose) to create a complete **test > staging > production** pipeline using Cloud Deploy.
+This tutorial guides you through setting up and using the Google Cloud Deploy service.
+
+You will create a GCP Project, or use an existing one if you choose, to create a complete **test > staging > production** delivery pipeline using Cloud Deploy.
 
 <!-- TODO: We need a graphic/logo/something here for impact. Possibly a graphic of the dev > staging > prod pipeline for emphasis? -->
 
 <!-- TODO: Will it? If so, add link -->
 ### Supporting materials
-
-The User Guide includes a detailed walkthough corresponding to each step in this tutorial, if you want to explore more deeply.
-
 Estimated Duration:
 <walkthrough-tutorial-duration duration="20"></walkthrough-tutorial-duration>
 
-Click the Start button below to begin.
+Click **Next** to proceed.
 
-## Configuring Cloud Shell
-
+## About Cloud Shell
 This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Cloud Deploy. Cloud Shell is an online development and operations environment accessible anywhere with your browser. You can manage your resources with its online terminal preloaded with utilities such as the gcloud command-line tool, kubectl, and more. You can also develop, build, debug, and deploy your cloud-based apps using the online [Cloud Shell Editor](https://ide.cloud.google.com/).
 
-### Selecting a Project
-First, select a Project to deploy Cloud Deploy. You can also create a new Project if you want. This is the Project that will house the Cloud Deploy components as well as the three GKE clusters that will act as your development, staging, and production environments.
+### Select a Project
+First, select a Project to deploy Cloud Deploy. This is the Project that where the Cloud Deploy service as well as the tutorial GKE clusters that will act as your development, staging, and production environments, will be located.
 
-_The Cloud Deploy Team highly recommends for you to create a new project for this tutorial. You're not going to be doing anything damaging, but depending on names for infrastructure in an existing project, the tutorial could fail to deploy or you could have unwanted things happen._
+_It is recommended you create a new Project for this tutorial. The tutorial could fail to deploy, or you may experience undesired side effects if using an existing project with conflicting settings._
 
 <walkthrough-project-setup></walkthrough-project-setup>
 
-Next, you'll get your work environment configured in Cloud Shell. Click the Next button below to continue.
+Click **Next** to proceed.
 
-## Configuring Cloud Shell
-
+## Configure Cloud Shell
 You'll do your work for this tutorial in Cloud Shell. To begin, open Cloud Shell in your browswer window by clicking the Cloud Shell icon <walkthrough-cloud-shell-icon></walkthrough-cloud-shell-icon>. 
 
 If you don't see the Cloud Shell icon in your window, you can also click below to open Cloud Shell.
@@ -44,50 +41,52 @@ If you don't see the Cloud Shell icon in your window, you can also click below t
 
 Next, you'll download the tutorial code base to your Cloud Shell.
 
-### Accessing the Tutorial Code
+### Clone the tutorial repository
+<!-- I am wondering if we include this in bootstrap.sh, as we did with the Experiment tutorial? wdybt? --sanderbogdan -->
+The source code for this tutorial is housed in a git repository. Your Cloud Shell already has `git` pre-installed.
 
-The source code for this tutorial is housed in a git repository. Your Cloud Shell VM has `git` pre-installed, so you don't need to worry about managing any packages. On your Cloud Shell instance, run the following command to clone the repository to your local disk. 
+Run the following command to clone the tutorial repository. This will clone the tutorial source code you'll use into a `tutorial` folder in your Cloud Shell home directory.
 
 ```bash
 git clone https://clouddeploy.googlesource.com/tutorial
 ```
 
-This clones the tutorial source code you'll use into the `tutorial` folder in your Cloud Shell home directroy. Now it's time to deploy your infrastructure. 
+Click **Next** to proceed.
 
-Click the Next button to continue.
+## Deploy tutorial infrastructure
+<!-- I am wondering if we include this in bootstrap.sh, as we did with the Experiment tutorial? wdybt? --sanderbogdan -->
+Now it's time to deploy the tutorial infrastructure. 
 
-## Deploying Infrastructure
+You'll deploy three GKE clusters with the following names into your `{{project-id}}` Project: 
 
-You'll deploy three GKE clusters with the following names into your *{{project-id}}* Project: 
-
-GKE Cluster Name | Purpose
+GKE Cluster Name | Use
 ----- | -----
-`test` | Application testing environment
-`staging` | Staging environment prior to production push
+`test` |  Application test environment
+`staging` | Staging environment (pre production)
 `prod` | Production environment
 
-_If you have an existing GKE cluster in {{project-id} with any of those names, you'll need to select another project to use._
+_NOTE: If you have an existing GKE cluster in `{{project-id}}` with any of these names, you will need to select another project to use._
 
-Next, you'll deploy three GKE clusters into a VPC (Virtual Private Cloud) in _{{project-id}}_. This is your application deployment infrastructure. 
+These three clusters are deployed into a VPC (Virtual Private Cloud) in `{{project-id}}`. 
 
-<!-- TODO: A graphic would help this be undesrtood better. Simple squares with VPCs etc -->
+<!-- TODO: A graphic would help this be understood better. Simple squares with VPCs etc -->
 
-To create your GKE clusters and all the additional needed resources for this tutorial, there's a `bootstrap.sh` script in the tutorial source code.  
-
-To execute the `bootstrap.sh` , run the following commands in your Cloud Shell
+To create these GKE clusters, and supporting resources, run the `bootstrap.sh` in your Cloud Shell.
 
 ```bash
 cd tutorial
 ./bootstrap.sh
 ```
 
-The bootstrap process may take a few minutes to run. Once completed successfully, confirm your GKE clusters are up and functioning by running the following command: 
+*Note*: The bootstrap process may take a few minutes to run. 
+
+Once completed, confirm your GKE clusters and supporting resources are properly deployed. 
 
 ```bash
 gcloud container clusters list
 ```
 
-Your output should look similar to this, and all three clusters should have 3 nodes and have a `RUNNING` status.
+Your output should look similar to below, with each cluster having three nodes and a `RUNNING` status.
 
 ```terminal
 NAME     LOCATION     MASTER_VERSION    MASTER_IP       MACHINE_TYPE   NODE_VERSION      NUM_NODES  STATUS
@@ -96,11 +95,12 @@ staging  us-central1  1.17.17-gke.2800  35.232.139.69   n1-standard-2  1.17.17-g
 test     us-central1  1.17.17-gke.2800  35.188.180.217  n1-standard-2  1.17.17-gke.2800  3          RUNNING
 ```
 
-You're now ready to begin configuring Cloud Deploy. Click the Next button below to proceed.
+Click **Next** to proceed.
 
-## Creating Your Cloud Deploy Environment
+## Create tutorial environment
+You're now ready to begin configuring Cloud Deploy.
 
-This tutorial focuses on core concepts and tooling of Cloud Deploy. The primary commands you'll be using are:
+This tutorial focuses on the core concepts and tooling of Cloud Deploy. The primary commands you'll be using are below.
 
 <!-- TODO: update this list of commands -->
 Resource  | Commands
@@ -111,30 +111,37 @@ Release candidate | `gcloud alpha deploy release-candidates`
 Rollout | `gcloud alpha deploy rollouts`
 
 <!-- TODO: Keep this updated depending on the app lifecycle -->
-### Enabling the Cloud Deploy API
-
+### Enable the Cloud Deploy API
+<!-- I am wondering if we include this in bootstrap.sh, as we did with the Experiment tutorial? wdybt? --sanderbogdan -->
 <!-- TODO: This may change or be wholly unneeded. I'm leaving it here for current testing if nothing else --jduncan -->
-Because Cloud Deploy is currently a Private Preview product, you need to enable the API. To accomplish this, run the following commands in your Cloud Shell.
+<!-- COMMENT: I like the fact that we how how to enable the API programmatically, but perhaps this part of the boostrap.sh? Conversely, the CLI to do this is a bit knotty - hopefully that will be able to simplified forward as well? --sanderbogdan -->
+To enable the Cloud Deploy service and API, run the following.
 
 ```bash
 gcloud config set api_endpoint_overrides/clouddeploy "https://staging-clouddeploy.sandbox.googleapis.com/"
 gcloud services enable staging-clouddeploy.sandbox.googleapis.com --project={{project-id}}
 ```
+Click **Next** to proceed.
 
-### Configuring Cloud Deploy
+### Configure Cloud Deploy
+Default Cloud Deploy parameters can be configured with the  `gcloud` SDK to avoid typing them for every command.
 
-Some Cloud Deploy parameters can be configured in your `gcloud` SDK to avoid typing them for every command. To set a default Cloud Deploy region for the rest of the commands in this tutorial, run the following command on your Cloud Shell: 
+To set a default Cloud Deploy region for the rest of the commands in this tutorial, run the following command on your Cloud Shell: 
 
 ```bash
 gcloud config set deploy/region $REGION
 ```
 
-This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter. The full list of Cloud Deploy configurations is available at [TODO]. You're ready to deploy your first Cloud Deploy resource in your Project.
+This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter.
 
-Click the Next button to proceed.
+<!-- COMMENT: I think this should be a pointer to the Cloud Deploy CLI documentation / or perhaps there is a gcloud CLI document regarding common defaults. TODO: follow up on link recommendation with ddorbin@ --sanderbogdan -->
+The full list of Cloud Deploy configurations is available at [TODO].
 
-## Creating Your Delivery Pipeline
+You are now ready to deploy your first Cloud Deploy resource in your Project.
 
+Click **Next** to proceed.
+
+## Create the Delivery Pipeline
 In this section you'll create the environment for your infrastructure. For this tutorial, you're creating a Cloud Deploy environment that consists of one _Delivery Pipeline_ for a web application that progresses through three _Targets_. These targets are your _test, staging, and prod_ GKE clusters.
 
 Cloud Deploy uses YAML files to define resources. For the tutorial, these files are all in the repository you previously cloned to your Cloud Shell. The first resource you need to create is the Delivery Pipeline. 

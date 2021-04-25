@@ -5,7 +5,7 @@
 </walkthrough-author>
 
 <!-- descriptive tutorial name? --sanderbogdan -->
-# Cloud Deploy: Private Preview tutorial
+# Cloud Deploy: Private Preview
 ## Overview
 This tutorial guides you through setting up and using the Google Cloud Deploy service.
 
@@ -422,23 +422,23 @@ gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --im
 To confirm your ...
 <!-- TODO: finish step content -->
 
-## Promote a release to prod
-<!-- TODO: details; promote through production -->
+## Promotion
+<!-- TODO: details; promote through to production -->
 
-## Rollback a release
-<!-- TODO: details; create a second release, rollback test -->
+## Rollback
+<!-- TODO: details; create a second release, rollback test target -->
 
-## Perform an approval
-<!-- TODO: details; add approval to prod target YAML, add IAM permission, approval-->
+## Approvals
+<!-- TODO: details; add approval to prod target YAML, add IAM permission, approval and promote through-->
 
-## Cloud Deploy in Cloud Console
+## Cloud Deploy Console
 <!-- TODO: Couple short paragraphs, pivot out to review Delivery Pipeline and details in Cloud Console -->
 
-# Advanced uses
+# Advanced use
 <!-- TODO: review with Jamie/Henry this week -->
 
 ## Use Skaffold profiles
 <!-- TODO: Helm or Kustomize? Simple sample, similar to the prior Experiment tutorial to demonstrate how to use Skaffold + profiles -->
 
-## Run post deployment check
-<!-- TODO: or some notifications example? maybe we punt this esp. since we plan to have Skaffold test support coming. iterested in opinions -->
+## Notifications
+<!-- TODO: I feel a very simple example, with some post deployment notification message hook that prints a message is good enough. We can use this step's copy to express  -->

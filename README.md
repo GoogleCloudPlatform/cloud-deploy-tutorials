@@ -21,7 +21,7 @@ To test out the Cloud Deploy tutorial at any time, follow these instructions:
   ```
 * Launch the tutorial window:
   ```bash
-  teachme tutorials/walkthroughs/tutorial.md
+  teachme tutorials/walkthroughs/cloud_deploy_e2e_gke.md
   ```
 
 The tutorial window should open in your browser tab on the right side. From that, read and follow the instructions in your Cloud Shell window.

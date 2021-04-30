@@ -7,6 +7,7 @@ CD_CONFIG_DIR=clouddeploy-config
 echo Enabling GCP APIs, please wait...
 gcloud services enable storage.googleapis.com
 gcloud services enable compute.googleapis.com
+gcloud services enable artifactregistry.googleapis.com
 
 cd tf
 export PROJECT_ID=$(gcloud config get-value core/project)

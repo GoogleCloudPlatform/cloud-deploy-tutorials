@@ -3,6 +3,7 @@ kind: target
 name: prod
 delivery-pipeline: web-app
 description: prod cluster
+approvalRequired: true
 gkeCluster:
   project: ${PROJECT_ID}
   cluster: prod

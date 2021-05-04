@@ -404,7 +404,7 @@ Because this is the first release of our application, we'll name it `web-app-001
 Run the following command to create the release:
 
 ```bash
-gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --images leeroy-web=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:${WEB_SHA},leeroy-app=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:${APP_SHA} --source web/
+gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --images leeroy-web=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:${GIT_SHA},leeroy-app=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:${GIT_SHA} --source web/
 ```
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.

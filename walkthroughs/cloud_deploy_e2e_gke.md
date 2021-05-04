@@ -111,6 +111,7 @@ You're now ready to begin configuring Cloud Deploy.
 <!-- I am wondering if we include this in bootstrap.sh, as we did with the Experiment tutorial? wdybt? --sanderbogdan -->
 <!-- TODO: This may change or be wholly unneeded. I'm leaving it here for current testing if nothing else --jduncan -->
 <!-- COMMENT: I like the fact that we how how to enable the API programmatically, but perhaps this part of the boostrap.sh? Conversely, the CLI to do this is a bit knotty - hopefully that will be able to simplified forward as well? --sanderbogdan -->
+<!-- COMMENT: yeah, this is just a placeholder until we get to the prod API -->
 To enable the Cloud Deploy service and related APIs, run the following command:
 
 ```bash
@@ -373,17 +374,16 @@ export GIT_SHA=$(git rev-parse --short HEAD)
 This value should match the `tags` value in the Artifact Registry output from above.
 
 ```bash
-gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format=value"(tags)"
+gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format=value"(package,tags)"
 ```
 
 The output should look like this (but with different commit IDs): 
 
-<!-- TODO: is this correct? can the container names be displayed, also --sanderbogdan -->
 ```terminal
 Listing items under project your-project, location us-central1, repository web-app.
 
-63ec18a
-63ec18a
+us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app      63ec18a
+us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web      63ec18a
 ```
 
 You can confirm the output matches the git commit ID.
@@ -404,22 +404,207 @@ Because this is the first release of our application, we'll name it `web-app-001
 Run the following command to create the release:
 
 ```bash
-gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --images leeroy-web=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:${WEB_SHA},leeroy-app=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:${APP_SHA}
+gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --images leeroy-web=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:${WEB_SHA},leeroy-app=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:${APP_SHA} --source web/
 ```
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.
 
-To confirm your ...
-<!-- TODO: finish step content -->
+To confirm your release has been created run the following command: 
+
+```bash
+gcloud alpha deploy releases list --delivery-pipeline web-app
+```
+
+Your output should look similar to this: 
+
+```terminal
+---
+buildArtifacts:
+- imageName: leeroy-app
+  tag: 'us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:'- imageName: leeroy-web
+  tag: 'us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:'
+createTime: '2021-04-29T00:30:59.672965025Z'deliveryPipelineSnapshot:
+  createTime: '1970-01-01T00:00:30.486775Z'
+  description: web-app delivery pipeline
+  etag: 2539eacd7f5c256d
+  name: projects/619472186817/locations/us-central1/deliveryPipelines/web-app
+  serialPipeline:
+    stages:
+    - targetId: test
+    - targetId: staging
+    - targetId: prod
+```
+
+With your release created, it's time to promote your application through your environments. 
+
+Click **Next** to proceed.
 
 ## Promotion
-<!-- TODO: details; promote through to production -->
+
+With your release created, you can promote your application to your `test` Target GKE cluster. To promote your `web-app-001` release, run the following command:
+
+```bash
+gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001 --to-target test
+```
+Your output should look similar to this: 
+
+```terminal
+rollout:
+  rollout: web-app-001-to-test-0002
+  target: test
+```
+
+The promotion command should return quickly. But your actual application deployment may take a few minutes to your GKE cluster because it has to download your application images from your Artifact Registry. To confirm your promotion was successful, run the following command:
+
+```bash
+gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+```
+
+Your output should look similar to this:
+
+```terminal
+---
+createTime: '2021-04-30T18:46:45.657293361Z'
+deployBuild: 3915c189-e9b4-4c6e-b757-322d8db18188
+deployEndTime: '2021-04-30T18:47:31.951451Z'
+deployStartTime: '2021-04-30T18:46:47.234151706Z'
+etag: d4a044da3c830258
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-test-0002
+state: SUCCESS
+target: test
+uid: f37126ebe3764108beb081c7e2930d7a
+```
+
+To confirm your application was deployed to your test GKE cluster, run the following commands in your Cloud Shell: 
+
+```bash
+kubectx test
+kubectl get pods -n default
+```
+
+The output of your `kubectl` command should look similar to the following: 
+
+```terminal
+NAME                          READY   STATUS    RESTARTS   AGE
+leeroy-app-7b8d48f794-svl6g   1/1     Running   0          19s
+leeroy-web-5498c5b7fd-czvm8   1/1     Running   0          20s
+```
+
+To promote your application to your staging Target, run the following command: 
+
+```bash
+gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001 --to-target staging
+```
+
+You can verify this promotion was successful using the same steps as above for Cloud Deploy as well as your `staging` GKE cluster.
+
+In the next section, you'll modify your `prod` target to require an approval and finally deploy your Release to production.
+
+Click **Next** to proceed. 
+
+## Approvals
+
+Any Target can require an Approval before a Release promotion can occur. This is designed to protect production and sensitive Targets from accidentally promoting a release before it's been fully vetted and tested.
+
+### Requiring Approval for Promotion to a Target
+
+When you created your prod environment, the configuration was in place to require approvals to this Target. To verify this, run this command and look for the `approvalRequired` parameter.
+
+```bash
+$ gcloud alpha deploy targets describe prod --delivery-pipeline web-app
+```
+
+Your output should look similar to this: 
+
+```terminal
+Target:
+  approvalRequired: true
+  createTime: '2021-04-30T18:40:11.068571913Z'
+  description: prod cluster
+  etag: 74a0c6560ae0ace7
+  gkeCluster:
+    cluster: prod
+    location: us-central1
+    project: {{project-id}}
+  name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/prod
+  uid: 95fbe354bc07435f8248712a44035ca0
+  updateTime: '2021-04-30T20:39:57.398607646Z'
+```
+
+Go ahead and promote your application to your prod Target with this command 
+
+```bash
+gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+```
+
+When you look at your rollouts for `web-app-001`, you'll notice that the promotion to prod has a `PENDING_APPROVAL` status.
+
+```terminal
+approvalState: NEEDS_APPROVAL
+createTime: '2021-05-03T17:23:18.183598192Z'
+etag: ac30600d82dcb0f
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-prod-0001
+state: PENDING_APPROVAL
+target: prod
+uid: f7de1bc9af4e46e499cc0c134b3758a6
+```
+
+Next, you'll create a user with the proper IAM roles to approve this promotion to your prod Target and make your production push. 
+
+Click **Next** to proceed.
+
+### Defining Approvers through IAM
+
+<!-- TODO - doesn't work in CLI yet -->
+
+With your user properly enabled, you can now promote your application to your prod Target. 
+
+Click **Next** to proceed.
+
+### Deploying to Prod
+
+To approve your application and promote it to your prod Target, use this command: 
+
+```bash
+gcloud alpha deploy rollouts approve web-app-001-to-prod-0001 --delivery-pipeline web-app --release web-app-001
+```
+
+After a short time, your promotion should complete. Verify this by running the `gcloud alpha deploy rollouts list --delivery-pipeline web-app` command: 
+
+```bash
+gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+```
+
+Your output should look similar to this: 
+
+```terminal
+approvalState: APPROVED
+createTime: '2021-05-03T17:23:18.183598192Z'
+deployBuild: 27c9a286-2a88-419e-be5b-a79fa6248f60
+deployEndTime: '2021-05-03T19:00:26.526217Z'
+deployStartTime: '2021-05-03T18:59:46.114953201Z'
+etag: 205ff1e1a8d8c4f6
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-prod-0001
+state: SUCCESS
+target: prod
+uid: f7de1bc9af4e46e499cc0c134b3758a6
+```
+
+You can also confirm your `prod` GKE cluster has your apps deployed: 
+
+```bash
+kubectx prod
+kubectl get pod -n default
+```
+
+Your Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster.
+
+In the next section you'll roll an application back. 
+
+Click **Next** to proceed.
 
 ## Rollback
 <!-- TODO: details; create a second release, rollback test target -->
-
-## Approvals
-<!-- TODO: details; add approval to prod target YAML, add IAM permission, approval and promote through-->
 
 ## Cloud Deploy Console
 <!-- TODO: Couple short paragraphs, pivot out to review Delivery Pipeline and details in Cloud Console -->

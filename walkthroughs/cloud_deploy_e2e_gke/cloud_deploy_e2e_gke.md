@@ -89,9 +89,20 @@ test     us-central1  1.17.17-gke.2800  35.188.180.217  n1-standard-2  1.17.17-g
 
 If the command succeeds, each cluster will have three nodes and a `RUNNING` status.
 
+### Configure Cloud Deploy Region
+Default Cloud Deploy parameters can be configured with `gcloud` to avoid typing them for every command.
+
+Run the following command in Cloud Shell to set a default region for the rest of the commands in this tutorial: 
+
+```bash
+gcloud config set deploy/region $REGION
+```
+
+This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter. In the next section you'll use `skaffold` to build your sample application.
+
 Click **Next** to proceed.
 
-## Create tutorial environment
+## Enable Staging API
 You're now ready to begin configuring Cloud Deploy.
 
 ### Enable the Cloud Deploy API
@@ -102,17 +113,6 @@ To enable the Cloud Deploy service and related APIs, run the following command:
 gcloud config set api_endpoint_overrides/clouddeploy "https://staging-clouddeploy.sandbox.googleapis.com/"
 gcloud services enable staging-clouddeploy.sandbox.googleapis.com --project={{project-id}}
 ```
-
-### Configure Cloud Deploy
-Default Cloud Deploy parameters can be configured with `gcloud` to avoid typing them for every command.
-
-Run the following command in Cloud Shell to set a default region for the rest of the commands in this tutorial: 
-
-```bash
-gcloud config set deploy/region $REGION
-```
-
-This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter. In the next section you'll use `skaffold` to build your sample application.
 
 Click **Next** to proceed.
 
@@ -422,7 +422,7 @@ With your release created, it's time to promote your application through your en
 
 Click **Next** to proceed.
 
-## Promotion
+## Promoting Applications
 
 With your release created, you can promote your application to your `test` Target GKE cluster. To promote your `web-app-001` release, run the following command:
 
@@ -481,7 +481,7 @@ gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-a
 
 You can verify this promotion was successful using the same steps as above for Cloud Deploy as well as your `staging` GKE cluster.
 
-In the next section, you'll modify your `prod` target to require an approval and finally deploy your Release to production.
+In the next section, you'll look at Targets that require approvals before Promotions can complete.
 
 Click **Next** to proceed. 
 
@@ -538,9 +538,7 @@ Click **Next** to proceed.
 
 ## Defining Approvers
 
-With your user properly enabled, you can now promote your application to your prod Target. 
 
-Click **Next** to proceed.
 
 ### Deploying to Prod
 
@@ -585,6 +583,8 @@ In the next section you'll roll an application back.
 Click **Next** to complete this tutorial.
 
 ## Conclusion
+
+Thank you for taking the time to get to know the Cloud Deploy tool from Google Cloud!
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 

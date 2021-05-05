@@ -112,7 +112,108 @@ Run the following command in Cloud Shell to set a default region for the rest of
 gcloud config set deploy/region $REGION
 ```
 
-This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter. You're now ready to deploy your first Cloud Deploy resource in your project.
+This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter. In the next section you'll use `skaffold` to build your sample application.
+
+Click **Next** to proceed.
+
+## Build the Application
+Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
+
+As part of this tutorial, a sample application has been cloned from a [Github repository](https://github.com/GoogleContainerTools/skaffold.git) to your Cloud Shell instance, in the `web` directory. 
+
+In this section, you'll build that application image so you can progress it through the `webapp` delivery pipeline.
+
+### Configure Artifact Registry authentication
+Google Cloud's Artifact Registry was enabled as part of this tutorial. To push a container image to the registry, you need to enable the `docker` daemon so you can log in to Artifact Registry using your active SDK authentication token. 
+
+The commands below allow your user to run `docker` commands on Cloud Shell and also configure the local `docker` daemon to authenticate using `gcloud` for your Artifact Registry domain.
+
+```bash
+sudo usermod -a -G docker ${USER}
+gcloud auth configure-docker ${REGION}-docker.pkg.dev
+```
+
+Authenticate to Artifact Registry: 
+
+```bash
+docker login ${REGION}-docker.pkg.dev
+```
+
+This allows `skaffold` to push your image to Artifact Registry.
+
+### Build with Skaffold
+
+The example application source code is in the `web` directory of your Cloud Shell instance. It's a simple web app that listens to a port, provides an HTTP response code and adds a log entry.
+
+The `web` directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application.
+
+<walkthrough-editor-select-line filePath="tutorial/web/skaffold.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view the `web-app` `skaffold.yaml`.</walkthrough-editor-select-line>
+
+When deployed, the application images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
+
+```bash
+cd web/
+skaffold build --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app
+```
+
+Confirm the images were successfully pushed to Artifact Registry:
+
+```bash
+gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format json
+```
+The `--format json` parameter returns the output as JSON for readability. The output should look like this: 
+
+```terminal
+Listing items under project your-project, location us-central1, repository web-app.
+
+[
+  {
+    "createTime": "2021-04-15T23:15:15.792959Z",
+    "package": "us-central1-docker.pkg.dev/your-project/web-app/leeroy-app",    
+    "tags": "63ec18a",
+    "updateTime": "2021-04-15T23:15:15.792959Z",
+    "version": "sha256:80d8a867b82eb402ebe5b48f972c65c2b4cf7657ab30b03dd7b0b21dfc4a6792"
+  },
+  {
+    "createTime": "2021-04-15T23:15:27.320207Z",
+    "package": "us-central1-docker.pkg.dev/your-project/web-app/leeroy-web",
+    "tags": "63ec18a",
+    "updateTime": "2021-04-15T23:15:27.320207Z",
+    "version": "sha256:30c37ef69eaf759b8c151adea99b6e8cdde85a81b073b101fbc593eab98bc102"
+  }
+]
+```
+
+By default, `skaffold` sets the tag for an image to the short form of the `git` commit ID. You can use this to verify the image being added to a Cloud Deploy `release`.
+
+### Verify the Application Image
+Run the following `git` command to ensure there were no issues when building or pushing the application image:
+
+```bash
+export GIT_SHA=$(git rev-parse --short HEAD)
+```
+
+This value should match the `tags` value in the Artifact Registry output from above.
+
+```bash
+gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format=value"(package,tags)"
+```
+
+The output should look like this (but with different commit IDs): 
+
+```terminal
+Listing items under project your-project, location us-central1, repository web-app.
+
+us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app      63ec18a
+us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web      63ec18a
+```
+
+You can confirm the output matches the git commit ID.
+```bash
+echo $GIT_SHA
+```
+
+If the values match, your application container images are now built, verified, and ready for Cloud Deploy. 
 
 Click **Next** to proceed.
 
@@ -274,105 +375,6 @@ updateTime: '2021-04-15T16:44:32.078235982Z'
 ```
 
 All Cloud Deploy targets for the delivery pipeline have now been created.
-
-Click **Next** to proceed.
-
-## Build the Application
-Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
-
-As part of this tutorial, a sample application has been cloned from a [Github repository](https://github.com/GoogleContainerTools/skaffold.git) to your Cloud Shell instance, in the `web` directory. 
-
-In this section, you'll build that application image so you can progress it through the `webapp` delivery pipeline.
-
-### Configure Artifact Registry authentication
-Google Cloud's Artifact Registry was enabled as part of this tutorial. To push a container image to the registry, you need to enable the `docker` daemon so you can log in to Artifact Registry using your active SDK authentication token. 
-
-The commands below allow your user to run `docker` commands on Cloud Shell and also configure the local `docker` daemon to authenticate using `gcloud` for your Artifact Registry domain.
-
-```bash
-sudo usermod -a -G docker ${USER}
-gcloud auth configure-docker ${REGION}-docker.pkg.dev
-```
-
-Authenticate to Artifact Registry: 
-
-```bash
-docker login ${REGION}-docker.pkg.dev
-```
-
-This allows `skaffold` to push your image to Artifact Registry.
-
-### Build with Skaffold
-
-The example application source code is in the `web` directory of your Cloud Shell instance. That directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application.
-
-<walkthrough-editor-select-line filePath="tutorial/web/skaffold.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view the `web-app` `skaffold.yaml`.</walkthrough-editor-select-line>
-
-When deployed, the application images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
-
-```bash
-cd web/
-skaffold build --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app
-```
-
-Confirm the images were successfully pushed to Artifact Registry:
-
-```bash
-gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format json
-```
-The `--format json` parameter returns the output as JSON for readability. The output should look like this: 
-
-```terminal
-Listing items under project your-project, location us-central1, repository web-app.
-
-[
-  {
-    "createTime": "2021-04-15T23:15:15.792959Z",
-    "package": "us-central1-docker.pkg.dev/your-project/web-app/leeroy-app",    
-    "tags": "63ec18a",
-    "updateTime": "2021-04-15T23:15:15.792959Z",
-    "version": "sha256:80d8a867b82eb402ebe5b48f972c65c2b4cf7657ab30b03dd7b0b21dfc4a6792"
-  },
-  {
-    "createTime": "2021-04-15T23:15:27.320207Z",
-    "package": "us-central1-docker.pkg.dev/your-project/web-app/leeroy-web",
-    "tags": "63ec18a",
-    "updateTime": "2021-04-15T23:15:27.320207Z",
-    "version": "sha256:30c37ef69eaf759b8c151adea99b6e8cdde85a81b073b101fbc593eab98bc102"
-  }
-]
-```
-
-By default, `skaffold` sets the tag for an image to the short form of the `git` commit ID. You can use this to verify the image being added to a Cloud Deploy `release`.
-
-### Verify the Application Image
-Run the following `git` command to ensure there were no issues when building or pushing the application image:
-
-```bash
-export GIT_SHA=$(git rev-parse --short HEAD)
-```
-
-This value should match the `tags` value in the Artifact Registry output from above.
-
-```bash
-gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format=value"(package,tags)"
-```
-
-The output should look like this (but with different commit IDs): 
-
-```terminal
-Listing items under project your-project, location us-central1, repository web-app.
-
-us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app      63ec18a
-us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web      63ec18a
-```
-
-You can confirm the output matches the git commit ID.
-```bash
-echo $GIT_SHA
-```
-
-If the values match, your application container images are now built, verified, and ready for Cloud Deploy. 
 
 Click **Next** to proceed.
 

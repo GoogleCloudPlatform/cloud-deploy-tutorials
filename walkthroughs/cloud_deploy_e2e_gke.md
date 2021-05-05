@@ -4,21 +4,17 @@
     >
 </walkthrough-author>
 
-<!-- descriptive tutorial name? --sanderbogdan -->
 # Cloud Deploy: Private Preview
 ## Overview
 This tutorial guides you through setting up and using the Google Cloud Deploy service.
 
 You will create a GCP Project (or use an existing one if you want), to create a complete **test > staging > production** delivery pipeline using Cloud Deploy.
 
-<!-- TODO: We need a graphic/logo/something here for impact. Possibly a graphic of the dev > staging > prod pipeline for emphasis? -->
-
 ### About Cloud Shell
 This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Cloud Deploy. Cloud Shell is an online development and operations environment, accessible anywhere with your browser. 
 
 You can manage your resources with its online terminal, preloaded with utilities such as the `gcloud`, `kubectl`, and more. You can also develop, build, debug, and deploy your cloud-based apps using the online [Cloud Shell Editor](https://ide.cloud.google.com/).
 
-<!-- TODO: Will it? If so, add link -->
 ### Supporting materials
 Estimated Duration:
 <walkthrough-tutorial-duration duration="20"></walkthrough-tutorial-duration>
@@ -44,9 +40,7 @@ If you don't see the Cloud Shell icon in your window, you can click this button 
 Next, you'll download the tutorial code base to your Cloud Shell.
 
 ### Clone the tutorial repository
-<!-- I am wondering if we include this in bootstrap.sh, as we did with the Experiment tutorial? wdybt? --sanderbogdan 
-sgtm --ddorbin
--->
+
 The source code for this tutorial is housed in a git repository. Your Cloud Shell already has `git` pre-installed.
 
 Run the following command to clone the tutorial repository:
@@ -60,7 +54,7 @@ This puts the tutorial source code you'll use into a `tutorial` folder in your C
 Click **Next** to proceed.
 
 ## Deploy tutorial infrastructure
-<!-- I am wondering if we include this in bootstrap.sh, as we did with the Experiment tutorial? wdybt? --sanderbogdan -->
+
 You'll deploy three GKE clusters with the following names into your `{{project-id}}` Project: 
 
 * `test`
@@ -69,12 +63,7 @@ You'll deploy three GKE clusters with the following names into your `{{project-i
 
 _Note_: If you have an existing GKE cluster in `{{project-id}}` with any of these names, you need to select a different project.
 
-<!-- Does the user need to know that it's a VPC, in the context of this tutorial? -->
-These three clusters are deployed into a Virtual Private Cloud in `{{project-id}}`. 
-
-<!-- TODO: A graphic would help this be understood better. Simple squares with VPCs etc -->
-
-Run `bootstrap.sh` in your Cloud Shell to create the GKE clusters and supporting resources:
+These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`. Next, run `bootstrap.sh` in your Cloud Shell to create the GKE clusters and supporting resources:
 
 ```bash
 cd tutorial
@@ -105,13 +94,8 @@ Click **Next** to proceed.
 ## Create tutorial environment
 You're now ready to begin configuring Cloud Deploy.
 
-
-<!-- TODO: Keep this updated depending on the app lifecycle -->
 ### Enable the Cloud Deploy API
-<!-- I am wondering if we include this in bootstrap.sh, as we did with the Experiment tutorial? wdybt? --sanderbogdan -->
-<!-- TODO: This may change or be wholly unneeded. I'm leaving it here for current testing if nothing else --jduncan -->
-<!-- COMMENT: I like the fact that we how how to enable the API programmatically, but perhaps this part of the boostrap.sh? Conversely, the CLI to do this is a bit knotty - hopefully that will be able to simplified forward as well? --sanderbogdan -->
-<!-- COMMENT: yeah, this is just a placeholder until we get to the prod API -->
+
 To enable the Cloud Deploy service and related APIs, run the following command:
 
 ```bash
@@ -128,25 +112,14 @@ Run the following command in Cloud Shell to set a default region for the rest of
 gcloud config set deploy/region $REGION
 ```
 
-This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter.
-
-<!-- COMMENT: I think this should be a pointer to the Cloud Deploy CLI documentation / or perhaps there is a gcloud CLI document regarding common defaults. TODO: follow up on link recommendation with ddorbin@ --sanderbogdan 
-I'm in favor of removing this entirely --ddorbin
-The config we just set is region, which isn't a CD-specific config, so I'm not sure what we're trying to offer with the next sentence.
--->
-The full list of Cloud Deploy configurations is available at [TODO].
-
-You are now ready to deploy your first Cloud Deploy resource in your project.
+This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter. You're now ready to deploy your first Cloud Deploy resource in your project.
 
 Click **Next** to proceed.
 
 ## Create the delivery pipeline
 
 Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
-<!-- COMMENT: May want to reference specific step # here. --sanderbogdan 
-I added that. Look ok? -->
 
-<!-- COMMENT: We can consider adding linkings to the external facing Cloud Deploy resource documentation for Public Preview --sanderbogdan -->
 In this tutorial, you will create a Cloud Deploy _delivery pipeline_ that progresses a web application through three _targets_: `test`, `staging`, and `prod`.
 
 <walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/delivery-pipeline.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to review the delivery pipeline YAML</walkthrough-editor-select-line>
@@ -159,26 +132,35 @@ gcloud alpha deploy apply --file=clouddeploy-config/delivery-pipeline.yaml
 
 Verify the delivery pipeline was created:
 
-<!-- TODO: consider doing a get here instead of list, particularly since we do a list with targets? wdybt? --sanderbogdan -->
 ```bash
-gcloud alpha deploy delivery-pipelines list
+gcloud alpha deploy delivery-pipelines describe web-app
 ```
 
 The output should look like this:
 
 ```terminal
----
-createTime: '2021-04-12T18:34:02.614196898Z'
-description: web-app delivery pipeline
-etag: 2539eacd7f5c256d
-name: projects/your-project/locations/us-central1/deliveryPipelines/web-app
-serialPipeline:
-  stages:
-  - targetId: test
-  - targetId: staging
-  - targetId: prod
-uid: b116d89067e64d7eb63f37fe5e99d1ff
-updateTime: '2021-04-12T18:34:04.936664219Z'
+Delivery Pipeline:
+  createTime: '2021-05-04T20:10:05.892293560Z'
+  description: web-app delivery pipeline
+  etag: 2539eacd7f5c256d
+  name: projects/jduncan-cd-tutorials/locations/us-central1/deliveryPipelines/web-app
+  serialPipeline:
+    stages:
+    - targetId: test
+    - targetId: staging
+    - targetId: prod
+  uid: 1e7225f13eb147ebb0c39752fed2951d
+  updateTime: '2021-05-04T20:10:06.647329907Z'
+Targets:
+- Current Release: projects/jduncan-cd-tutorials/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
+  Last deployment: '2021-05-04T20:33:57.875620Z'
+  Target: test
+- Current Release: projects/jduncan-cd-tutorials/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
+  Last deployment: '2021-05-04T20:16:42.253574Z'
+  Target: staging
+- Current Release: projects/jduncan-cd-tutorials/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
+  Last deployment: '2021-05-04T20:35:58.925137Z'
+  Target: prod
 ```
 
 With your delivery pipeline confirmed, you're ready to create the three _targets_.
@@ -296,7 +278,6 @@ All Cloud Deploy targets for the delivery pipeline have now been created.
 Click **Next** to proceed.
 
 ## Build the Application
-<!-- TODO: We should check with viglesias@ regarding how he wants to position this copy --sanderbogdan -->
 Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
 
 As part of this tutorial, a sample application has been cloned from a [Github repository](https://github.com/GoogleContainerTools/skaffold.git) to your Cloud Shell instance, in the `web` directory. 
@@ -396,8 +377,8 @@ If the values match, your application container images are now built, verified, 
 Click **Next** to proceed.
 
 ## Create a Release
-<!-- TODO: A release, technically, also includes the rendering source and skaffold.yaml; we should somehow weave a statement regarding this into this section, also (IMHO). --sanderbogdan -->
-A Cloud Deploy `release` is a specific version of one or more application images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_).
+
+A Cloud Deploy `release` is a specific version of one or more application images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
 
 Because this is the first release of our application, we'll name it `web-app-001`.
 
@@ -553,9 +534,7 @@ Next, you'll create a user with the proper IAM roles to approve this promotion t
 
 Click **Next** to proceed.
 
-### Defining Approvers through IAM
-
-<!-- TODO - doesn't work in CLI yet -->
+## Defining Approvers
 
 With your user properly enabled, you can now promote your application to your prod Target. 
 
@@ -601,19 +580,14 @@ Your Cloud Deploy workflow approval worked, and your application is now deployed
 
 In the next section you'll roll an application back. 
 
-Click **Next** to proceed.
+Click **Next** to complete this tutorial.
 
-## Rollback
-<!-- TODO: details; create a second release, rollback test target -->
+## Conclusion
 
-## Cloud Deploy Console
-<!-- TODO: Couple short paragraphs, pivot out to review Delivery Pipeline and details in Cloud Console -->
+<walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 
-# Advanced use
-<!-- TODO: review with Jamie/Henry this week -->
+<walkthrough-inline-feedback></walkthrough-inline-feedback>
 
-## Use Skaffold profiles
-<!-- TODO: Helm or Kustomize? Simple sample, similar to the prior Experiment tutorial to demonstrate how to use Skaffold + profiles -->
+Here's what you can do next:
 
-## Notifications
-<!-- TODO: I feel a very simple example, with some post deployment notification message hook that prints a message is good enough. We can use this step's copy to express  -->
+

@@ -133,13 +133,13 @@ The example application source code is in the `web` directory of your Cloud Shel
 
 The `web` directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application.
 
-<walkthrough-editor-select-line filePath="tutorial/web/skaffold.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view the `web-app` `skaffold.yaml`.</walkthrough-editor-select-line>
+<walkthrough-editor-open-file filePath="tutorial/web/skaffold.yaml">Click here to review skaffold.yaml.</walkthrough-editor-open-file>
 
 When deployed, the application images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
 
 ```bash
 cd web/
-skaffold build --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app
+skaffold build --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json
 ```
 
 Confirm the images were successfully pushed to Artifact Registry:
@@ -156,50 +156,23 @@ Listing items under project your-project, location us-central1, repository web-a
   {
     "createTime": "2021-04-15T23:15:15.792959Z",
     "package": "us-central1-docker.pkg.dev/your-project/web-app/leeroy-app",    
-    "tags": "63ec18a",
+    "tags": "v1",
     "updateTime": "2021-04-15T23:15:15.792959Z",
     "version": "sha256:80d8a867b82eb402ebe5b48f972c65c2b4cf7657ab30b03dd7b0b21dfc4a6792"
   },
   {
     "createTime": "2021-04-15T23:15:27.320207Z",
     "package": "us-central1-docker.pkg.dev/your-project/web-app/leeroy-web",
-    "tags": "63ec18a",
+    "tags": "v1",
     "updateTime": "2021-04-15T23:15:27.320207Z",
     "version": "sha256:30c37ef69eaf759b8c151adea99b6e8cdde85a81b073b101fbc593eab98bc102"
   }
 ]
 ```
 
-By default, `skaffold` sets the tag for an image to the short form of the `git` commit ID. You can use this to verify the image being added to a Cloud Deploy `release`.
+By default, `skaffold` sets the tag for an image its related `git` tag if one is available. In this case, a `v1` tag was set on the repository.
 
-### Verify the Application Image
-Run the following `git` command to ensure there were no issues when building or pushing the application image:
-
-```bash
-export GIT_SHA=$(git rev-parse --short HEAD)
-```
-
-This value should match the `tags` value in the Artifact Registry output from above.
-
-```bash
-gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format=value"(package,tags)"
-```
-
-The output should look like this (but with different commit IDs): 
-
-```terminal
-Listing items under project your-project, location us-central1, repository web-app.
-
-us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app      63ec18a
-us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web      63ec18a
-```
-
-You can confirm the output matches the git commit ID.
-```bash
-echo $GIT_SHA
-```
-
-If the values match, your application container images are now built, verified, and ready for Cloud Deploy. 
+Similar information can be found in the `artifacts.json` file that was created by the `skaffold` command. You'll use that file in an upcoming step. <walkthrough-editor-open-file filePath="tutorial/artifacts.json">Click here to review artifacts.json.</walkthrough-editor-open-file>
 
 Click **Next** to proceed.
 
@@ -209,7 +182,7 @@ Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resource
 
 In this tutorial, you will create a Cloud Deploy _delivery pipeline_ that progresses a web application through three _targets_: `test`, `staging`, and `prod`.
 
-<walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/delivery-pipeline.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to review the delivery pipeline YAML</walkthrough-editor-select-line>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/delivery-pipeline.yaml">Click here to review the delivery pipeline YAML</walkthrough-editor-open-file>
  
 The following command creates the `delivery-pipeline` resource using the delivery pipeline YAML file: 
 
@@ -261,7 +234,7 @@ In the tutorial delivery pipeline, the first target is `test`.
 
 You create a `target` by applying a YAML file to Cloud Deploy using `glcoud alpha deploy apply`.
 
-<walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/test-environment.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view the `test` target YAML</walkthrough-editor-select-line>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/test-environment.yaml">Click here to view the `test` target YAML</walkthrough-editor-open-file>
 
 Create the `test` target: 
 
@@ -298,7 +271,7 @@ In this section, you create targets for the `staging` and `prod` clusters. The p
 
 Start by creating the `staging` target.
 
-<walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/staging-environment.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view the `staging` target YAML</walkthrough-editor-select-line>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/staging-environment.yaml">Click here to view the `staging` target YAML</walkthrough-editor-open-file>
 
 Apply the `staging` target definition: 
 
@@ -308,7 +281,7 @@ gcloud alpha deploy apply --file clouddeploy-config/staging-environment.yaml
 
 Repeat the process for the `prod` target.
 
-<walkthrough-editor-select-line filePath="tutorial/clouddeploy-config/prod-environment.yaml" startLine="11" startCharacterOffset="0" endLine="19" endCharacterOffset="99">Click here to view your `prod` target YAML</walkthrough-editor-select-line>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/prod-environment.yaml">Click here to view your `prod` target YAML</walkthrough-editor-open-file>
 
 Apply the `prod` target definition:
 
@@ -373,7 +346,7 @@ Because this is the first release of our application, we'll name it `web-app-001
 Run the following command to create the release:
 
 ```bash
-gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --images leeroy-web=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:${GIT_SHA},leeroy-app=${REGION}-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:${GIT_SHA} --source web/
+gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --build-artifacts artifacts.json
 ```
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.

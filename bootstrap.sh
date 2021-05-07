@@ -48,3 +48,9 @@ rm -rf skaffold
 for template in $(ls $CD_CONFIG_DIR/*.template); do
   envsubst < ${template} > ${template%.*}
 done
+
+source scripts/set_envars.sh
+
+git tag -a v1 -m "version 1 release"
+
+

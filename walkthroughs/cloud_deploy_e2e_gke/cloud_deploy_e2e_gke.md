@@ -102,20 +102,6 @@ This will be used for any additonal Cloud Deploy commands unless you override it
 
 Click **Next** to proceed.
 
-## Enable Staging API
-You're now ready to begin configuring Cloud Deploy.
-
-### Enable the Cloud Deploy API
-
-To enable the Cloud Deploy service and related APIs, run the following command:
-
-```bash
-gcloud config set api_endpoint_overrides/clouddeploy "https://staging-clouddeploy.sandbox.googleapis.com/"
-gcloud services enable staging-clouddeploy.sandbox.googleapis.com --project={{project-id}}
-```
-
-Click **Next** to proceed.
-
 ## Build the Application
 Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
 

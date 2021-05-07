@@ -5,9 +5,6 @@
 # Purpose: to re-set environment variables from gcloud values after a session
 # timeout or other mishap in a Cloud Shell environment.
 
-# this should be removed once we move to the prod API
-gcloud config set api_endpoint_overrides/clouddeploy "https://staging-clouddeploy.sandbox.googleapis.com/"
-
 export PROJECT_ID=$(gcloud config get-value core/project)
 export BACKEND=${PROJECT_ID}-tf-backend
 export REGION=us-central1

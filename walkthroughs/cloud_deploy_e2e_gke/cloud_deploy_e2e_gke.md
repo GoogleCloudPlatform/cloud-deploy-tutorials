@@ -150,19 +150,19 @@ gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-a
 The `--format json` parameter returns the output as JSON for readability. The output should look like this: 
 
 ```terminal
-Listing items under project your-project, location us-central1, repository web-app.
+Listing items under project {{project-id}}, location us-central1, repository web-app.
 
 [
   {
     "createTime": "2021-04-15T23:15:15.792959Z",
-    "package": "us-central1-docker.pkg.dev/your-project/web-app/leeroy-app",    
+    "package": "us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app",    
     "tags": "v1",
     "updateTime": "2021-04-15T23:15:15.792959Z",
     "version": "sha256:80d8a867b82eb402ebe5b48f972c65c2b4cf7657ab30b03dd7b0b21dfc4a6792"
   },
   {
     "createTime": "2021-04-15T23:15:27.320207Z",
-    "package": "us-central1-docker.pkg.dev/your-project/web-app/leeroy-web",
+    "package": "us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web",
     "tags": "v1",
     "updateTime": "2021-04-15T23:15:27.320207Z",
     "version": "sha256:30c37ef69eaf759b8c151adea99b6e8cdde85a81b073b101fbc593eab98bc102"
@@ -258,8 +258,8 @@ etag: 4c7d828d4f7a3b74
 gkeCluster:
   cluster: test
   location: us-central1˜
-  project: your-project
-name: projects/your-project/locations/us-central1/deliveryPipelines/web-app/targets/test
+  project: {{project-id}}
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
 uid: d1d2ca2dc4bf4884a8d16588cfe6d458
 updateTime: '2021-04-15T13:53:31.663277590Z'
 ```
@@ -305,8 +305,8 @@ etag: 9c923d5f1dd88c97
 gkeCluster:
   cluster: staging
   location: us-central1˜
-  project: your-project
-name: projects/your-project/locations/us-central1/deliveryPipelines/web-app/targets/staging
+  project: {{project-id}}
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/staging
 uid: b1a856d72e5d43de817c2ea8380da39b
 updateTime: '2021-04-15T16:44:00.272725580Z'
 ---
@@ -316,8 +316,8 @@ etag: 4c7d828d4f7a3b74
 gkeCluster:
   cluster: test
   location: us-central1˜
-  project: your-project
-name: projects/your-project/locations/us-central1/deliveryPipelines/web-app/targets/test
+  project: {{project-id}}
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
 uid: d1d2ca2dc4bf4884a8d16588cfe6d458
 updateTime: '2021-04-15T13:53:31.663277590Z'
 ---
@@ -327,8 +327,8 @@ etag: ff1840e2d8c3010a
 gkeCluster:
   cluster: prod
   location: us-central1
-  project: your-project
-name: projects/your-project/locations/us-central1/deliveryPipelines/web-app/targets/prod
+  project: {{project-id}}
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/prod
 uid: 0c22c1fb08e546ee9ae569ce501bac95
 updateTime: '2021-04-15T16:44:32.078235982Z'
 ```

@@ -494,7 +494,7 @@ Any Target can require an Approval before a Release promotion can occur. This is
 When you created your prod environment, the configuration was in place to require approvals to this Target. To verify this, run this command and look for the `approvalRequired` parameter.
 
 ```bash
-$ gcloud alpha deploy targets describe prod --delivery-pipeline web-app
+gcloud alpha deploy targets describe prod --delivery-pipeline web-app
 ```
 
 Your output should look similar to this: 
@@ -538,9 +538,54 @@ Click **Next** to proceed.
 
 ## Defining Approvers
 
+Cloud Deploy is designed to integrate with multiple personas within an IT organization. For the product owner or team lead who approves production changes, there's a special IAM Role that can be bound to users and service accounts to give them the capability to approve pipeline promotions. 
 
+Due to the nature of this one-person tutorial, we're not going to actually use another account to approve the process. But we will walk through creating a service account and binding it to the `clouddeploy.approver` role.
 
-### Deploying to Prod
+First, create a new service account. 
+
+```bash
+gcloud iam service-accounts create pipeline-approver --display-name 'Web-App Pipeline Approver'
+```
+
+Confirm your new Service Account was created. 
+
+```bash
+gcloud iam service-accounts list
+```
+
+Your output should include your new Approver Service Account as well as Service Accounts for each GKE cluster that were created with the bootstrap process. Note the `EMAIL` address for your new Approver service account. You'll need it in the next step.
+
+```terminal
+DISPLAY NAME                            EMAIL                                                           DISABLED
+Cluster Service Account for test        tf-sa-test@jduncan-cd-tutorials.iam.gserviceaccount.com         False
+Cluster Service Account for prod        tf-sa-prod@jduncan-cd-tutorials.iam.gserviceaccount.com         False
+Cluster Service Account for staging     tf-sa-staging@jduncan-cd-tutorials.iam.gserviceaccount.com      False
+Web-App Pipeline Approver               pipeline-approver@jduncan-cd-tutorials.iam.gserviceaccount.com  False
+Compute Engine default service account  619472186817-compute@developer.gserviceaccount.com              False
+```
+
+Service Accounts are used by CI tools like [Cloud Build](https://cloud.google.com/build) and [Jenkins](https://www.jenkins.io/) to interact programatically with GCP. This is a typical workflow for anyone integrating Cloud Deploy into their CI/CD toolchain.
+
+To bind the `clouddeploy.approver` role to your new Service Account, run this command. 
+
+```bash
+gcloud projects add-iam-policy-binding jduncan-cd-tutorials --member=serviceAccount:pipeline-approver@jduncan-cd-tutorials.iam.gserviceaccount.com --role=roles/clouddeploy.approver
+```
+
+In the long output, you should notice this output. 
+
+```terminal
+- members:
+  - serviceAccount:pipeline-approver@jduncan-cd-tutorials.iam.gserviceaccount.com
+  role: roles/clouddeploy.approver
+```
+
+In the next section you'll promote your application to your prod Target.
+
+Click **Next** to proceed.
+
+## Deploying to Prod
 
 To approve your application and promote it to your prod Target, use this command: 
 
@@ -578,13 +623,11 @@ kubectl get pod -n default
 
 Your Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster.
 
-In the next section you'll roll an application back. 
-
 Click **Next** to complete this tutorial.
 
 ## Conclusion
 
-Thank you for taking the time to get to know the Cloud Deploy tool from Google Cloud!
+Thank you for taking the time to get to know the Cloud Deploy tool from Google Cloud! 
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 

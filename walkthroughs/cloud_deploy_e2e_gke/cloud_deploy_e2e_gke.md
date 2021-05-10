@@ -139,7 +139,8 @@ When deployed, the application images are named `leeroy-web` and `leeroy-app`. T
 
 ```bash
 cd web/
-skaffold build --interactive=false --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json
+skaffold build --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json
+cd ..
 ```
 
 Confirm the images were successfully pushed to Artifact Registry:
@@ -346,7 +347,9 @@ Because this is the first release of our application, we'll name it `web-app-001
 Run the following command to create the release:
 
 ```bash
+cd web/
 gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --build-artifacts artifacts.json
+cd ..
 ```
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.
@@ -363,7 +366,8 @@ Your output should look similar to this:
 ---
 buildArtifacts:
 - imageName: leeroy-app
-  tag: 'us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:'- imageName: leeroy-web
+  tag: 'us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:'
+- imageName: leeroy-web
   tag: 'us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:'
 createTime: '2021-04-29T00:30:59.672965025Z'deliveryPipelineSnapshot:
   createTime: '1970-01-01T00:00:30.486775Z'
@@ -476,10 +480,14 @@ Target:
 Go ahead and promote your application to your prod Target with this command 
 
 ```bash
-gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001 --to-target prod
 ```
 
 When you look at your rollouts for `web-app-001`, you'll notice that the promotion to prod has a `PENDING_APPROVAL` status.
+
+```bash
+gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+```
 
 ```terminal
 approvalState: NEEDS_APPROVAL

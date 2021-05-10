@@ -170,7 +170,7 @@ Listing items under project {{project-id}}, location us-central1, repository web
 ]
 ```
 
-By default, `skaffold` sets the tag for an image its related `git` tag if one is available. In this case, a `v1` tag was set on the repository.
+By default, `skaffold` sets the tag for an image to its related `git` tag if one is available. In this case, a `v1` tag was set on the repository.
 
 Similar information can be found in the `artifacts.json` file that was created by the `skaffold` command. You'll use that file in an upcoming step. <walkthrough-editor-open-file filePath="tutorial/artifacts.json">Click here to review artifacts.json.</walkthrough-editor-open-file>
 

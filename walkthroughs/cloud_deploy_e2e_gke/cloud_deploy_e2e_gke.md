@@ -139,7 +139,7 @@ When deployed, the application images are named `leeroy-web` and `leeroy-app`. T
 
 ```bash
 cd web/
-skaffold build --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json
+skaffold build --interactive=false --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json
 ```
 
 Confirm the images were successfully pushed to Artifact Registry:

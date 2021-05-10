@@ -203,7 +203,7 @@ Delivery Pipeline:
   createTime: '2021-05-04T20:10:05.892293560Z'
   description: web-app delivery pipeline
   etag: 2539eacd7f5c256d
-  name: projects/jduncan-cd-tutorials/locations/us-central1/deliveryPipelines/web-app
+  name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app
   serialPipeline:
     stages:
     - targetId: test
@@ -212,13 +212,13 @@ Delivery Pipeline:
   uid: 1e7225f13eb147ebb0c39752fed2951d
   updateTime: '2021-05-04T20:10:06.647329907Z'
 Targets:
-- Current Release: projects/jduncan-cd-tutorials/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
+- Current Release: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
   Last deployment: '2021-05-04T20:33:57.875620Z'
   Target: test
-- Current Release: projects/jduncan-cd-tutorials/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
+- Current Release: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
   Last deployment: '2021-05-04T20:16:42.253574Z'
   Target: staging
-- Current Release: projects/jduncan-cd-tutorials/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
+- Current Release: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
   Last deployment: '2021-05-04T20:35:58.925137Z'
   Target: prod
 ```
@@ -517,10 +517,10 @@ Your output should include your new Approver Service Account as well as Service 
 
 ```terminal
 DISPLAY NAME                            EMAIL                                                           DISABLED
-Cluster Service Account for test        tf-sa-test@jduncan-cd-tutorials.iam.gserviceaccount.com         False
-Cluster Service Account for prod        tf-sa-prod@jduncan-cd-tutorials.iam.gserviceaccount.com         False
-Cluster Service Account for staging     tf-sa-staging@jduncan-cd-tutorials.iam.gserviceaccount.com      False
-Web-App Pipeline Approver               pipeline-approver@jduncan-cd-tutorials.iam.gserviceaccount.com  False
+Cluster Service Account for test        tf-sa-test@{{project-id}}.iam.gserviceaccount.com         False
+Cluster Service Account for prod        tf-sa-prod@{{project-id}}.iam.gserviceaccount.com         False
+Cluster Service Account for staging     tf-sa-staging@{{project-id}}.iam.gserviceaccount.com      False
+Web-App Pipeline Approver               pipeline-approver@{{project-id}}.iam.gserviceaccount.com  False
 Compute Engine default service account  619472186817-compute@developer.gserviceaccount.com              False
 ```
 
@@ -529,14 +529,14 @@ Service Accounts are used by CI tools like [Cloud Build](https://cloud.google.co
 To bind the `clouddeploy.approver` role to your new Service Account, run this command. 
 
 ```bash
-gcloud projects add-iam-policy-binding jduncan-cd-tutorials --member=serviceAccount:pipeline-approver@jduncan-cd-tutorials.iam.gserviceaccount.com --role=roles/clouddeploy.approver
+gcloud projects add-iam-policy-binding {{project-id}} --member=serviceAccount:pipeline-approver@{{project-id}}.iam.gserviceaccount.com --role=roles/clouddeploy.approver
 ```
 
 In the long output, you should notice this output. 
 
 ```terminal
 - members:
-  - serviceAccount:pipeline-approver@jduncan-cd-tutorials.iam.gserviceaccount.com
+  - serviceAccount:pipeline-approver@{{project-id}}.iam.gserviceaccount.com
   role: roles/clouddeploy.approver
 ```
 

@@ -15,9 +15,8 @@ This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to confi
 
 You can manage your resources with its online terminal, preloaded with utilities such as the `gcloud`, `kubectl`, and more. You can also develop, build, debug, and deploy your cloud-based apps using the online [Cloud Shell Editor](https://ide.cloud.google.com/).
 
-### Supporting materials
 Estimated Duration:
-<walkthrough-tutorial-duration duration="20"></walkthrough-tutorial-duration>
+<walkthrough-tutorial-duration duration="45"></walkthrough-tutorial-duration>
 
 Click **Start** to proceed.
 
@@ -31,25 +30,11 @@ _We recommend you create a new project for this tutorial. You may experience und
 Click **Next** to proceed.
 
 ## Prepare Cloud Shell
-You'll use Cloud Shell for this tutorial. Open Cloud Shell in your browser by clicking the Cloud Shell icon <walkthrough-cloud-shell-icon></walkthrough-cloud-shell-icon>. 
+You'll use Cloud Shell for this tutorial. Clicking the button below will open Cloud Shell, clone the sample code repository, and open the tutorial code in the same window. 
 
-If you don't see the Cloud Shell icon in your window, you can click this button to open it:
+If you've already completed this step, click **Next**.
 
-<walkthrough-open-cloud-shell-button></walkthrough-open-cloud-shell-button>
-
-Next, you'll download the tutorial code base to your Cloud Shell.
-
-### Clone the tutorial repository
-
-The source code for this tutorial is housed in a git repository. Your Cloud Shell already has `git` pre-installed.
-
-Run the following command to clone the tutorial repository:
-
-```bash
-git clone -b v0.0.3 https://source.developers.google.com/p/cloud-deploy-preview/r/tutorial
-```
-
-This puts the tutorial source code you'll use into a `tutorial` folder in your Cloud Shell home directory.
+[![Setup Cloud Shell](images/setup.png)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/cloud-deploy-preview/r/tutorial&cloudshell_git_branch=v0.0.2&cloudshell_workspace=.&cloudshell_tutorial=walkthroughs/cloud_deploy_e2e_gke/cloud_deploy_e2e_gke.md)
 
 Click **Next** to proceed.
 

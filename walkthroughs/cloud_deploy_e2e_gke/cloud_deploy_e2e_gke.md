@@ -139,7 +139,7 @@ When deployed, the application images are named `leeroy-web` and `leeroy-app`. T
 
 ```bash
 cd web/
-skaffold build --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json
+skaffold build --interactive=false --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json
 cd ..
 ```
 
@@ -258,7 +258,7 @@ description: test cluster
 etag: 4c7d828d4f7a3b74
 gkeCluster:
   cluster: test
-  location: us-central1˜
+  location: us-central1
   project: {{project-id}}
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
 uid: d1d2ca2dc4bf4884a8d16588cfe6d458
@@ -305,7 +305,7 @@ description: staging cluster
 etag: 9c923d5f1dd88c97
 gkeCluster:
   cluster: staging
-  location: us-central1˜
+  location: us-central1
   project: {{project-id}}
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/staging
 uid: b1a856d72e5d43de817c2ea8380da39b
@@ -316,7 +316,7 @@ description: test cluster
 etag: 4c7d828d4f7a3b74
 gkeCluster:
   cluster: test
-  location: us-central1˜
+  location: us-central1
   project: {{project-id}}
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
 uid: d1d2ca2dc4bf4884a8d16588cfe6d458

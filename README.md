@@ -1,4 +1,4 @@
-# Cloud Deploy (Experiment)
+# Cloud Deploy Tutorials
 Copyright Google LLC 2020
 
 Google Confidential, Pre-GA Offering for Google Cloud Platform (see https://cloud.google.com/terms/service-terms)
@@ -7,24 +7,17 @@ Google Confidential, Pre-GA Offering for Google Cloud Platform (see https://clou
 
 This repository contains content and functionality to help you try out the Cloud Deploy service. Currently, this service is not intended for production workloads -— do not use it for any live applications.
 
-## Internal Testing
+## Getting Started
 
-_NOTE_: This method is only for MAD Team internal testing. This is not how the application will be delivered to users for Private Preview or beyond.
+1. Click the graphic below. This will open up and configure your Cloud Shell environment.
 
-To test out the Cloud Deploy tutorial at any time, follow these instructions:
+[![Open ](images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/cloud-deploy-preview/r/tutorial&cloudshell_git_branch=v0.0.2&cloudshell_workspace=.&cloudshell_open_in_editor=README.md)
 
-* Open Cloud Shell in your browser.
-* Go to https://clouddeploy.googlesource.com/new-password and follow the instructions to add an authentication cookie to your Cloud Shell instance.
-* Clone the repository:
-  ```bash
-  git clone https://clouddeploy.googlesource.com/tutorial
-  ```
-* Launch the tutorial window:
-  ```bash
-  teachme tutorial/walkthroughs/cloud_deploy_e2e_gke/cloud_deploy_e2e_gke.md
-  ```
+2. Run the following command to open up the tutorial pane in your window. 
 
-The tutorial window should open in your browser tab on the right side. From that, read and follow the instructions in your Cloud Shell window.
+    ```bash
+    teachme walkthroughs/cloud_deploy_e2e_gke/cloud_deploy_e2e_gke.md
+    ```
 
 ### Issues accessing the tutorial
 

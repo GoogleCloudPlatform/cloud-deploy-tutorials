@@ -11,7 +11,7 @@ This repository contains content and functionality to help you try out the Cloud
 
 1. Click the graphic below. This will open up and configure your Cloud Shell environment.
 
-[![Open ](images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/cloud-deploy-preview/r/tutorial&cloudshell_git_branch=v0.0.2&cloudshell_workspace=.&cloudshell_open_in_editor=README.md)
+[![Open ](images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/cloud-deploy-preview/r/tutorial&cloudshell_git_branch=v0.0.3&cloudshell_workspace=.&cloudshell_open_in_editor=README.md)
 
 2. Run the following command to open up the tutorial pane in your window. 
 

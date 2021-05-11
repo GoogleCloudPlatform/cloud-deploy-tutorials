@@ -46,7 +46,7 @@ The source code for this tutorial is housed in a git repository. Your Cloud Shel
 Run the following command to clone the tutorial repository:
 
 ```bash
-git clone https://clouddeploy.googlesource.com/tutorial
+git clone -b v0.0.3 https://source.developers.google.com/p/cloud-deploy-preview/r/tutorial
 ```
 
 This puts the tutorial source code you'll use into a `tutorial` folder in your Cloud Shell home directory.

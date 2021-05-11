@@ -347,9 +347,7 @@ Because this is the first release of our application, we'll name it `web-app-001
 Run the following command to create the release:
 
 ```bash
-cd web/
-gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --build-artifacts artifacts.json
-cd ..
+gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --build-artifacts web/artifacts.json --source web/
 ```
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.

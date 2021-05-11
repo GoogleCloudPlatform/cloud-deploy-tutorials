@@ -14,11 +14,9 @@ export PROJECT_ID=$(gcloud config get-value core/project)
 export BACKEND=${PROJECT_ID}-tf-backend
 export REGION=us-central1
 
-sed "s/bucket=.*/bucket=\"$BACKEND\"/g" backend.tmpl > backend.tf
+sed "s/bucket=.*/bucket=\"$BACKEND\"/g" main.tmpl > main.tf
 gsutil mb gs://${BACKEND} || true
 
-# if we're going to enable the needed APIs above, we don't need to perform the same work in TF
-# b/184063019
 terraform init
 terraform plan -out=terraform.tfplan  -var="project_id=${PROJECT_ID}" -var="region=${REGION}"
 terraform apply -auto-approve terraform.tfplan 

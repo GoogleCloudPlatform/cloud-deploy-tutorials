@@ -12,7 +12,7 @@ cd ..
 rm -rf ./web
 rm -rf ./web-helm
 rm -rf tf/.terrafor*
-rm -rf tf/backend.tf
+rm -rf tf/main.tf
 rm -rf tf/terraform.tfstat*
 rm -rf tf/terraform.tfplan
 rm -rf confi* && mkdir config

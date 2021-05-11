@@ -7,7 +7,7 @@ crash.log
 *tfplan*
 
 # Ignore generated files
-backend.tf
+main.tf
 
 # Ignore cloned directories
 web

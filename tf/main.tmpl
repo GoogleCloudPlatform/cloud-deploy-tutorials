@@ -1,0 +1,32 @@
+/**
+ * Copyright Google LLC 2020
+ * Google Confidential, Pre-GA Offering for Google Cloud Platform
+ * (see https://cloud.google.com/terms/service-terms)
+ */
+
+terraform {
+  backend "gcs" {
+    bucket="{{BACKEND_BUCKET}}"
+    prefix="foundation"
+  }
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 3.64.0"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 3.64.0"
+    }
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+provider "google-beta" {
+  project = var.project_id
+  region  = var.region
+}

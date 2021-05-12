@@ -57,7 +57,7 @@ Click **Next** to proceed.
 
 You'll deploy three GKE clusters with the following names into your `{{project-id}}` Project: 
 
-* `test`
+* `test` (often referred to as `dev`)
 * `staging`
 * `prod`
 
@@ -109,29 +109,11 @@ As part of this tutorial, a sample application has been cloned from a [Github re
 
 In this section, you'll build that application image so you can progress it through the `webapp` delivery pipeline.
 
-### Configure Artifact Registry authentication
-Google Cloud's Artifact Registry was enabled as part of this tutorial. To push a container image to the registry, you need to enable the `docker` daemon so you can log in to Artifact Registry using your active SDK authentication token. 
-
-The commands below allow your user to run `docker` commands on Cloud Shell and also configure the local `docker` daemon to authenticate using `gcloud` for your Artifact Registry domain.
-
-```bash
-sudo usermod -a -G docker ${USER}
-gcloud auth configure-docker ${REGION}-docker.pkg.dev
-```
-
-Authenticate to Artifact Registry: 
-
-```bash
-docker login ${REGION}-docker.pkg.dev
-```
-
-This allows `skaffold` to push your image to Artifact Registry.
-
 ### Build with Skaffold
 
 The example application source code is in the `web` directory of your Cloud Shell instance. It's a simple web app that listens to a port, provides an HTTP response code and adds a log entry.
 
-The `web` directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application.
+The `web` directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application. This configuration uses the [Cloud Build](https://cloud.google.com/build) service to build the container images for your applications.
 
 <walkthrough-editor-open-file filePath="tutorial/web/skaffold.yaml">Click here to review skaffold.yaml.</walkthrough-editor-open-file>
 
@@ -183,7 +165,7 @@ Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resource
 
 In this tutorial, you will create a Cloud Deploy _delivery pipeline_ that progresses a web application through three _targets_: `test`, `staging`, and `prod`.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/delivery-pipeline.yaml">Click here to review the delivery pipeline YAML</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/delivery-pipeline.yaml">Click here to view delivery-pipeline.yaml</walkthrough-editor-open-file>
  
 The following command creates the `delivery-pipeline` resource using the delivery pipeline YAML file: 
 
@@ -212,16 +194,7 @@ Delivery Pipeline:
     - targetId: prod
   uid: 1e7225f13eb147ebb0c39752fed2951d
   updateTime: '2021-05-04T20:10:06.647329907Z'
-Targets:
-- Current Release: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
-  Last deployment: '2021-05-04T20:33:57.875620Z'
-  Target: test
-- Current Release: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
-  Last deployment: '2021-05-04T20:16:42.253574Z'
-  Target: staging
-- Current Release: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
-  Last deployment: '2021-05-04T20:35:58.925137Z'
-  Target: prod
+Targets:[]
 ```
 
 With your delivery pipeline confirmed, you're ready to create the three _targets_.
@@ -235,7 +208,7 @@ In the tutorial delivery pipeline, the first target is `test`.
 
 You create a `target` by applying a YAML file to Cloud Deploy using `glcoud alpha deploy apply`.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/test-environment.yaml">Click here to view the `test` target YAML</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/test-environment.yaml">Click here to view the test-environment.yaml</walkthrough-editor-open-file>
 
 Create the `test` target: 
 
@@ -272,7 +245,7 @@ In this section, you create targets for the `staging` and `prod` clusters. The p
 
 Start by creating the `staging` target.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/staging-environment.yaml">Click here to view the `staging` target YAML</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/staging-environment.yaml">Click here to view staging-environment.yaml</walkthrough-editor-open-file>
 
 Apply the `staging` target definition: 
 
@@ -282,7 +255,7 @@ gcloud alpha deploy apply --file clouddeploy-config/staging-environment.yaml
 
 Repeat the process for the `prod` target.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/prod-environment.yaml">Click here to view your `prod` target YAML</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/prod-environment.yaml">Click here to view prod-environment.yaml</walkthrough-editor-open-file>
 
 Apply the `prod` target definition:
 
@@ -586,7 +559,19 @@ kubectx prod
 kubectl get pod -n default
 ```
 
-Your Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster.
+Your Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial. 
+
+Click **Next** to proceed.
+
+## Cleaning Up
+
+To clean up your GKE Targets and other resources, run the provided cleanup script.
+
+```bash
+./cleanup.sh
+```
+
+This will remove the GCP resources as well as the artifacts on your Cloud Shell instance. It may take a few minutes to complete.
 
 Click **Next** to complete this tutorial.
 

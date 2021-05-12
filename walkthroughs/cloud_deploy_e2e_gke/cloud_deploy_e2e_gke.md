@@ -503,6 +503,8 @@ Compute Engine default service account  619472186817-compute@developer.gservicea
 
 Service Accounts are used by CI tools like [Cloud Build](https://cloud.google.com/build) and [Jenkins](https://www.jenkins.io/) to interact programatically with GCP. This is a typical workflow for anyone integrating Cloud Deploy into their CI/CD toolchain.
 
+### Add Approval Permissions
+
 To bind the `clouddeploy.approver` role to your new Service Account, run this command. 
 
 ```bash

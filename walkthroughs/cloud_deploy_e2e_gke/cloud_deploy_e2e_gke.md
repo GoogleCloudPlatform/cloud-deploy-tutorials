@@ -95,7 +95,7 @@ Default Cloud Deploy parameters can be configured with `gcloud` to avoid typing 
 Run the following command in Cloud Shell to set a default region for the rest of the commands in this tutorial: 
 
 ```bash
-gcloud config set deploy/region $REGION
+gcloud config set deploy/region $(gcloud config get-value compute/region)
 ```
 
 This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter. In the next section you'll use `skaffold` to build your sample application.
@@ -120,15 +120,13 @@ The `web` directory contains `skaffold.yaml`, which contains instructions for `s
 When deployed, the application images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
 
 ```bash
-cd web/
-skaffold build --interactive=false --default-repo ${REGION}-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json
-cd ..
+skaffold build --interactive=false --default-repo $(gcloud config get-value compute/region)-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json --source web/
 ```
 
 Confirm the images were successfully pushed to Artifact Registry:
 
 ```bash
-gcloud artifacts docker images list ${REGION}-docker.pkg.dev/${PROJECT_ID}/web-app --include-tags --format json
+gcloud artifacts docker images list $(gcloud config get-value compute/region)-docker.pkg.dev/$(gcloud config get-value project)/web-app --include-tags --format json
 ```
 The `--format json` parameter returns the output as JSON for readability. The output should look like this: 
 

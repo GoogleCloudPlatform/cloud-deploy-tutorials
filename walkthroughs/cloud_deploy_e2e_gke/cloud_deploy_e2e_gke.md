@@ -51,7 +51,7 @@ _Note_: If you have an existing GKE cluster in `{{project-id}}` with any of thes
 These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`. Next, run `bootstrap.sh` in your Cloud Shell to create the GKE clusters and supporting resources:
 
 ```bash
-cd tutorial
+cd clouddeploy-tutorials
 ./bootstrap.sh
 ```
 

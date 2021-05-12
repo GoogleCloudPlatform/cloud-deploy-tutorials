@@ -6,9 +6,9 @@
 
 # Cloud Deploy: Private Preview
 ## Overview
-This tutorial guides you through setting up and using the Google Cloud Deploy service.
+This tutorial guides you through setting up and using the Google [Cloud Deploy](https://console.cloud.google.com/deploy) service.
 
-You will create a GCP Project (or use an existing one if you want), to create a complete **test > staging > production** delivery pipeline using Cloud Deploy.
+You'll create a GCP Project (or use an existing one if you want), to create a complete **test > staging > production** delivery pipeline using Cloud Deploy.
 
 ### About Cloud Shell
 This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Cloud Deploy. Cloud Shell is an online development and operations environment, accessible anywhere with your browser. 
@@ -144,9 +144,7 @@ Click **Next** to proceed.
 
 ## Create the delivery pipeline
 
-Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
-
-In this tutorial, you will create a Cloud Deploy _delivery pipeline_ that progresses a web application through three _targets_: `test`, `staging`, and `prod`.
+In this tutorial, you will create a Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`. Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
 
 <walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/delivery-pipeline.yaml">Click here to view delivery-pipeline.yaml</walkthrough-editor-open-file>
  
@@ -180,14 +178,17 @@ Delivery Pipeline:
 Targets:[]
 ```
 
+You can also see the [details for your delivery pipeline](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app?project={{project-id}}) in the GCP control panel.
+
 With your delivery pipeline confirmed, you're ready to create the three _targets_.
 
 Click **Next** to proceed.
 
-## Create the test target
+## Test target
+
 In Cloud Deploy, a _target_ represents a GKE cluster where an application can be deployed as part of a delivery pipeline.
 
-In the tutorial delivery pipeline, the first target is `test`. 
+In the tutorial delivery pipeline, the first target is `test`.
 
 You create a `target` by applying a YAML file to Cloud Deploy using `glcoud alpha deploy apply`.
 
@@ -220,6 +221,8 @@ name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/ta
 uid: d1d2ca2dc4bf4884a8d16588cfe6d458
 updateTime: '2021-04-15T13:53:31.663277590Z'
 ```
+
+You can also view [details for your Target](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/targets/test?project={{project-id}) in the GCP control panel. 
 
 Click **Next** to proceed.
 
@@ -335,26 +338,15 @@ createTime: '2021-04-29T00:30:59.672965025Z'deliveryPipelineSnapshot:
     - targetId: prod
 ```
 
+You can also view [Release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/releases/web-app?project={{project-id}) in the GCP control panel.
+
 With your release created, it's time to promote your application through your environments. 
 
 Click **Next** to proceed.
 
 ## Promoting Applications
 
-With your release created, you can promote your application to your `test` Target GKE cluster. To promote your `web-app-001` release, run the following command:
-
-```bash
-gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001 --to-target test
-```
-Your output should look similar to this: 
-
-```terminal
-rollout:
-  rollout: web-app-001-to-test-0002
-  target: test
-```
-
-The promotion command should return quickly. But your actual application deployment may take a few minutes to your GKE cluster because it has to download your application images from your Artifact Registry. To confirm your promotion was successful, run the following command:
+With your release created, you can promote your application. When the Release was created in the previous step, it automatically promoted your application to the initial Target. To confirm your `test` Target has your application deployed, run the following command:
 
 ```bash
 gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001

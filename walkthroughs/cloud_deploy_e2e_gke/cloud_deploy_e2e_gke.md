@@ -105,7 +105,7 @@ The `web` directory contains `skaffold.yaml`, which contains instructions for `s
 When deployed, the application images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
 
 ```bash
-skaffold build --interactive=false --default-repo $(gcloud config get-value compute/region)-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json --source web/
+cd web && skaffold build --interactive=false --default-repo $(gcloud config get-value compute/region)-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json && cd ..
 ```
 
 Confirm the images were successfully pushed to Artifact Registry:

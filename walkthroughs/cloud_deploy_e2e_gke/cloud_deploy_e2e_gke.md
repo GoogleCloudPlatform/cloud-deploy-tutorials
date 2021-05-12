@@ -34,7 +34,7 @@ You'll use Cloud Shell for this tutorial. Clicking the button below will open Cl
 
 If you've already completed this step, click **Next**.
 
-[![Setup Cloud Shell](images/setup.png)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/cloud-deploy-preview/r/tutorial&cloudshell_git_branch=v0.0.2&cloudshell_workspace=.&cloudshell_tutorial=walkthroughs/cloud_deploy_e2e_gke/cloud_deploy_e2e_gke.md)
+[![Setup Cloud Shell](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/setup.png)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/clouddeploy-preview/r/clouddeploy-tutorials&cloudshell_git_branch=release-1.0&cloudshell_workspace=.&cloudshell_tutorial=walkthroughs/cloud_deploy_e2e_gke/cloud_deploy_e2e_gke.md)
 
 Click **Next** to proceed.
 

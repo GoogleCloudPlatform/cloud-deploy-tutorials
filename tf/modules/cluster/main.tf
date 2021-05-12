@@ -47,7 +47,7 @@ module "delivery_platform_cluster" {
   ip_range_services      = var.ip_range_services
   kubernetes_version     = var.gke_kubernetes_version
   release_channel        = var.release_channel
-  regional               = false
+  regional               = true
   enable_private_nodes   = true
 
   enable_binary_authorization = false

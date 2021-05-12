@@ -5,7 +5,7 @@
  */
 
 locals {
-  cluster_type = "zonal"
+  cluster_type = "regional"
 }
 
 module "cluster-test" {

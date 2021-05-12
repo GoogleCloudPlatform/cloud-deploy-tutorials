@@ -1,5 +1,5 @@
 apiVersion: cloudDeploy/beta1
-kind: delivery-pipeline
+kind: deliveryPipeline
 name: web-app
 description: web-app delivery pipeline
 serialPipeline:
@@ -11,7 +11,7 @@ serialPipeline:
 apiVersion: cloudDeploy/beta1
 kind: target
 name: test
-delivery-pipeline: web-app
+deliveryPipeline: web-app
 description: test cluster
 gkeCluster:
   project: ${PROJECT_ID}
@@ -21,7 +21,7 @@ gkeCluster:
 apiVersion: cloudDeploy/beta1
 kind: target
 name: staging
-delivery-pipeline: web-app
+deliveryPipeline: web-app
 description: staging cluster
 gkeCluster:
   project: ${PROJECT_ID}
@@ -31,7 +31,7 @@ gkeCluster:
 apiVersion: cloudDeploy/beta1
 kind: target
 name: prod
-delivery-pipeline: web-app
+deliveryPipeline: web-app
 description: prod cluster
 approvalRequired: true
 gkeCluster:

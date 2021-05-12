@@ -1,5 +1,5 @@
 apiVersion: cloudDeploy/beta1
-kind: delivery-pipeline
+kind: deliveryPipeline
 name: web-app
 description: web-app delivery pipeline
 serialPipeline:

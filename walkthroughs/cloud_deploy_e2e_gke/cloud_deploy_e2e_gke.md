@@ -52,7 +52,7 @@ These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`
 
 ```bash
 cd tutorial
-./bootstrap.sh && source scripts/set_envars.sh
+./bootstrap.sh
 ```
 
 This might take a few minutes to run. 

@@ -11,7 +11,7 @@ cd ..
 
 rm -rf ./web
 rm -rf ./web-helm
-rm -rf tf/.terrafor*
+rm -rf tf/.terraform
 rm -rf tf/main.tf
 rm -rf tf/terraform.tfstat*
 rm -rf tf/terraform.tfplan

@@ -2,53 +2,97 @@
 # Google Confidential, Pre-GA Offering for Google Cloud Platform 
 # (see https://cloud.google.com/terms/service-terms)
 
-CD_CONFIG_DIR=clouddeploy-config
+# Standard functions begin with manage or run.
+# Walkthrough-specific functions begin with the abbreviation for 
+# that walkthrough
+# Current walkthroughs: 
+# e2e - End-to-end (aka primary) walkthrough
 
-echo Enabling GCP APIs, please wait...
-gcloud services enable storage.googleapis.com
-gcloud services enable compute.googleapis.com
-gcloud services enable artifactregistry.googleapis.com
+ROOT_DIR=$(git rev-parse --show-toplevel)
+CD_CONFIG_DIR=$ROOT_DIR/clouddeploy-config
+TF_DIR=$ROOT_DIR/tf
 
-cd tf
-export PROJECT_ID=$(gcloud config get-value core/project)
-export BACKEND=${PROJECT_ID}-tf-backend
-export REGION=us-central1
+PROJECT_ID=$(gcloud config get-value core/project)
+BACKEND=$PROJECT_ID-tf-backend
+REGION=us-central1
+GCLOUD_CONFIG=clouddeploy
 
-sed "s/bucket=.*/bucket=\"$BACKEND\"/g" main.tmpl > main.tf
-gsutil mb gs://${BACKEND} || true
+manage_apis() {
+    # Enables any APIs that we need prior to Terraform being run
 
-terraform init
-terraform plan -out=terraform.tfplan  -var="project_id=${PROJECT_ID}" -var="region=${REGION}"
-terraform apply -auto-approve terraform.tfplan 
+    echo "Enabling GCP APIs, please wait..."
+    gcloud services enable storage.googleapis.com
+    gcloud services enable compute.googleapis.com
+    gcloud services enable artifactregistry.googleapis.com  
+}
 
-gcloud config set compute/region ${REGION}
-gcloud config set deploy/region ${REGION}
+manage_configs() {
+    # Sets any SDK configs and ensures they'll persist across
+    # Cloud Shell sessions
 
-gcloud container clusters get-credentials test --region ${REGION}
-kubectl config delete-context test
-kubectl config rename-context gke_${PROJECT_ID}_${REGION}_test test
+    echo "Creating persistent Cloud Shell configuration"
+    SHELL_RC=$HOME/.$(basename $SHELL)rc
+    echo export CLOUDSDK_CONFIG=$HOME/.gcloud >> $SHELL_RC
 
-gcloud container clusters get-credentials staging --region ${REGION}
-kubectl config delete-context staging
-kubectl config rename-context gke_${PROJECT_ID}_${REGION}_staging staging
+    gcloud config configurations create $GCLOUD_CONFIG
 
-gcloud container clusters get-credentials prod --region ${REGION}
-kubectl config delete-context prod
-kubectl config rename-context gke_${PROJECT_ID}_${REGION}_prod prod
+    gcloud config set project $PROJECT_ID
+    gcloud config set compute/region $REGION
+}
 
-cd ..
+run_terraform() {
+    # Terraform workflows
 
-# Clone Sample Repo
-git -c advice.detachedHead=false clone https://github.com/GoogleContainerTools/skaffold.git -b v1.14.0
-mv skaffold/examples/microservices/ ./web
-rm -rf skaffold
+    cd $TF_DIR
 
-for template in $(ls $CD_CONFIG_DIR/*.template); do
-  envsubst < ${template} > ${template%.*}
-done
+    sed "s/bucket=.*/bucket=\"$BACKEND\"/g" main.template > main.tf
+    gsutil mb gs://${BACKEND} || true
 
-cp $CD_CONFIG_DIR/skaffold.yaml web/
+    terraform init
+    terraform plan -out=terraform.tfplan  -var="project_id=$PROJECT_ID" -var="region=$REGION"
+    terraform apply -auto-approve terraform.tfplan
+}
 
-git tag -a v1 -m "version 1 release"
+manage_gke_contexts() {
+    # Ensures GKE cluster contexts are isntalled as easy to use names
 
+    echo "Setting GKE contexts"
+    gcloud container clusters get-credentials test --region ${REGION}
+    kubectl config delete-context test
+    kubectl config rename-context gke_${PROJECT_ID}_${REGION}_test test
+
+    gcloud container clusters get-credentials staging --region ${REGION}
+    kubectl config delete-context staging
+    kubectl config rename-context gke_${PROJECT_ID}_${REGION}_staging staging
+
+    gcloud container clusters get-credentials prod --region ${REGION}
+    kubectl config delete-context prod
+    kubectl config rename-context gke_${PROJECT_ID}_${REGION}_prod prod
+}
+ 
+
+e2e_apps() {
+    # Any sample application install and configuration for the E2E walkthrough.
+
+    echo "Deploying walkthrough applications"
+    cd $ROOT_DIR
+
+    git -c advice.detachedHead=false clone https://github.com/GoogleContainerTools/skaffold.git -b v1.14.0
+    mv skaffold/examples/microservices/ ./web
+    rm -rf skaffold
+
+    for template in $(ls $CD_CONFIG_DIR/*.template); do
+    envsubst < ${template} > ${template%.*}
+    done
+
+    cp $CD_CONFIG_DIR/skaffold.yaml web/
+
+    git tag -a v1 -m "version 1 release"
+}
+
+manage_configs
+manage_apis
+run_terraform
+manage_gke_contexts
+e2e_apps
 

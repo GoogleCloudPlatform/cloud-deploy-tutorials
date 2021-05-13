@@ -20,21 +20,25 @@ Estimated Duration:
 
 Click **Start** to proceed.
 
-## Select a project
-Choose a project for this tutorial. The project will contain the Cloud Deploy service and the GKE clusters that will act as your development, staging, and production environments.
+## Project setup
+GCP organizes resources into projects. This allows you to
+collect all of the related resources for a single application in one place.
 
-_We recommend you create a new project for this tutorial. You may experience undesired side effects if you use an existing project with conflicting settings._
+Begin by creating a new project or selecting an existing project for this
+tutorial.
 
-<walkthrough-project-setup></walkthrough-project-setup>
+<walkthrough-project-setup billing="true"></walkthrough-project-setup>
 
-Click **Next** to proceed.
+For details, see
+[Creating a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project).
 
-## Prepare Cloud Shell
-You'll use Cloud Shell for this tutorial. Clicking the button below will open Cloud Shell, clone the sample code repository, and open the tutorial code in the same window. 
+### Selecting your Project
 
-If you've already completed this step, click **Next**.
+Once selected, set the same Project in your Cloud Shell `gcloud` configuration with this command:
 
-[![Setup Cloud Shell](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/setup.png)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/clouddeploy-preview/r/clouddeploy-tutorials&cloudshell_git_branch=release-1.0&cloudshell_workspace=.&cloudshell_tutorial=walkthroughs/cloud_deploy_e2e_gke/cloud_deploy_e2e_gke.md)
+```bash
+gcloud config set project {{project-id}}
+```
 
 Click **Next** to proceed.
 

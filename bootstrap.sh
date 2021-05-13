@@ -12,9 +12,9 @@ ROOT_DIR=$(git rev-parse --show-toplevel)
 CD_CONFIG_DIR=$ROOT_DIR/clouddeploy-config
 TF_DIR=$ROOT_DIR/tf
 
-PROJECT_ID=$(gcloud config get-value core/project)
+export PROJECT_ID=$(gcloud config get-value core/project)
 BACKEND=$PROJECT_ID-tf-backend
-REGION=us-central1
+export REGION=us-central1
 GCLOUD_CONFIG=clouddeploy
 
 manage_apis() {

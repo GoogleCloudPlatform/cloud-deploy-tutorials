@@ -38,6 +38,7 @@ manage_configs() {
 
     gcloud config set project $PROJECT_ID
     gcloud config set compute/region $REGION
+    gcloud config set deploy/region $REGION
 }
 
 run_terraform() {

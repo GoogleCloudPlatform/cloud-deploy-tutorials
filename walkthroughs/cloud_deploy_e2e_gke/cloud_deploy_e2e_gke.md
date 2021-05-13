@@ -81,19 +81,6 @@ Next you'll configure your Cloud Deploy Region parameter.
 
 Click **Next** to proceed.
 
-## Configure Cloud Deploy Region
-Default Cloud Deploy parameters can be configured with `gcloud` to avoid typing them for every command.
-
-Run the following command in Cloud Shell to set a default region for the rest of the commands in this tutorial: 
-
-```bash
-gcloud config set deploy/region $(gcloud config get-value compute/region)
-```
-
-This will be used for any additonal Cloud Deploy commands unless you override it using the `--region` parameter. In the next section you'll use `skaffold` to build your sample application.
-
-Click **Next** to proceed.
-
 ## Build the Application
 Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
 
@@ -307,9 +294,9 @@ Click **Next** to proceed.
 
 A Cloud Deploy `release` is a specific version of one or more application images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
 
-Because this is the first release of our application, we'll name it `web-app-001`.
+Because this is the first release of your application, name it `web-app-001`.
 
-Run the following command to create the release:
+Run the following command to create the release. The `--build-artifacts` parameter references the `artifacts.json` file created by `skaffold` earlier. The `--source` parameter references the application source directory where `skaffold.yaml` can be found.
 
 ```bash
 gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --build-artifacts web/artifacts.json --source web/
@@ -344,7 +331,7 @@ createTime: '2021-04-29T00:30:59.672965025Z'deliveryPipelineSnapshot:
     - targetId: prod
 ```
 
-You can also view [Release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/releases/web-app?project={{project-id}) in the GCP control panel.
+You can also view [Release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/releases/web-app?project={{project-id}}) in the GCP control panel.
 
 With your release created, it's time to promote your application through your environments. 
 
@@ -388,10 +375,10 @@ leeroy-app-7b8d48f794-svl6g   1/1     Running   0          19s
 leeroy-web-5498c5b7fd-czvm8   1/1     Running   0          20s
 ```
 
-To promote your application to your staging Target, run the following command: 
+To promote your application to your staging Target, run the following command. The optional `--to-target` parameter can specify a Target to promote to. If this option isn't included, the Release is promoted to the next Target in the Delivery Pipeline. 
 
 ```bash
-gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001 --to-target staging
+gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001 
 ```
 
 To confirm your application has been promoted to the `staging` Target, run the following command:
@@ -493,7 +480,7 @@ Click **Next** to proceed.
 
 Cloud Deploy is designed to integrate with multiple personas within an IT organization. For the product owner or team lead who approves production changes, there's a special IAM Role that can be bound to users and service accounts to give them the capability to approve pipeline promotions. 
 
-Due to the nature of this one-person tutorial, we're not going to actually use another account to approve the process. But we will walk through creating a service account and binding it to the `clouddeploy.approver` role.
+Due to the nature of this one-person tutorial, we're not going to actually use another account to approve the process. **This step is optional and not required for completion of subesequent steps**. But we will walk through creating a service account and binding it to the `clouddeploy.approver` role.
 
 First, create a new service account. 
 
@@ -589,6 +576,14 @@ To clean up your GKE Targets and other resources, run the provided cleanup scrip
 ```
 
 This will remove the GCP resources as well as the artifacts on your Cloud Shell instance. It may take a few minutes to complete.
+
+### Cleaning up gcloud configurations
+
+When you ran `bootstrap.sh`, a line was added to your Cloud Shell configuration. For users of the `bash` shell, a line was added to `.bashrc` to reference `$HOME/.gcloud` as the directory `glcoud` uses to keep configurations. For people who have customized their Cloud Shell environments to use other shells, the corresponding `rc` was similarly edited. 
+
+In the `.gcloud` directory a configuration named `clouddeploy` was also created. This features allows `gcloud` configurations to [persist across Cloud Shell sessions and restarts](https://cloud.google.com/shell/docs/configuring-cloud-shell#gcloud_command-line_tool_preferences).
+
+If you want to remove this configuration, remove the line from your `rc` file and delete the `$HOME/.gcloud` directory.
 
 Click **Next** to complete this tutorial.
 

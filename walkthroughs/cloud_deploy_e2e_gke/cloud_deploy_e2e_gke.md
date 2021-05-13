@@ -387,7 +387,41 @@ To promote your application to your staging Target, run the following command:
 gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001 --to-target staging
 ```
 
-You can verify this promotion was successful using the same steps as above for Cloud Deploy as well as your `staging` GKE cluster.
+To confirm your application has been promoted to the `staging` Target, run the following command:
+
+```bash
+gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+```
+
+Your output should contain a section similar to this:
+
+```terminal
+---
+createTime: '2021-04-30T18:46:45.657293361Z'
+deployBuild: 3915c189-e9b4-4c6e-b757-322d8db18188
+deployEndTime: '2021-04-30T18:47:31.951451Z'
+deployStartTime: '2021-04-30T18:46:47.234151706Z'
+etag: d4a044da3c830258
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-staging-0001
+state: SUCCESS
+target: staging
+uid: f37126ebe3764108beb081c7e2930d7a
+```
+
+To confirm your application was deployed to your staging GKE cluster, run the following commands in your Cloud Shell:
+
+```bash
+kubectx staging
+kubectl get pods -n default
+```
+
+The output of your `kubectl` command should look similar to the following:
+
+```terminal
+NAME                          READY   STATUS    RESTARTS   AGE
+leeroy-app-7b8d48f794-svl6g   1/1     Running   0          19s
+leeroy-web-5498c5b7fd-czvm8   1/1     Running   0          20s
+```
 
 In the next section, you'll look at Targets that require approvals before Promotions can complete.
 

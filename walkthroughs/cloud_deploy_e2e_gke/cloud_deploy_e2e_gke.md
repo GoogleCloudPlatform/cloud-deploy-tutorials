@@ -32,7 +32,7 @@ tutorial.
 For details, see
 [Creating a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project).
 
-### Selecting your Project
+### Select your Project
 
 Once selected, set the same Project in your Cloud Shell `gcloud` configuration with this command:
 
@@ -42,7 +42,7 @@ gcloud config set project {{project-id}}
 
 Click **Next** to proceed.
 
-## Deploy tutorial infrastructure
+## Deploy infrastructure
 
 You'll deploy three GKE clusters with the following names into your `{{project-id}}` Project: 
 
@@ -77,7 +77,11 @@ test     us-central1  1.17.17-gke.2800  35.188.180.217  n1-standard-2  1.17.17-g
 
 If the command succeeds, each cluster will have three nodes and a `RUNNING` status.
 
-### Configure Cloud Deploy Region
+Next you'll configure your Cloud Deploy Region parameter.
+
+Click **Next** to proceed.
+
+## Configure Cloud Deploy Region
 Default Cloud Deploy parameters can be configured with `gcloud` to avoid typing them for every command.
 
 Run the following command in Cloud Shell to set a default region for the rest of the commands in this tutorial: 
@@ -103,7 +107,7 @@ The example application source code is in the `web` directory of your Cloud Shel
 
 The `web` directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application. This configuration uses the [Cloud Build](https://cloud.google.com/build) service to build the container images for your applications.
 
-<walkthrough-editor-open-file filePath="tutorial/web/skaffold.yaml">Click here to review skaffold.yaml.</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="web/skaffold.yaml">Click here to review skaffold.yaml.</walkthrough-editor-open-file>
 
 When deployed, the application images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
 
@@ -111,37 +115,33 @@ When deployed, the application images are named `leeroy-web` and `leeroy-app`. T
 cd web && skaffold build --interactive=false --default-repo $(gcloud config get-value compute/region)-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json && cd ..
 ```
 
-Confirm the images were successfully pushed to Artifact Registry:
+When you ran `bootstrap.sh` a [Google Cloud Artifact Registry](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to Artifact Registry:
 
 ```bash
-gcloud artifacts docker images list $(gcloud config get-value compute/region)-docker.pkg.dev/$(gcloud config get-value project)/web-app --include-tags --format json
+gcloud artifacts docker images list $(gcloud config get-value compute/region)-docker.pkg.dev/$(gcloud config get-value project)/web-app --include-tags --format yaml
 ```
-The `--format json` parameter returns the output as JSON for readability. The output should look like this: 
+The `--format yaml` parameter returns the output as JSON for readability. The output should look like this: 
 
 ```terminal
 Listing items under project {{project-id}}, location us-central1, repository web-app.
 
-[
-  {
-    "createTime": "2021-04-15T23:15:15.792959Z",
-    "package": "us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app",    
-    "tags": "v1",
-    "updateTime": "2021-04-15T23:15:15.792959Z",
-    "version": "sha256:80d8a867b82eb402ebe5b48f972c65c2b4cf7657ab30b03dd7b0b21dfc4a6792"
-  },
-  {
-    "createTime": "2021-04-15T23:15:27.320207Z",
-    "package": "us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web",
-    "tags": "v1",
-    "updateTime": "2021-04-15T23:15:27.320207Z",
-    "version": "sha256:30c37ef69eaf759b8c151adea99b6e8cdde85a81b073b101fbc593eab98bc102"
-  }
-]
+---
+createTime: '2021-05-13T20:31:13.636063Z'
+package: us-central1-docker.pkg.dev/jduncan-cd-dev/web-app/leeroy-app
+tags: release-1.0-3-gf0649a5
+updateTime: '2021-05-13T20:31:13.636063Z'
+version: sha256:b5b63cb3deb5068b6d8a651bbd40947f81e2406ee7e5e9da507f0d39cada71d9
+---
+createTime: '2021-05-13T20:31:12.513087Z'
+package: us-central1-docker.pkg.dev/jduncan-cd-dev/web-app/leeroy-web
+tags: release-1.0-3-gf0649a5
+updateTime: '2021-05-13T20:31:12.513087Z'
+version: sha256:d6a2da6aff0638ef4b6eb50134ab0109deb60a7434f690ed48462ed22e888905
 ```
 
 By default, `skaffold` sets the tag for an image to its related `git` tag if one is available. In this case, a `v1` tag was set on the repository.
 
-Similar information can be found in the `artifacts.json` file that was created by the `skaffold` command. You'll use that file in an upcoming step. <walkthrough-editor-open-file filePath="tutorial/artifacts.json">Click here to review artifacts.json.</walkthrough-editor-open-file>
+Similar information can be found in the `artifacts.json` file that was created by the `skaffold` command. You'll use that file in an upcoming step. <walkthrough-editor-open-file filePath="web/artifacts.json">Click here to review artifacts.json.</walkthrough-editor-open-file>
 
 Click **Next** to proceed.
 
@@ -166,8 +166,11 @@ gcloud alpha deploy delivery-pipelines describe web-app
 The output should look like this:
 
 ```terminal
+Unable to get target projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
+Unable to get target projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/staging
+Unable to get target projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/prod
 Delivery Pipeline:
-  createTime: '2021-05-04T20:10:05.892293560Z'
+  createTime: '2021-05-13T20:22:22.880283007Z'
   description: web-app delivery pipeline
   etag: 2539eacd7f5c256d
   name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app
@@ -176,14 +179,14 @@ Delivery Pipeline:
     - targetId: test
     - targetId: staging
     - targetId: prod
-  uid: 1e7225f13eb147ebb0c39752fed2951d
-  updateTime: '2021-05-04T20:10:06.647329907Z'
-Targets:[]
+  uid: 7f9c9f7e90ee44869a21ce2215b5536c
+  updateTime: '2021-05-13T20:22:24.151840532Z'
+Targets: []
 ```
 
 You can also see the [details for your delivery pipeline](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app?project={{project-id}}) in the GCP control panel.
 
-With your delivery pipeline confirmed, you're ready to create the three _targets_.
+Notice the first three lines of the output. Your Delivery Pipeline references three Target environments that haven't been created yet. In the next sections you'll create those Targets.
 
 Click **Next** to proceed.
 

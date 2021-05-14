@@ -5,6 +5,9 @@
 </walkthrough-author>
 
 # Cloud Deploy: Private Preview
+
+![Cloud Deploy logo](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png "Cloud Deploy logo")
+
 ## Overview
 This tutorial guides you through setting up and using the Google [Cloud Deploy](https://console.cloud.google.com/deploy) service.
 

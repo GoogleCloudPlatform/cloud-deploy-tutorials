@@ -71,6 +71,13 @@ manage_gke_contexts() {
     kubectl config rename-context gke_${PROJECT_ID}_${REGION}_prod prod
 }
 
+configure_git() {
+  # Ensures some base level git client config is present
+
+  git config user.name "Cloud Deploy"
+  git config user.email "noreply@google.com"
+}
+
 e2e_apps() {
     # Any sample application install and configuration for the E2E walkthrough.
 
@@ -94,5 +101,6 @@ manage_configs
 manage_apis
 run_terraform
 manage_gke_contexts
+configure_git
 e2e_apps
 

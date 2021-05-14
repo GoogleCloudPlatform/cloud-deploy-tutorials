@@ -638,12 +638,8 @@ Click **Next** to complete this tutorial.
 
 ## Conclusion
 
-Thank you for taking the time to get to know the Cloud Deploy tool from Google Cloud!
+Thank you for taking the time to get to know the Cloud Deploy Preview from Google Cloud!
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 
 <walkthrough-inline-feedback></walkthrough-inline-feedback>
-
-Here's what you can do next:
-
-

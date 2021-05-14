@@ -185,12 +185,12 @@ In the tutorial delivery pipeline, the first target is `test`.
 
 You create a `target` by applying a YAML file to Cloud Deploy using `glcoud alpha deploy apply`.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/test-environment.yaml">Click here to view the test-environment.yaml</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/target-test.yaml">Click here to view the target-test.yaml</walkthrough-editor-open-file>
 
 Create the `test` target:
 
 ```bash
-gcloud alpha deploy apply --file clouddeploy-config/test-environment.yaml
+gcloud alpha deploy apply --file clouddeploy-config/target-test.yaml
 ```
 
 Verify the `target` was created:
@@ -224,22 +224,22 @@ In this section, you create targets for the `staging` and `prod` clusters. The p
 
 Start by creating the `staging` target.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/staging-environment.yaml">Click here to view staging-environment.yaml</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/target-staging.yaml">Click here to view target-staging.yaml</walkthrough-editor-open-file>
 
 Apply the `staging` target definition:
 
 ```bash
-gcloud alpha deploy apply --file clouddeploy-config/staging-environment.yaml
+gcloud alpha deploy apply --file clouddeploy-config/target-staging.yaml
 ```
 
 Next you will repeat the process for the `prod` target.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/prod-environment.yaml">Click here to view prod-environment.yaml</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/target-prod.yaml">Click here to view target-prod.yaml</walkthrough-editor-open-file>
 
 Apply the `prod` target definition:
 
 ```bash
-gcloud alpha deploy apply --file clouddeploy-config/prod-environment.yaml
+gcloud alpha deploy apply --file clouddeploy-config/target-prod.yaml
 ```
 
 Verify both targets for the `web-app` delivery pipeline:

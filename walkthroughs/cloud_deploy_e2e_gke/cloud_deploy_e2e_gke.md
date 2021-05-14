@@ -403,6 +403,8 @@ target: test
 uid: f37126ebe3764108beb081c7e2930d7a
 ```
 
+Note that the first rollout of a Release will take several minutes, because Cloud Deploy renders the manifests for all Targets when the Release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+
 To confirm your application was deployed to your test GKE cluster, run the following commands in your Cloud Shell:
 
 ```bash
@@ -445,6 +447,7 @@ state: SUCCESS
 target: staging
 uid: f37126ebe3764108beb081c7e2930d7a
 ```
+The rollout may take several minutes. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 To confirm your application was deployed to your staging GKE cluster, run the following commands in your Cloud Shell:
 
@@ -599,6 +602,8 @@ state: SUCCESS
 target: prod
 uid: f7de1bc9af4e46e499cc0c134b3758a6
 ```
+
+The rollout may take several minutes. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 You can also confirm your `prod` GKE cluster has your apps deployed:
 

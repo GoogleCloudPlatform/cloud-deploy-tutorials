@@ -88,7 +88,7 @@ As part of this tutorial, a sample application has been cloned from a [Github re
 
 In this section, you'll build that application image so you can progress it through the `webapp` delivery pipeline.
 
-### Build with Skaffold
+### Building with Skaffold
 
 The example application source code is in the `web` directory of your Cloud Shell instance. It's a simple web app that listens to a port, provides an HTTP response code and adds a log entry.
 
@@ -101,6 +101,12 @@ When deployed, the application images are named `leeroy-web` and `leeroy-app`. T
 ```bash
 cd web && skaffold build --interactive=false --default-repo $(gcloud config get-value compute/region)-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json && cd ..
 ```
+
+Next, confirm the container images built by `skaffold` were uploaded to the container registry properly. 
+
+Click **Next** to proceed.
+
+## Custom application images
 
 When you ran `bootstrap.sh` a [Google Cloud Artifact Registry](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to Artifact Registry:
 
@@ -150,7 +156,7 @@ Verify the delivery pipeline was created:
 gcloud alpha deploy delivery-pipelines describe web-app
 ```
 
-The output should look like this:
+Your output should look like the example below. 
 
 ```terminal
 Unable to get target projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
@@ -199,7 +205,7 @@ Verify the `target` was created:
 gcloud alpha deploy targets list --delivery-pipeline=web-app
 ```
 
-The output should look like this:
+The output should look like the example below. Important information in this output is that the Target is recognized as a `gkeCluster` and that it's been associated with the `web-app` Delivery Pipeline.
 
 ```terminal
 ---
@@ -248,7 +254,7 @@ Verify both targets for the `web-app` delivery pipeline:
 gcloud alpha deploy targets list --delivery-pipeline=web-app
 ```
 
-The output should look like this:
+The output should look like this, showing all three Targets created and associated with your `web-app` Delivery Pipeline.
 
 ```terminal
 ---
@@ -311,7 +317,7 @@ To confirm your release has been created run the following command:
 gcloud alpha deploy releases list --delivery-pipeline web-app
 ```
 
-Your output should look similar to this:
+Your output should look similar to the example below. Important things to note are that the release has been successfully rendered according to the `renderState` value, as well as the location of the `skaffold` configuration noted by the `skaffoldConfigUri` parameter.
 
 ```terminal
 ---
@@ -387,7 +393,7 @@ With your release created, you can promote your application. When the Release wa
 gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
 
-Your output should look similar to this:
+Your output should look similar to the example below. The start and end times for the deploy are noted, as well that it succeeded.
 
 ```terminal
 ---
@@ -480,7 +486,7 @@ When you created your prod environment, the configuration was in place to requir
 gcloud alpha deploy targets describe prod --delivery-pipeline web-app
 ```
 
-Your output should look similar to this:
+Your output should look similar to the example below. Unlike the previous targets, the prod Target does require approval per the `approvalRequired` parameter.
 
 ```terminal
 Target:
@@ -508,6 +514,8 @@ When you look at your rollouts for `web-app-001`, you'll notice that the promoti
 ```bash
 gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
+
+In the output, note that the `approvalState` is `NEEDS_APPROVAL` and the state is `PENDING_APPROVAL`.
 
 ```terminal
 approvalState: NEEDS_APPROVAL
@@ -588,7 +596,7 @@ After a short time, your promotion should complete. To verify this, run the foll
 gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
 
-Your output should look similar to this:
+Your output should look similar to below. 
 
 ```terminal
 approvalState: APPROVED
@@ -603,7 +611,7 @@ target: prod
 uid: f7de1bc9af4e46e499cc0c134b3758a6
 ```
 
-The rollout may take several minutes. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+The rollout may take several minutes. If you do not see `state: SUCCESS` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 You can also confirm your `prod` GKE cluster has your apps deployed:
 

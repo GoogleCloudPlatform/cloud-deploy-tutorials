@@ -1,5 +1,5 @@
 # Cloud Deploy Tutorials
-Copyright Google LLC 2020
+Copyright Google LLC 2021
 
 Google Confidential, Pre-GA Offering for Google Cloud Platform (see https://cloud.google.com/terms/service-terms)
 

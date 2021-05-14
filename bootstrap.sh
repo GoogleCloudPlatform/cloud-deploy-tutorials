@@ -1,11 +1,11 @@
-# Copyright Google LLC 2020
-# Google Confidential, Pre-GA Offering for Google Cloud Platform 
+# Copyright Google LLC 2021
+# Google Confidential, Pre-GA Offering for Google Cloud Platform
 # (see https://cloud.google.com/terms/service-terms)
 
 # Standard functions begin with manage or run.
-# Walkthrough-specific functions begin with the abbreviation for 
+# Walkthrough-specific functions begin with the abbreviation for
 # that walkthrough
-# Current walkthroughs: 
+# Current walkthroughs:
 # e2e - End-to-end (aka primary) walkthrough
 
 ROOT_DIR=$(git rev-parse --show-toplevel)
@@ -23,7 +23,7 @@ manage_apis() {
     echo "Enabling GCP APIs, please wait..."
     gcloud services enable storage.googleapis.com
     gcloud services enable compute.googleapis.com
-    gcloud services enable artifactregistry.googleapis.com  
+    gcloud services enable artifactregistry.googleapis.com
 }
 
 manage_configs() {
@@ -70,7 +70,6 @@ manage_gke_contexts() {
     kubectl config delete-context prod
     kubectl config rename-context gke_${PROJECT_ID}_${REGION}_prod prod
 }
- 
 
 e2e_apps() {
     # Any sample application install and configuration for the E2E walkthrough.

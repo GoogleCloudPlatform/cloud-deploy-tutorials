@@ -145,7 +145,7 @@ Click **Next** to proceed.
 
 In this tutorial, you will create a Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`. Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/delivery-pipeline.yaml">Click here to view delivery-pipeline.yaml</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="clouddeploy-config/delivery-pipeline.yaml">Click here to view delivery-pipeline.yaml</walkthrough-editor-open-file>
 
 The following command creates the `delivery-pipeline` resource using the delivery pipeline YAML file:
 
@@ -194,7 +194,7 @@ In the tutorial delivery pipeline, the first target is `test`.
 
 You create a `target` by applying a YAML file to Cloud Deploy using `glcoud alpha deploy apply`.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/target-test.yaml">Click here to view the target-test.yaml</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="clouddeploy-config/target-test.yaml">Click here to view the target-test.yaml</walkthrough-editor-open-file>
 
 Create the `test` target:
 
@@ -233,7 +233,7 @@ In this section, you create targets for the `staging` and `prod` clusters. The p
 
 Start by creating the `staging` target.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/target-staging.yaml">Click here to view target-staging.yaml</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="clouddeploy-config/target-staging.yaml">Click here to view target-staging.yaml</walkthrough-editor-open-file>
 
 Apply the `staging` target definition:
 
@@ -243,7 +243,7 @@ gcloud alpha deploy apply --file clouddeploy-config/target-staging.yaml
 
 Next you will repeat the process for the `prod` target.
 
-<walkthrough-editor-open-file filePath="tutorial/clouddeploy-config/target-prod.yaml">Click here to view target-prod.yaml</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="clouddeploy-config/target-prod.yaml">Click here to view target-prod.yaml</walkthrough-editor-open-file>
 
 Apply the `prod` target definition:
 

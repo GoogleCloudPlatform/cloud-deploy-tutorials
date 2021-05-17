@@ -20,9 +20,12 @@ GCLOUD_CONFIG=clouddeploy
 manage_apis() {
     # Enables any APIs that we need prior to Terraform being run
 
-    echo "Enabling GCP APIs, please wait..."
+    echo "Enabling GCP APIs, please wait, this may take several minutes..."
+    echo "Storage API"...
     gcloud services enable storage.googleapis.com
+    echo "Compute API"...
     gcloud services enable compute.googleapis.com
+    echo "Artifact Registry API"...
     gcloud services enable artifactregistry.googleapis.com
 }
 
@@ -31,14 +34,19 @@ manage_configs() {
     # Cloud Shell sessions
 
     echo "Creating persistent Cloud Shell configuration"
-    SHELL_RC=$HOME/.$(basename $SHELL)rc
-    echo export CLOUDSDK_CONFIG=$HOME/.gcloud >> $SHELL_RC
+    SHELL_RC=${HOME}/.$(basename ${SHELL})rc
+    echo export CLOUDSDK_CONFIG=${HOME}/.gcloud >> ${SHELL_RC}
 
-    gcloud config configurations create $GCLOUD_CONFIG
+    if [[ $(gcloud config configurations list --quiet --filter "name=${GCLOUD_CONFIG}") ]]; then
+      echo "Config ${GCLOUD_CONFIG} already exists, skipping config creation"
+    else
+      gcloud config configurations create ${GCLOUD_CONFIG}
+      echo "Created config ${GCLOUD_CONFIG}"
+    fi
 
-    gcloud config set project $PROJECT_ID
-    gcloud config set compute/region $REGION
-    gcloud config set deploy/region $REGION
+    gcloud config set project ${PROJECT_ID}
+    gcloud config set compute/region ${REGION}
+    gcloud config set deploy/region ${REGION}
 }
 
 run_terraform() {
@@ -97,8 +105,8 @@ e2e_apps() {
     git tag -a v1 -m "version 1 release"
 }
 
-manage_configs
 manage_apis
+manage_configs
 run_terraform
 manage_gke_contexts
 configure_git

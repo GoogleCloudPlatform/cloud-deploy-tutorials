@@ -61,7 +61,7 @@ These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`
 ./bootstrap.sh
 ```
 
-This will take a few minutes to run.
+This will take approximately 10 minutes to run.
 
 After the script finishes, confirm that your GKE clusters and supporting resources are properly deployed:
 

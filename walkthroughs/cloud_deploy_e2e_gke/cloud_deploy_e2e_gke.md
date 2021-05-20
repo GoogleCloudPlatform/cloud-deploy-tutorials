@@ -80,8 +80,6 @@ test     us-central1  1.17.17-gke.2800  35.188.180.217  n1-standard-2  1.17.17-g
 
 If the command succeeds, each cluster will have three nodes and a `RUNNING` status.
 
-Next you'll configure your Cloud Deploy Region parameter.
-
 Click **Next** to proceed.
 
 ## Build the Application

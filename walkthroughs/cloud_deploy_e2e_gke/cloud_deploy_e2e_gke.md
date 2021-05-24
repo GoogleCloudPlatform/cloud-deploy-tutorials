@@ -382,13 +382,15 @@ uid: 25b7ee6d14394a40a70b09fb4a006f64
 
 You can also view [Release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/releases/web-app-001?project={{project-id}}) in the GCP control panel.
 
-With your release created, it's time to promote your application through your environments.
+When a release is created, it will also be automatically rolled out to the first Target in the pipeline (unless approval is required, which will be covered in a later step of this tutorial).
+
+You can read more about this in the [Cloud Deploy delivery process](https://cloud.google.com/deploy/docs/overview#the_delivery_process) section of the documentation.
 
 Click **Next** to proceed.
 
 ## Promoting Applications
 
-With your release created, you can promote your application. When the Release was created in the previous step, it automatically promoted your application to the initial Target. To confirm your `test` Target has your application deployed, run the following command:
+With your release created, you can promote your application. When the Release was created in the previous step, it automatically rolled out your application to the initial Target. To confirm your `test` Target has your application deployed, run the following command:
 
 ```bash
 gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001

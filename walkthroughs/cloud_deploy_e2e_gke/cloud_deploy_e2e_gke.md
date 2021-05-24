@@ -103,13 +103,13 @@ When deployed, the application images are named `leeroy-web` and `leeroy-app`. T
 cd web && skaffold build --interactive=false --default-repo $(gcloud config get-value compute/region)-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json && cd ..
 ```
 
-Next, confirm the container images built by `skaffold` were uploaded to the container registry properly. 
+In the next step you will confirm the container images built by `skaffold` were uploaded to the container image registry properly.
 
 Click **Next** to proceed.
 
 ## Custom application images
 
-When you ran `bootstrap.sh` a [Google Cloud Artifact Registry](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to Artifact Registry:
+When you ran `bootstrap.sh` a repository in [Google Cloud Artifact Registry](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to Artifact Registry, run the following command:
 
 ```bash
 gcloud artifacts docker images list $(gcloud config get-value compute/region)-docker.pkg.dev/$(gcloud config get-value project)/web-app --include-tags --format yaml

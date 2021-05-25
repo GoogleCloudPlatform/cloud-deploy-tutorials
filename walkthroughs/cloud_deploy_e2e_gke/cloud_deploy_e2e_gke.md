@@ -87,7 +87,7 @@ Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open
 
 As part of this tutorial, a sample application has been cloned from a [Github repository](https://github.com/GoogleContainerTools/skaffold.git) to your Cloud Shell instance, in the `web` directory.
 
-In this section, you'll build that application image so you can progress it through the `webapp` delivery pipeline.
+In this section, you'll build that container image so you can progress it through the `webapp` delivery pipeline.
 
 ### Building with Skaffold
 
@@ -97,7 +97,7 @@ The `web` directory contains `skaffold.yaml`, which contains instructions for `s
 
 <walkthrough-editor-open-file filePath="web/skaffold.yaml">Click here to review skaffold.yaml.</walkthrough-editor-open-file>
 
-When deployed, the application images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
+When deployed, the container images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
 
 ```bash
 cd web && skaffold build --interactive=false --default-repo $(gcloud config get-value compute/region)-docker.pkg.dev/{{project-id}}/web-app --file-output artifacts.json && cd ..
@@ -107,7 +107,7 @@ In the next step you will confirm the container images built by `skaffold` were 
 
 Click **Next** to proceed.
 
-## Custom application images
+## Custom container images
 
 When you ran `bootstrap.sh` a repository in [Google Cloud Artifact Registry](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to Artifact Registry, run the following command:
 
@@ -300,7 +300,7 @@ Click **Next** to proceed.
 
 ## Create a Release
 
-A Cloud Deploy `release` is a specific version of one or more application images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
+A Cloud Deploy `release` is a specific version of one or more container images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
 
 Because this is the first release of your application, name it `web-app-001`.
 

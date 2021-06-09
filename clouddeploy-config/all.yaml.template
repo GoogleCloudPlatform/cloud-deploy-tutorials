@@ -1,6 +1,7 @@
-apiVersion: cloudDeploy/beta1
-kind: delivery-pipeline
-name: web-app
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: DeliveryPipeline
+metadata:
+  name: web-app
 description: web-app delivery pipeline
 serialPipeline:
  stages:
@@ -8,9 +9,10 @@ serialPipeline:
  - targetId: staging
  - targetId: prod
 ---
-apiVersion: cloudDeploy/beta1
-kind: target
-name: test
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: test
 deliveryPipeline: web-app
 description: test cluster
 gkeCluster:
@@ -18,9 +20,10 @@ gkeCluster:
   cluster: test
   location: ${REGION}
 ---
-apiVersion: cloudDeploy/beta1
-kind: target
-name: staging
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: staging
 deliveryPipeline: web-app
 description: staging cluster
 gkeCluster:
@@ -28,9 +31,10 @@ gkeCluster:
   cluster: staging
   location: ${REGION}
 ---
-apiVersion: cloudDeploy/beta1
-kind: target
-name: prod
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: prod
 deliveryPipeline: web-app
 description: prod cluster
 approvalRequired: true

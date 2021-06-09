@@ -1,6 +1,7 @@
-apiVersion: cloudDeploy/beta1
-kind: delivery-pipeline
-name: web-app
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: DeliveryPipeline
+metadata:
+  name: web-app
 description: web-app delivery pipeline
 serialPipeline:
  stages:

@@ -1,6 +1,7 @@
-apiVersion: cloudDeploy/beta1
-kind: target
-name: prod
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: prod
 deliveryPipeline: web-app
 description: prod cluster
 approvalRequired: true

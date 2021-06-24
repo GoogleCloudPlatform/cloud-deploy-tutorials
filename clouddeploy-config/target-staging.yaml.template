@@ -2,7 +2,6 @@ apiVersion: deploy.cloud.google.com/v1beta1
 kind: Target
 metadata:
   name: staging
-deliveryPipeline: web-app
 description: staging cluster
 gkeCluster:
   project: ${PROJECT_ID}

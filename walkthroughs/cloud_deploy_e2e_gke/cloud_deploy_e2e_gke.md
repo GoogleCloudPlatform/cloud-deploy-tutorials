@@ -203,13 +203,13 @@ gcloud alpha deploy apply --file clouddeploy-config/target-test.yaml
 Verify the `target` was created:
 
 ```bash
-gcloud alpha deploy targets list --delivery-pipeline=web-app
+gcloud alpha deploy targets describe test --delivery-pipeline=web-app
 ```
 
 The output should look like the example below. Important information in this output is that the Target is recognized as a `gkeCluster` and that it's been associated with the `web-app` Delivery Pipeline.
 
 ```terminal
----
+Target:
 createTime: '2021-04-15T13:53:31.094996057Z'
 description: test cluster
 etag: 4c7d828d4f7a3b74
@@ -252,10 +252,10 @@ gcloud alpha deploy apply --file clouddeploy-config/target-prod.yaml
 Verify both targets for the `web-app` delivery pipeline:
 
 ```bash
-gcloud alpha deploy targets list --delivery-pipeline=web-app
+gcloud alpha deploy targets list
 ```
 
-The output should look like this, showing all three Targets created and associated with your `web-app` Delivery Pipeline.
+The output should look like this, showing all three created Targets, which are used with your `web-app` Delivery Pipeline.
 
 ```terminal
 ---
@@ -281,7 +281,7 @@ name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/ta
 uid: d1d2ca2dc4bf4884a8d16588cfe6d458
 updateTime: '2021-04-15T13:53:31.663277590Z'
 ---
-approvalRequired: true
+requireApproval: true
 createTime: '2021-04-15T16:44:31.295700Z'
 description: prod cluster
 etag: ff1840e2d8c3010a
@@ -366,7 +366,7 @@ targetSnapshots:
   name: projects/408335957468/locations/us-central1/deliveryPipelines/web-app/targets/staging
   uid: 7676fb491be94f1e90a0d0476a1f8308
   updateTime: '1970-01-01T00:00:07.845918Z'
-- approvalRequired: true
+- requireApproval: true
   createTime: '1970-01-01T00:00:22.407141Z'
   description: prod cluster
   etag: 78c6e5a779b43e72
@@ -483,17 +483,17 @@ Any Target can require an Approval before a Release promotion can occur. This is
 
 ### Requiring Approval for Promotion to a Target
 
-When you created your prod environment, the configuration was in place to require approvals to this Target. To verify this, run this command and look for the `approvalRequired` parameter.
+When you created your prod environment, the configuration was in place to require approvals to this Target. To verify this, run this command and look for the `requireApproval` parameter.
 
 ```bash
 gcloud alpha deploy targets describe prod --delivery-pipeline web-app
 ```
 
-Your output should look similar to the example below. Unlike the previous targets, the prod Target does require approval per the `approvalRequired` parameter.
+Your output should look similar to the example below. Unlike the previous targets, the prod Target does require approval per the `requireApproval` parameter.
 
 ```terminal
 Target:
-  approvalRequired: true
+  requireApproval: true
   createTime: '2021-04-30T18:40:11.068571913Z'
   description: prod cluster
   etag: 74a0c6560ae0ace7

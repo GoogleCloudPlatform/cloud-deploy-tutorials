@@ -2,9 +2,8 @@ apiVersion: deploy.cloud.google.com/v1beta1
 kind: Target
 metadata:
   name: prod
-deliveryPipeline: web-app
 description: prod cluster
-approvalRequired: true
+requireApproval: true
 gkeCluster:
   project: ${PROJECT_ID}
   cluster: prod

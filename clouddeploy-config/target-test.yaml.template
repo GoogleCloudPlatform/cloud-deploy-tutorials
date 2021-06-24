@@ -2,7 +2,6 @@ apiVersion: deploy.cloud.google.com/v1beta1
 kind: Target
 metadata:
   name: test
-deliveryPipeline: web-app
 description: test cluster
 gkeCluster:
   project: ${PROJECT_ID}

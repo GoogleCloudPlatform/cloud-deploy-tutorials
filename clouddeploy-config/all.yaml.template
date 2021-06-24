@@ -13,7 +13,6 @@ apiVersion: deploy.cloud.google.com/v1beta1
 kind: Target
 metadata:
   name: test
-deliveryPipeline: web-app
 description: test cluster
 gkeCluster:
   project: ${PROJECT_ID}
@@ -24,7 +23,6 @@ apiVersion: deploy.cloud.google.com/v1beta1
 kind: Target
 metadata:
   name: staging
-deliveryPipeline: web-app
 description: staging cluster
 gkeCluster:
   project: ${PROJECT_ID}
@@ -35,9 +33,8 @@ apiVersion: deploy.cloud.google.com/v1beta1
 kind: Target
 metadata:
   name: prod
-deliveryPipeline: web-app
 description: prod cluster
-approvalRequired: true
+requireApproval: true
 gkeCluster:
   project: ${PROJECT_ID}
   cluster: prod

@@ -85,7 +85,7 @@ Click **Next** to proceed.
 ## Build the Application
 Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
 
-As part of this tutorial, a sample application has been cloned from a [Github repository](https://github.com/GoogleContainerTools/skaffold.git) to your Cloud Shell instance, in the `web` directory.
+As part of this tutorial, a sample application from the [Skaffold Github repository](https://github.com/GoogleContainerTools/skaffold.git) is available from your Cloud Shell instance, in the `web` directory.
 
 In this section, you'll build that container image so you can progress it through the `webapp` delivery pipeline.
 

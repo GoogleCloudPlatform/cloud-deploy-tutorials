@@ -92,10 +92,6 @@ e2e_apps() {
     echo "Deploying walkthrough applications"
     cd $ROOT_DIR
 
-    git -c advice.detachedHead=false clone https://github.com/GoogleContainerTools/skaffold.git -b v1.14.0
-    mv skaffold/examples/microservices/ ./web
-    rm -rf skaffold
-
     for template in $(ls $CD_CONFIG_DIR/*.template); do
     envsubst < ${template} > ${template%.*}
     done

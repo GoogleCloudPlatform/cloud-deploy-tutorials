@@ -9,9 +9,8 @@ crash.log
 # Ignore generated files
 main.tf
 
-# Ignore cloned directories
-web
-web-helm
+# Ignore app code directories
+web/
 
 # Ignore generated files
 clouddeploy-config/*.yaml

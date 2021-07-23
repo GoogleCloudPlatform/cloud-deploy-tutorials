@@ -13,3 +13,13 @@ resource "google_artifact_registry_repository" "artifact-registry" {
   description   = "Image registry for tutorial web app"
   format        = "DOCKER"
 }
+
+resource "google_artifact_registry_repository" "artifact-registry-profiles" {
+
+  provider = google-beta
+
+  location      = var.region
+  repository_id = "web-app-profiles"
+  description   = "Image registry for tutorial web app with Skaffold profiles"
+  format        = "DOCKER"
+}

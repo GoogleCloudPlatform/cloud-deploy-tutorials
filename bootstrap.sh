@@ -79,6 +79,20 @@ manage_gke_contexts() {
     kubectl config rename-context gke_${PROJECT_ID}_${REGION}_prod prod
 }
 
+manage_gke_namespaces() {
+    # Create a namespace for each tutorial in each cluster
+    echo "Creating Kubernetes namespaces"
+
+    cd ${ROOT_DIR}
+
+    CONTEXTS=("test" "staging" "prod")
+
+    for CONTEXT in ${CONTEXTS[@]}
+    do
+      kubectl --context ${CONTEXT} apply -f kubernetes-config/namespaces/
+    done
+}
+
 configure_git() {
   # Ensures some base level git client config is present
 
@@ -105,6 +119,7 @@ manage_apis
 manage_configs
 run_terraform
 manage_gke_contexts
+manage_gke_namespaces
 configure_git
 e2e_apps
 

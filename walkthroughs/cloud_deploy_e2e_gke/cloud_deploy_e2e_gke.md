@@ -418,7 +418,7 @@ To confirm your application was deployed to your test GKE cluster, run the follo
 
 ```bash
 kubectx test
-kubectl get pods -n default
+kubectl get pods -n web-app
 ```
 
 The output of your `kubectl` command should look similar to the following:
@@ -462,7 +462,7 @@ To confirm your application was deployed to your staging GKE cluster, run the fo
 
 ```bash
 kubectx staging
-kubectl get pods -n default
+kubectl get pods -n web-app
 ```
 
 The output of your `kubectl` command should look similar to the following:
@@ -620,7 +620,7 @@ You can also confirm your `prod` GKE cluster has your apps deployed:
 
 ```bash
 kubectx prod
-kubectl get pod -n default
+kubectl get pod -n web-app
 ```
 
 Your Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.

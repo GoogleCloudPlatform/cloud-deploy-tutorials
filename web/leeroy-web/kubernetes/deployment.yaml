@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: leeroy-web
+  namespace: web-app
   labels:
     app: leeroy-web
 spec:

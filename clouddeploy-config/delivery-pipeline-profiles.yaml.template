@@ -1,0 +1,16 @@
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: DeliveryPipeline
+metadata:
+  name: web-app-profiles
+description: web-app delivery pipeline with Skaffold profiles
+serialPipeline:
+ stages:
+ - targetId: test
+   profiles:
+   - test
+ - targetId: staging
+   profiles:
+   - staging
+ - targetId: prod
+   profiles:
+   - prod

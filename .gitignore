@@ -11,6 +11,7 @@ main.tf
 
 # Ignore app code directories
 web/
+web-profiles/
 
 # Ignore generated files
 clouddeploy-config/*.yaml

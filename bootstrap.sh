@@ -103,14 +103,15 @@ configure_git() {
 e2e_apps() {
     # Any sample application install and configuration for the E2E walkthrough.
 
-    echo "Deploying walkthrough applications"
+    echo "Configuring walkthrough applications"
     cd $ROOT_DIR
 
     for template in $(ls $CD_CONFIG_DIR/*.template); do
     envsubst < ${template} > ${template%.*}
     done
 
-    cp $CD_CONFIG_DIR/skaffold.yaml web/
+    cp $CD_CONFIG_DIR/skaffold.yaml web/skaffold.yaml
+    cp $CD_CONFIG_DIR/skaffold-profiles.yaml web-profiles/skaffold.yaml
 
     git tag -a v1 -m "version 1 release"
 }

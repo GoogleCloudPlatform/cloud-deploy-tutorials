@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: leeroy-app-profiles
+  namespace: web-app-profiles
+  labels:
+    app: leeroy-app-profiles
+spec:
+  clusterIP: None
+  ports:
+    - port: 50051
+      name: leeroy-app-profiles
+  selector:
+    app: leeroy-app-profiles
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leeroy-app-profiles
+  namespace: web-app-profiles
+  labels:
+    app: leeroy-app-profiles
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leeroy-app-profiles
+  template:
+    metadata:
+      labels:
+        app: leeroy-app-profiles
+    spec:
+      containers:
+      - name: leeroy-app-profiles
+        image: leeroy-app-profiles
+        ports:
+        - containerPort: 50051

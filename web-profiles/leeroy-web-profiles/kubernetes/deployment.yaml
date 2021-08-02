@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leeroy-web-profiles
+  namespace: web-app-profiles
+  labels:
+    app: leeroy-web-profiles
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leeroy-web-profiles
+  template:
+    metadata:
+      labels:
+        app: leeroy-web-profiles
+    spec:
+      containers:
+        - name: leeroy-web-profiles
+          image: leeroy-web-profiles
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,30 @@
+apiVersion: skaffold/v2beta7
+kind: Config
+build:
+  artifacts:
+    - image: leeroy-web-profiles
+      context: leeroy-web-profiles
+    - image: leeroy-app-profiles
+      context: leeroy-app-profiles
+  googleCloudBuild:
+    projectId: ${PROJECT_ID}
+deploy:
+  kubectl:
+    manifests:
+      - leeroy-web-profiles/kubernetes/*
+profiles:
+- name: test
+  deploy:
+    kustomize:
+      paths:
+        - leeroy-app-profiles/kubernetes/test
+- name: staging
+  deploy:
+    kustomize:
+      paths:
+        - leeroy-app-profiles/kubernetes/staging
+- name: prod
+  deploy:
+    kustomize:
+      paths:
+        - leeroy-app-profiles/kubernetes/prod

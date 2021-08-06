@@ -18,6 +18,7 @@ metadata:
   name: leeroy-app-profiles
   namespace: web-app-profiles
 spec:
+  replicas: 2
   template:
     spec:
       containers:

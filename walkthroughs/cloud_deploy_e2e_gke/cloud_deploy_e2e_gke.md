@@ -629,13 +629,13 @@ Click **Next** to proceed.
 
 ## Cleaning Up
 
-To clean up your GKE Targets and other resources, run the provided cleanup script.
+To clean up your GKE Targets and other resources, run the provided cleanup script. If you would like to continue to another tutorial, do not run this step, as these resources will be reused.
 
 ```bash
 ./cleanup.sh
 ```
 
-This will remove the GCP resources as well as the artifacts on your Cloud Shell instance. It may take a few minutes to complete.
+This will remove the GCP resources as well as the artifacts on your Cloud Shell instance. It will take around 10 minutes to complete.
 
 ### Cleaning up gcloud configurations
 

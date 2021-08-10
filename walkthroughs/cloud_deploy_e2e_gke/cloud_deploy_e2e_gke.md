@@ -122,13 +122,13 @@ Listing items under project {{project-id}}, location us-central1, repository web
 ---
 createTime: '2021-05-13T20:31:13.636063Z'
 package: us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app
-tags: release-1.0-3-gf0649a5
+tags: v1
 updateTime: '2021-05-13T20:31:13.636063Z'
 version: sha256:b5b63cb3deb5068b6d8a651bbd40947f81e2406ee7e5e9da507f0d39cada71d9
 ---
 createTime: '2021-05-13T20:31:12.513087Z'
 package: us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web
-tags: release-1.0-3-gf0649a5
+tags: v1
 updateTime: '2021-05-13T20:31:12.513087Z'
 version: sha256:d6a2da6aff0638ef4b6eb50134ab0109deb60a7434f690ed48462ed22e888905
 ```

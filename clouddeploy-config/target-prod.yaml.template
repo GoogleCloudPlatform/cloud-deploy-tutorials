@@ -4,7 +4,5 @@ metadata:
   name: prod
 description: prod cluster
 requireApproval: true
-gkeCluster:
-  project: ${PROJECT_ID}
-  cluster: prod
-  location: ${REGION}
+gke:
+  cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/prod

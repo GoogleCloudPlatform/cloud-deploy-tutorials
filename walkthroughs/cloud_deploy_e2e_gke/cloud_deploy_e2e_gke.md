@@ -120,17 +120,17 @@ The `--format yaml` parameter returns the output as YAML for readability. The ou
 Listing items under project {{project-id}}, location us-central1, repository web-app.
 
 ---
-createTime: '2021-05-13T20:31:13.636063Z'
+createTime: '2021-08-16T14:01:58.125999Z'
 package: us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app
 tags: v1
-updateTime: '2021-05-13T20:31:13.636063Z'
-version: sha256:b5b63cb3deb5068b6d8a651bbd40947f81e2406ee7e5e9da507f0d39cada71d9
+updateTime: '2021-08-16T14:01:58.125999Z'
+version: sha256:71c0def49cbc6f414d9b2723f302654e6791f0db3948cc7bbf430ac0346224f8
 ---
-createTime: '2021-05-13T20:31:12.513087Z'
+createTime: '2021-08-16T14:01:55.719359Z'
 package: us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web
 tags: v1
-updateTime: '2021-05-13T20:31:12.513087Z'
-version: sha256:d6a2da6aff0638ef4b6eb50134ab0109deb60a7434f690ed48462ed22e888905
+updateTime: '2021-08-16T14:01:55.719359Z'
+version: sha256:91161798f2f544cb0a21fc8c6cec3c3f824f46d64de5ce18846f74a9cc730d09
 ```
 
 By default, `skaffold` sets the tag for an image to its related `git` tag if one is available. In this case, a `v1` tag was set on the repository.
@@ -160,11 +160,11 @@ gcloud alpha deploy delivery-pipelines describe web-app
 Your output should look like the example below. 
 
 ```terminal
-Unable to get target projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
-Unable to get target projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/staging
-Unable to get target projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/prod
+Unable to get target test
+Unable to get target staging
+Unable to get target prod
 Delivery Pipeline:
-  createTime: '2021-05-13T20:22:22.880283007Z'
+  createTime: '2021-08-16T14:03:18.294884547Z'
   description: web-app delivery pipeline
   etag: 2539eacd7f5c256d
   name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app
@@ -173,8 +173,8 @@ Delivery Pipeline:
     - targetId: test
     - targetId: staging
     - targetId: prod
-  uid: 7f9c9f7e90ee44869a21ce2215b5536c
-  updateTime: '2021-05-13T20:22:24.151840532Z'
+  uid: eb0601aa03ac4b088d74c6a5f13f36ae
+  updateTime: '2021-08-16T14:03:18.680753520Z'
 Targets: []
 ```
 
@@ -206,20 +206,18 @@ Verify the `target` was created:
 gcloud alpha deploy targets describe test --delivery-pipeline=web-app
 ```
 
-The output should look like the example below. Important information in this output is that the Target is recognized as a `gkeCluster` and that it's been associated with the `web-app` Delivery Pipeline.
+The output should look like the example below. Important information in this output is that the Target is recognized as a `gke` `cluster`.
 
 ```terminal
 Target:
-createTime: '2021-04-15T13:53:31.094996057Z'
-description: test cluster
-etag: 4c7d828d4f7a3b74
-gkeCluster:
-  cluster: test
-  location: us-central1
-  project: {{project-id}}
-name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
-uid: d1d2ca2dc4bf4884a8d16588cfe6d458
-updateTime: '2021-04-15T13:53:31.663277590Z'
+  createTime: '2021-08-16T14:04:02.848374540Z'
+  description: test cluster
+  etag: 7c430c4e71df8f43
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/test
+  name: projects/{{project-id}}/locations/us-central1/targets/test
+  uid: c51b1e166442447e921c0e857be754a3
+  updateTime: '2021-08-16T14:04:03.165134282Z'
 ```
 
 You can also view [details for your Target](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/targets/test?project={{project-id}}) in the GCP control panel.
@@ -258,40 +256,32 @@ gcloud alpha deploy targets list
 The output should look like this, showing all three created Targets, which are used with your `web-app` Delivery Pipeline.
 
 ```terminal
----
-createTime: '2021-04-15T16:43:59.404939886Z'
-description: staging cluster
-etag: 9c923d5f1dd88c97
-gkeCluster:
-  cluster: staging
-  location: us-central1
-  project: {{project-id}}
-name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/staging
-uid: b1a856d72e5d43de817c2ea8380da39b
-updateTime: '2021-04-15T16:44:00.272725580Z'
----
-createTime: '2021-04-15T13:53:31.094996057Z'
-description: test cluster
-etag: 4c7d828d4f7a3b74
-gkeCluster:
-  cluster: test
-  location: us-central1
-  project: {{project-id}}
-name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/test
-uid: d1d2ca2dc4bf4884a8d16588cfe6d458
-updateTime: '2021-04-15T13:53:31.663277590Z'
----
-requireApproval: true
-createTime: '2021-04-15T16:44:31.295700Z'
-description: prod cluster
-etag: ff1840e2d8c3010a
-gkeCluster:
-  cluster: prod
-  location: us-central1
-  project: {{project-id}}
-name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/prod
-uid: 0c22c1fb08e546ee9ae569ce501bac95
-updateTime: '2021-04-15T16:44:32.078235982Z'
+targets:
+- createTime: '2021-08-16T14:04:35.715192830Z'
+  description: staging cluster
+  etag: 59dfe1ad69cced01
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/staging
+  name: projects/{{project-id}}/locations/us-central1/targets/staging
+  uid: 906ccca2037c4a339018eb7f92d86d37
+  updateTime: '2021-08-16T14:04:36.012290125Z'
+- createTime: '2021-08-16T14:04:02.848374540Z'
+  description: test cluster
+  etag: 7c430c4e71df8f43
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/test
+  name: projects/{{project-id}}/locations/us-central1/targets/test
+  uid: c51b1e166442447e921c0e857be754a3
+  updateTime: '2021-08-16T14:04:03.165134282Z'
+- createTime: '2021-08-16T14:04:41.009584891Z'
+  description: prod cluster
+  etag: 95f6cfe4a63a7f5f
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod
+  name: projects/{{project-id}}/locations/us-central1/targets/prod
+  requireApproval: true
+  uid: b88f2b6546304fb6897710d058d2b025
+  updateTime: '2021-08-16T14:04:41.360370226Z'
 ```
 
 All Cloud Deploy targets for the delivery pipeline have now been created.
@@ -318,66 +308,86 @@ To confirm your release has been created run the following command:
 gcloud alpha deploy releases list --delivery-pipeline web-app
 ```
 
-Your output should look similar to the example below. Important things to note are that the release has been successfully rendered according to the `renderState` value, as well as the location of the `skaffold` configuration noted by the `skaffoldConfigUri` parameter.
+Your output should look similar to the example below. Important things to note are that the release has been successfully rendered according to the `renderingState` value, as well as the location of the `skaffold` configuration noted by the `skaffoldConfigUri` parameter.
 
 ```terminal
 ---
 buildArtifacts:
-- imageName: leeroy-app
-  tag: us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:v1@sha256:23269937afe8c3827d40999902e48ad8a9ddb2a3d0fe1efbfcedd75c847ce43e
-- imageName: leeroy-web
-  tag: us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:v1@sha256:51882af00331ccca196aa56e8bff69b377ed449a9cbbc013dd08d365bf385b36
-createTime: '2021-05-14T10:23:16.378352077Z'
+- image: leeroy-app
+  tag: us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-app:v1@sha256:71c0def49cbc6f414d9b2723f302654e6791f0db3948cc7bbf430ac0346224f8
+- image: leeroy-web
+  tag: us-central1-docker.pkg.dev/{{project-id}}/web-app/leeroy-web:v1@sha256:91161798f2f544cb0a21fc8c6cec3c3f824f46d64de5ce18846f74a9cc730d09
+createTime: '2021-08-16T14:05:20.503428Z'
 deliveryPipelineSnapshot:
-  createTime: '1970-01-01T00:00:37.541324Z'
+  createTime: '2021-08-16T14:03:18.558786Z'
   description: web-app delivery pipeline
   etag: 2539eacd7f5c256d
-  name: projects/408335957468/locations/us-central1/deliveryPipelines/web-app
+  name: projects/123320843249/locations/us-central1/deliveryPipelines/web-app
   serialPipeline:
     stages:
     - targetId: test
     - targetId: staging
     - targetId: prod
-  uid: c1c26b080e7e40379f0491862326d2fc
-  updateTime: '1970-01-01T00:00:37.541324Z'
-etag: a857d99c459bf9b5
-manifestBucket: gs://{{project-id}}_clouddeploy/render
+  uid: eb0601aa03ac4b088d74c6a5f13f36ae
+  updateTime: '2021-08-16T14:03:18.558786Z'
+etag: fc081ad5de12a888
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
+renderEndTime: '2021-08-16T14:05:55.992810Z'
+renderStartTime: '2021-08-16T14:05:21.803045346Z'
 renderState: SUCCESS
-skaffoldConfigUri: gs://{{project-id}}_clouddeploy/source/1620987794.922149-81438ff3065c4d61b7dbfa46cbfd7bf8.tgz
+renderingBuild: projects/123320843249/locations/us-central1/builds/d9a52630-d06a-4485-90b0-391f84b16b86
+skaffoldConfigUri: gs://{{project-id}}_clouddeploy/source/1629122719.128778-7891f1bb5957480d8e974b9f99905896.tgz
+skaffoldVersion: 1.24.0
+targetArtifacts:
+  prod:
+    archiveUri: gs://us-central1.deploy-artifacts.{{project-id}}.appspot.com/web-app-001-2fea54fde3ac4def8abe5c63dc73cf32/prod.tar.gz
+    manifestPath: manifest.yaml
+    skaffoldConfigPath: skaffold.yaml
+  staging:
+    archiveUri: gs://us-central1.deploy-artifacts.{{project-id}}.appspot.com/web-app-001-2fea54fde3ac4def8abe5c63dc73cf32/staging.tar.gz
+    manifestPath: manifest.yaml
+    skaffoldConfigPath: skaffold.yaml
+  test:
+    archiveUri: gs://us-central1.deploy-artifacts.{{project-id}}.appspot.com/web-app-001-2fea54fde3ac4def8abe5c63dc73cf32/test.tar.gz
+    manifestPath: manifest.yaml
+    skaffoldConfigPath: skaffold.yaml
+targetRenders:
+  prod:
+    renderingBuild: projects/123320843249/locations/us-central1/builds/d9a52630-d06a-4485-90b0-391f84b16b86
+    renderingState: SUCCEEDED
+  staging:
+    renderingBuild: projects/123320843249/locations/us-central1/builds/d9a52630-d06a-4485-90b0-391f84b16b86
+    renderingState: SUCCEEDED
+  test:
+    renderingBuild: projects/123320843249/locations/us-central1/builds/d9a52630-d06a-4485-90b0-391f84b16b86
+    renderingState: SUCCEEDED
 targetSnapshots:
-- createTime: '1970-01-01T00:00:40.904926Z'
+- createTime: '2021-08-16T14:04:02.948551Z'
   description: test cluster
-  etag: 794c266d0db4cc28
-  gkeCluster:
-    cluster: test
-    location: us-central1
-    project: {{project-id}}
-  name: projects/408335957468/locations/us-central1/deliveryPipelines/web-app/targets/test
-  uid: b1fe05c0fb3249dd921660afb53e7974
-  updateTime: '1970-01-01T00:00:40.904926Z'
-- createTime: '1970-01-01T00:00:07.845918Z'
+  etag: 7c430c4e71df8f43
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/test
+  name: projects/123320843249/locations/us-central1/targets/test
+  uid: c51b1e166442447e921c0e857be754a3
+  updateTime: '2021-08-16T14:04:02.948551Z'
+- createTime: '2021-08-16T14:04:35.783821Z'
   description: staging cluster
-  etag: d30e217167b30cd4
-  gkeCluster:
-    cluster: staging
-    location: us-central1
-    project: {{project-id}}
-  name: projects/408335957468/locations/us-central1/deliveryPipelines/web-app/targets/staging
-  uid: 7676fb491be94f1e90a0d0476a1f8308
-  updateTime: '1970-01-01T00:00:07.845918Z'
-- requireApproval: true
-  createTime: '1970-01-01T00:00:22.407141Z'
+  etag: 59dfe1ad69cced01
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/staging
+  name: projects/123320843249/locations/us-central1/targets/staging
+  uid: 906ccca2037c4a339018eb7f92d86d37
+  updateTime: '2021-08-16T14:04:35.783821Z'
+- createTime: '2021-08-16T14:04:41.094770Z'
   description: prod cluster
-  etag: 78c6e5a779b43e72
-  gkeCluster:
-    cluster: prod
-    location: us-central1
-    project: {{project-id}}
-  name: projects/408335957468/locations/us-central1/deliveryPipelines/web-app/targets/prod
-  uid: da928681694840e5b3976dd5b0a958d5
-  updateTime: '1970-01-01T00:00:22.407141Z'
-uid: 25b7ee6d14394a40a70b09fb4a006f64
+  etag: 95f6cfe4a63a7f5f
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod
+  name: projects/123320843249/locations/us-central1/targets/prod
+  requireApproval: true
+  uid: b88f2b6546304fb6897710d058d2b025
+  updateTime: '2021-08-16T14:04:41.094770Z'
+uid: 6a18d3470ec84da8ac0f74720f9f4513
 ```
 
 You can also view [Release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/releases/web-app-001?project={{project-id}}) in the GCP control panel.
@@ -401,15 +411,16 @@ Your output should look similar to the example below. The start and end times fo
 ```terminal
 ---
 approvalState: DOES_NOT_NEED_APPROVAL
-createTime: '2021-04-30T18:46:45.657293361Z'
-deployBuild: 3915c189-e9b4-4c6e-b757-322d8db18188
-deployEndTime: '2021-04-30T18:47:31.951451Z'
-deployStartTime: '2021-04-30T18:46:47.234151706Z'
-etag: d4a044da3c830258
-name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-test-0002
+createTime: '2021-08-16T14:05:21.961604Z'
+deployEndTime: '2021-08-16T14:06:35.278604Z'
+deployStartTime: '2021-08-16T14:06:22.420091744Z'
+deployingBuild: projects/123320843249/locations/us-central1/builds/4815b788-ec5e-4185-9141-a5b57c71b001
+enqueueTime: '2021-08-16T14:06:21.760830Z'
+etag: 5cb7b6c342b5f29b
+name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-test-0001
 state: SUCCESS
-target: test
-uid: f37126ebe3764108beb081c7e2930d7a
+targetId: test
+uid: cccd9525d3a0414fa60b2771036841d9
 ```
 
 Note that the first rollout of a Release will take several minutes, because Cloud Deploy renders the manifests for all Targets when the Release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
@@ -446,15 +457,15 @@ Your output should contain a section similar to this:
 ```terminal
 ---
 approvalState: DOES_NOT_NEED_APPROVAL
-createTime: '2021-04-30T18:46:45.657293361Z'
-deployBuild: 3915c189-e9b4-4c6e-b757-322d8db18188
-deployEndTime: '2021-04-30T18:47:31.951451Z'
-deployStartTime: '2021-04-30T18:46:47.234151706Z'
-etag: d4a044da3c830258
+createTime: '2021-08-16T14:09:49.522315Z'
+deployEndTime: '2021-08-16T14:10:02.029182Z'
+deployStartTime: '2021-08-16T14:09:50.199876916Z'
+deployingBuild: projects/123320843249/locations/us-central1/builds/47218238-c661-466e-9005-cde9ffa6bbf1
+etag: 6e25ab47add1d6ee
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-staging-0001
 state: SUCCESS
-target: staging
-uid: f37126ebe3764108beb081c7e2930d7a
+targetId: staging
+uid: b24b5f42db524fe4b0513c2f930e8196
 ```
 The rollout may take several minutes. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
@@ -493,17 +504,15 @@ Your output should look similar to the example below. Unlike the previous target
 
 ```terminal
 Target:
-  requireApproval: true
-  createTime: '2021-04-30T18:40:11.068571913Z'
+  createTime: '2021-08-16T14:04:41.009584891Z'
   description: prod cluster
-  etag: 74a0c6560ae0ace7
-  gkeCluster:
-    cluster: prod
-    location: us-central1
-    project: {{project-id}}
-  name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/targets/prod
-  uid: 95fbe354bc07435f8248712a44035ca0
-  updateTime: '2021-04-30T20:39:57.398607646Z'
+  etag: 95f6cfe4a63a7f5f
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod
+  name: projects/{{project-id}}/locations/us-central1/targets/prod
+  requireApproval: true
+  uid: b88f2b6546304fb6897710d058d2b025
+  updateTime: '2021-08-16T14:04:41.360370226Z'
 ```
 
 Go ahead and promote your application to your prod Target with this command
@@ -521,13 +530,14 @@ gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-
 In the output, note that the `approvalState` is `NEEDS_APPROVAL` and the state is `PENDING_APPROVAL`.
 
 ```terminal
+---
 approvalState: NEEDS_APPROVAL
-createTime: '2021-05-03T17:23:18.183598192Z'
-etag: ac30600d82dcb0f
+createTime: '2021-08-16T14:12:07.466989Z'
+etag: 6e9303e5a1b04084
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-prod-0001
 state: PENDING_APPROVAL
-target: prod
-uid: f7de1bc9af4e46e499cc0c134b3758a6
+targetId: prod
+uid: a5c7d6007fee4d80904d49142581aaa7
 ```
 
 Next, you'll create a user with the proper IAM roles to approve this promotion to your prod Target and make your production push.
@@ -602,16 +612,19 @@ gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-
 Your output should look similar to below. 
 
 ```terminal
+---
 approvalState: APPROVED
-createTime: '2021-05-03T17:23:18.183598192Z'
-deployBuild: 27c9a286-2a88-419e-be5b-a79fa6248f60
-deployEndTime: '2021-05-03T19:00:26.526217Z'
-deployStartTime: '2021-05-03T18:59:46.114953201Z'
-etag: 205ff1e1a8d8c4f6
+approveTime: '2021-08-16T14:12:53.289467Z'
+createTime: '2021-08-16T14:12:07.466989Z'
+deployEndTime: '2021-08-16T14:13:08.195241Z'
+deployStartTime: '2021-08-16T14:12:53.760639336Z'
+deployingBuild: projects/123320843249/locations/us-central1/builds/b4b1636d-8fc2-4442-ab89-e118bf56834c
+enqueueTime: '2021-08-16T14:12:53.289467Z'
+etag: b129bfd02c374040
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-prod-0001
 state: SUCCESS
-target: prod
-uid: f7de1bc9af4e46e499cc0c134b3758a6
+targetId: prod
+uid: a5c7d6007fee4d80904d49142581aaa7
 ```
 
 The rollout may take several minutes. If you do not see `state: SUCCESS` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.

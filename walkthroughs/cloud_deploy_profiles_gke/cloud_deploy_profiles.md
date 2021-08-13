@@ -178,18 +178,19 @@ The `--format yaml` parameter returns the output as YAML for readability. The ou
 
 ```terminal
 Listing items under project {{project-id}}, location us-central1, repository web-app-profiles.
+
 ---
-createTime: '2021-08-06T10:23:19.838015Z'
+createTime: '2021-08-16T14:17:38.876047Z'
 package: us-central1-docker.pkg.dev/{{project-id}}/web-app-profiles/leeroy-app-profiles
 tags: v1
-updateTime: '2021-08-06T10:23:19.838015Z'
-version: sha256:014f32588ff27d4418cc2ed63ceca96b48e53ec9c76b52f57fa5463b36e7ac78
+updateTime: '2021-08-16T14:17:38.876047Z'
+version: sha256:a0c79a51a945c04f620d3134cf25d301179ba97af08820b50dfb3106fa95f815
 ---
-createTime: '2021-08-06T10:23:20.236063Z'
+createTime: '2021-08-16T14:17:38.625183Z'
 package: us-central1-docker.pkg.dev/{{project-id}}/web-app-profiles/leeroy-web-profiles
 tags: v1
-updateTime: '2021-08-06T10:23:20.236063Z'
-version: sha256:e9e97c1b488efa6a6910dce8aa8318f677daae543972efbcf2f3c52a9b15a54f
+updateTime: '2021-08-16T14:17:38.625183Z'
+version: sha256:1d976199de258a8bf6545852c593c8a51858a39b48351b9d562fca76d14d91f5
 ```
 
 By default, `skaffold` sets the tag for an image to its related `git` tag if one is available. In this case, a `v1` tag was set on the repository.
@@ -224,7 +225,7 @@ Your output should look like the example below. Notice that the targets are reus
 
 ```terminal
 Delivery Pipeline:
-  createTime: '2021-08-06T10:26:26.535630776Z'
+  createTime: '2021-08-16T14:18:45.690493174Z'
   description: web-app delivery pipeline with Skaffold profiles
   etag: c1bb971f4a5c558a
   name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles
@@ -239,8 +240,8 @@ Delivery Pipeline:
     - profiles:
       - prod
       targetId: prod
-  uid: 3fd543c2d8174d868240660103374fda
-  updateTime: '2021-08-06T10:26:26.646493691Z'
+  uid: a3bd5e0ebab4496c923fd1085a1816b1
+  updateTime: '2021-08-16T14:18:45.921453189Z'
 Targets:
 - Target: test
 - Target: staging
@@ -277,15 +278,15 @@ Your output should look similar to the example below. Important things to note a
 ---
 buildArtifacts:
 - image: leeroy-app-profiles
-  tag: us-central1-docker.pkg.dev/{{project-id}}/web-app-profiles/leeroy-app-profiles:v1-5-g83011bc@sha256:014f32588ff27d4418cc2ed63ceca96b48e53ec9c76b52f57fa5463b36e7ac78
+  tag: us-central1-docker.pkg.dev/{{project-id}}/web-app-profiles/leeroy-app-profiles:v1@sha256:a0c79a51a945c04f620d3134cf25d301179ba97af08820b50dfb3106fa95f815
 - image: leeroy-web-profiles
-  tag: us-central1-docker.pkg.dev/{{project-id}}/web-app-profiles/leeroy-web-profiles:v1-5-g83011bc@sha256:e9e97c1b488efa6a6910dce8aa8318f677daae543972efbcf2f3c52a9b15a54f
-createTime: '2021-08-06T10:30:13.197733Z'
+  tag: us-central1-docker.pkg.dev/{{project-id}}/web-app-profiles/leeroy-web-profiles:v1@sha256:1d976199de258a8bf6545852c593c8a51858a39b48351b9d562fca76d14d91f5
+createTime: '2021-08-16T14:19:23.683404Z'
 deliveryPipelineSnapshot:
-  createTime: '2021-08-06T10:26:26.619816Z'
+  createTime: '2021-08-16T14:18:45.903204Z'
   description: web-app delivery pipeline with Skaffold profiles
   etag: c1bb971f4a5c558a
-  name: projects/243106549432/locations/us-central1/deliveryPipelines/web-app-profiles
+  name: projects/123320843249/locations/us-central1/deliveryPipelines/web-app-profiles
   serialPipeline:
     stages:
     - profiles:
@@ -297,63 +298,51 @@ deliveryPipelineSnapshot:
     - profiles:
       - prod
       targetId: prod
-  uid: 3fd543c2d8174d868240660103374fda
-  updateTime: '2021-08-06T10:26:26.619816Z'
-etag: b435e6ac67132e33
+  uid: a3bd5e0ebab4496c923fd1085a1816b1
+  updateTime: '2021-08-16T14:18:45.903204Z'
+etag: eb4d84c5f608d864
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles/releases/web-app-profiles-001
-renderEndTime: '2021-08-06T10:31:04.647304Z'
-renderStartTime: '2021-08-06T10:30:13.961549226Z'
-renderState: SUCCESS
-renderingBuild: projects/243106549432/locations/us-central1/builds/0b05f583-4c8f-408a-8ad8-1b689dbe358a
-skaffoldConfigUri: gs://{{project-id}}_clouddeploy/source/1628245811.169313-6ed66c0a6bf741308c30e83b86168c50.tgz
+renderState: IN_PROGRESS
+renderingBuild: projects/123320843249/locations/us-central1/builds/1410d6aa-6416-415c-88b1-5be45bf8d613
+skaffoldConfigUri: gs://{{project-id}}_clouddeploy/source/1629123563.024985-fdded99d5fd74c6fb42b063e25f5f014.tgz
 skaffoldVersion: 1.24.0
-targetArtifacts:
+targetRenders:
   prod:
-    archiveUri: gs://us-central1.deploy-artifacts.{{project-id}}.appspot.com/web-app-profiles-001-6d720dd1985d4503befdc102893e85e3/prod.tar.gz
-    manifestPath: manifest.yaml
-    skaffoldConfigPath: skaffold.yaml
+    renderingBuild: projects/123320843249/locations/us-central1/builds/1410d6aa-6416-415c-88b1-5be45bf8d613
+    renderingState: IN_PROGRESS
   staging:
-    archiveUri: gs://us-central1.deploy-artifacts.{{project-id}}.appspot.com/web-app-profiles-001-6d720dd1985d4503befdc102893e85e3/staging.tar.gz
-    manifestPath: manifest.yaml
-    skaffoldConfigPath: skaffold.yaml
+    renderingBuild: projects/123320843249/locations/us-central1/builds/1410d6aa-6416-415c-88b1-5be45bf8d613
+    renderingState: IN_PROGRESS
   test:
-    archiveUri: gs://us-central1.deploy-artifacts.{{project-id}}.appspot.com/web-app-profiles-001-6d720dd1985d4503befdc102893e85e3/test.tar.gz
-    manifestPath: manifest.yaml
-    skaffoldConfigPath: skaffold.yaml
+    renderingBuild: projects/123320843249/locations/us-central1/builds/1410d6aa-6416-415c-88b1-5be45bf8d613
+    renderingState: IN_PROGRESS
 targetSnapshots:
-- createTime: '2021-08-06T09:28:29.322569Z'
+- createTime: '2021-08-16T14:04:02.948551Z'
   description: test cluster
-  etag: a7ce6c8bf6e97d7b
-  gkeCluster:
-    cluster: test
-    location: us-central1
-    project: {{project-id}}
-  name: projects/243106549432/locations/us-central1/targets/test
-  uid: 7e415505c0584a248af10fed2e806e21
-  updateTime: '2021-08-06T09:28:29.322569Z'
-- createTime: '2021-08-06T09:57:10.602755Z'
+  etag: 7c430c4e71df8f43
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/test
+  name: projects/123320843249/locations/us-central1/targets/test
+  uid: c51b1e166442447e921c0e857be754a3
+  updateTime: '2021-08-16T14:04:02.948551Z'
+- createTime: '2021-08-16T14:04:35.783821Z'
   description: staging cluster
-  etag: 28c2b2833b3492e3
-  gkeCluster:
-    cluster: staging
-    location: us-central1
-    project: {{project-id}}
-  name: projects/243106549432/locations/us-central1/targets/staging
-  uid: 4668da68e8574e1488eaf17e7d04ce3a
-  updateTime: '2021-08-06T09:57:10.602755Z'
-- createTime: '2021-08-06T09:57:20.053816Z'
+  etag: 59dfe1ad69cced01
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/staging
+  name: projects/123320843249/locations/us-central1/targets/staging
+  uid: 906ccca2037c4a339018eb7f92d86d37
+  updateTime: '2021-08-16T14:04:35.783821Z'
+- createTime: '2021-08-16T14:04:41.094770Z'
   description: prod cluster
-  etag: 63b7d7eef1d91401
-  gkeCluster:
-    cluster: prod
-    location: us-central1
-    project: {{project-id}}
-  name: projects/243106549432/locations/us-central1/targets/prod
+  etag: 95f6cfe4a63a7f5f
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod
+  name: projects/123320843249/locations/us-central1/targets/prod
   requireApproval: true
-  uid: fc826c8a8ad240af892e745024fc9e60
-  updateTime: '2021-08-06T09:57:20.053816Z'
-uid: 005a6e67629d43f380a147d2838911e1
-
+  uid: b88f2b6546304fb6897710d058d2b025
+  updateTime: '2021-08-16T14:04:41.094770Z'
+uid: 6b6bde86e2b1450cb1a8b5fa5f9d7606
 ```
 
 You can also view [Release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app-profiles/releases/web-app-profiles-001?project={{project-id}}) in the GCP control panel.
@@ -373,16 +362,16 @@ Your output should look similar to the example below. The start and end times fo
 ```terminal
 ---
 approvalState: DOES_NOT_NEED_APPROVAL
-createTime: '2021-08-06T10:30:18.002901Z'
-deployEndTime: '2021-08-06T10:31:26.837528Z'
-deployStartTime: '2021-08-06T10:31:14.483531118Z'
-deployingBuild: projects/243106549432/locations/us-central1/builds/c6b5de5d-c5eb-4ab7-ae80-0fd382d1c55c
-enqueueTime: '2021-08-06T10:31:13.947897Z'
-etag: ccae280ea72c95e1
+createTime: '2021-08-16T14:19:25.224924Z'
+deployEndTime: '2021-08-16T14:20:37.604144Z'
+deployStartTime: '2021-08-16T14:20:24.744716082Z'
+deployingBuild: projects/123320843249/locations/us-central1/builds/1cca90d5-5fc9-4a71-90d4-81cd639a71a2
+enqueueTime: '2021-08-16T14:20:24.273685Z'
+etag: 33ea01f8f51ea172
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles/releases/web-app-profiles-001/rollouts/web-app-profiles-001-to-test-0001
 state: SUCCESS
 targetId: test
-uid: 627c468869f3471880dec4f80ff60c79
+uid: 810fa2e785164f87852893d24bdb0b1f
 ```
 
 Note that the first rollout of a Release will take several minutes, because Cloud Deploy renders the manifests for all Targets when the Release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
@@ -417,7 +406,7 @@ The output of your `kubectl` command should look similar to the following:
 
 ```terminal
 Switched to context "test".
-2021/08/06 10:31:28 leeroy app server ready, runnning in target: test
+2021/08/16 14:20:38 leeroy app server ready, runnning in target: test
 ```
 
 Click **Next** to proceed.
@@ -441,15 +430,15 @@ Your output should contain a section similar to this:
 ```terminal
 ---
 approvalState: DOES_NOT_NEED_APPROVAL
-createTime: '2021-04-30T18:46:45.657293361Z'
-deployBuild: 3915c189-e9b4-4c6e-b757-322d8db18188
-deployEndTime: '2021-04-30T18:47:31.951451Z'
-deployStartTime: '2021-04-30T18:46:47.234151706Z'
-etag: d4a044da3c830258
+createTime: '2021-08-16T14:24:14.063191Z'
+deployEndTime: '2021-08-16T14:24:28.150165Z'
+deployStartTime: '2021-08-16T14:24:14.426966091Z'
+deployingBuild: projects/123320843249/locations/us-central1/builds/6cd8d985-594c-4185-9749-3a34ea541e6d
+etag: ee723ed51ea90de6
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles/releases/web-app-profiles-001/rollouts/web-app-profiles-001-to-staging-0001
 state: SUCCESS
-target: staging
-uid: f37126ebe3764108beb081c7e2930d7a
+targetId: staging
+uid: 448812a75ae04038ba2193220a74f1c7
 ```
 The rollout may take several minutes. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
@@ -484,8 +473,8 @@ The output of your `kubectl` command should look similar to the following:
 
 ```terminal
 Switched to context "staging".
-2021/08/06 10:35:08 leeroy app server ready, runnning in target: staging
-2021/08/06 10:35:09 leeroy app server ready, runnning in target: staging
+2021/08/16 14:24:29 leeroy app server ready, runnning in target: staging
+2021/08/16 14:24:28 leeroy app server ready, runnning in target: staging
 ```
 
 Click **Next** to proceed.
@@ -502,17 +491,15 @@ Your output should look similar to the example below. Unlike the previous target
 
 ```terminal
 Target:
-  createTime: '2021-08-06T09:57:19.947350447Z'
+  createTime: '2021-08-16T14:04:41.009584891Z'
   description: prod cluster
-  etag: 63b7d7eef1d91401
-  gkeCluster:
-    cluster: prod
-    location: us-central1
-    project: {{project-id}}
+  etag: 95f6cfe4a63a7f5f
+  gke:
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod
   name: projects/{{project-id}}/locations/us-central1/targets/prod
   requireApproval: true
-  uid: fc826c8a8ad240af892e745024fc9e60
-  updateTime: '2021-08-06T09:57:20.081243182Z'
+  uid: b88f2b6546304fb6897710d058d2b025
+  updateTime: '2021-08-16T14:04:41.360370226Z'
 ```
 
 Go ahead and promote your application to your prod Target with this command:
@@ -532,13 +519,12 @@ In the output, note that the `approvalState` is `NEEDS_APPROVAL` and the state i
 ```terminal
 ---
 approvalState: NEEDS_APPROVAL
-createTime: '2021-08-06T10:40:01.770182Z'
+createTime: '2021-08-16T14:27:48.308913Z'
 etag: 6e9303e5a1b04084
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles/releases/web-app-profiles-001/rollouts/web-app-profiles-001-to-prod-0001
 state: PENDING_APPROVAL
 targetId: prod
-uid: fd681c5fa9484659a34d9fb582475364
----
+uid: 86ac0b70bcdc4599a49eeddcfb41ef3e
 ```
 
 Click **Next** to proceed.
@@ -562,17 +548,17 @@ Your output should contain output similar to the following:
 ```terminal
 ---
 approvalState: APPROVED
-approveTime: '2021-08-06T10:41:52.197639Z'
-createTime: '2021-08-06T10:40:01.770182Z'
-deployEndTime: '2021-08-06T10:42:06.016017Z'
-deployStartTime: '2021-08-06T10:41:52.766512216Z'
-deployingBuild: projects/243106549432/locations/us-central1/builds/16b66075-e655-47b1-97bb-feb4efd225f4
-enqueueTime: '2021-08-06T10:41:52.197639Z'
-etag: 5cb659630a96cc3f
+approveTime: '2021-08-16T14:28:41.030182Z'
+createTime: '2021-08-16T14:27:48.308913Z'
+deployEndTime: '2021-08-16T14:28:54.293164Z'
+deployStartTime: '2021-08-16T14:28:41.494324300Z'
+deployingBuild: projects/123320843249/locations/us-central1/builds/398729bb-c9d1-4d89-b747-f14995fefafa
+enqueueTime: '2021-08-16T14:28:41.030182Z'
+etag: 8da9404a9b4005a1
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles/releases/web-app-profiles-001/rollouts/web-app-profiles-001-to-prod-0001
 state: SUCCESS
 targetId: prod
----
+uid: 86ac0b70bcdc4599a49eeddcfb41ef3e
 ```
 
 The rollout may take several minutes. If you do not see `state: SUCCESS` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
@@ -609,9 +595,9 @@ The output of your `kubectl` command should look similar to the following:
 
 ```terminal
 Switched to context "prod".
-2021/08/06 10:42:08 leeroy app server ready, runnning in target: prod
-2021/08/06 10:42:07 leeroy app server ready, runnning in target: prod
-2021/08/06 10:42:10 leeroy app server ready, runnning in target: prod
+2021/08/16 14:28:56 leeroy app server ready, runnning in target: prod
+2021/08/16 14:28:55 leeroy app server ready, runnning in target: prod
+2021/08/16 14:28:55 leeroy app server ready, runnning in target: prod
 ```
 
 Your Cloud Deploy per-Target configuration worked, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.

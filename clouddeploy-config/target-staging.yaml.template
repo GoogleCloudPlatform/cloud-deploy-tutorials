@@ -3,7 +3,5 @@ kind: Target
 metadata:
   name: staging
 description: staging cluster
-gkeCluster:
-  project: ${PROJECT_ID}
-  cluster: staging
-  location: ${REGION}
+gke:
+  cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/staging

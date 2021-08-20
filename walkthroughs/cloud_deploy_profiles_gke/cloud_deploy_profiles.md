@@ -108,7 +108,6 @@ You should see output similar to the following:
 
 ```terminal
 web-profiles
-├── artifacts.json
 ├── leeroy-app-profiles
 │   ├── Dockerfile
 │   ├── app.go

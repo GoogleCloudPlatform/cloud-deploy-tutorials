@@ -4,7 +4,7 @@
     >
 </walkthrough-author>
 
-# Cloud Deploy: Public Preview
+# Cloud Deploy: Preview
 
 ![Cloud Deploy logo](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png "Cloud Deploy logo")
 

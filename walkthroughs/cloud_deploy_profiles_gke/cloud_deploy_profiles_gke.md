@@ -13,7 +13,9 @@ This tutorial guides you through using Skaffold Profiles with the Google [Cloud 
 
 Following on from the Cloud Deploy End-to-end tutorial, you will use a **test > staging > production** delivery pipeline to deploy an application that is customized for each target.
 
-Please note that completion of the Cloud Deploy End-to-end tutorial is a prerequisite for this tutorial. If you have not done so, please complete this first, then resume here.
+Please note that completion of the Cloud Deploy End-to-end tutorial is a prerequisite for this tutorial.
+
+If you have not done so, please visit [the tutorials page](https://cloud.google.com/deploy/docs/tutorials), complete the Cloud Deploy End-to-end tutorial first, then resume this tutorial.
 
 ## About Profiles
 A common pattern for building and progressing an application safely and reliably to production is to build the artifact only once, and to use data stored separately to configure the application.
@@ -28,7 +30,7 @@ Examples of these requirements include:
 
 To facilitate this pattern, Cloud Deploy integrates with [`Skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset, which includes features to enable these kinds of deploy-time configuration.
 
-Skaffold, in turn, supports the use of multiple underlying tools that enable application manifest templatization and overlays.
+Skaffold, in turn, supports the use of multiple underlying tools that enable application manifest templatization and manipulation.
 
 This tutorial uses [Kustomize](https://kustomize.io/), but [Helm](https://helm.sh/) is another example of a tool that is commonly used to templatize and/or manage Kubernetes manifests.
 
@@ -55,7 +57,7 @@ GCP organizes resources into projects. This allows you to collect all of the rel
 
 Begin by selecting an existing project for this tutorial.
 
-***This project must be the project you used for the Cloud Deploy End-to-end tutorial, because infrastructure and Cloud Deploy Targets are reused.***
+***This project must be the project you used for the [Cloud Deploy End-to-end walkthrough](https://cloud.google.com/deploy/docs/tutorials), because infrastructure and Cloud Deploy Targets are reused.***
 
 <walkthrough-project-setup billing="true"></walkthrough-project-setup>
 
@@ -96,15 +98,7 @@ As part of this tutorial, a sample application from the [Skaffold Github reposit
 
 ### Application Configuration
 
-The example application source code is in the `web-profiles` directory of your Cloud Shell instance. It's a simple web app that signs on with a log entry, listens on a port, and provides an HTTP response to each incoming request.
-
-Run the following command to show the structure of the application and its configuration:
-
-```bash
-tree web-profiles
-```
-
-You should see output similar to the following:
+The example application source code is in the `web-profiles` directory of your Cloud Shell instance. It's a simple web app that signs on with a log entry, listens on a port, and provides an HTTP response to each incoming request. The structure of the application and its configuration is as follows:
 
 ```terminal
 web-profiles
@@ -131,10 +125,11 @@ web-profiles
 │   └── web.go
 └── skaffold.yaml
 ```
-Notice:
+
+Under the `kubernetes` directory for the `leeroy-app-profiles` application, notice:
 
 * The `base` directory, which contains Kubernetes configuration common to all targets for the `leeroy-app-profiles` application
-* The `prod`, `staging` and `test` directories, which contain configuration that specific to each target
+* The `prod`, `staging` and `test` directories, which contain configuration that is specific to each target
 
 The `web-profiles` directory contains `skaffold.yaml`, which contains directives for `Skaffold` to build and deploy container images for your application. This configuration uses the [Cloud Build](https://cloud.google.com/build) service to build the container images.
 
@@ -202,7 +197,9 @@ Click **Next** to proceed.
 
 ## Create the delivery pipeline
 
-In this tutorial, you will create a Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`. Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
+In this tutorial, you will create a new Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`, with specialized configuration for each.
+
+Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. You will reuse the target resources created in the pre-required [Cloud Deploy End-to-end walkthrough](https://cloud.google.com/deploy/docs/tutorials) tutorial.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/delivery-pipeline-profiles.yaml">Click here to view delivery-pipeline-profiles.yaml</walkthrough-editor-open-file>
 
@@ -220,7 +217,7 @@ Verify the delivery pipeline was created:
 gcloud alpha deploy delivery-pipelines describe web-app-profiles
 ```
 
-Your output should look like the example below. Notice that the targets are reused from the Cloud Deploy End-to-end tutorial, but this Pipeline has a `profile` associated with each `targetID`:
+Your output should look like the example below. Notice that the targets are reused from the Cloud Deploy End-to-end walkthrough, but this Pipeline has a `profile` associated with each `targetID`:
 
 ```terminal
 Delivery Pipeline:
@@ -391,7 +388,7 @@ leeroy-web-profiles-5498c5b7fd-czvm8   1/1     Running   0          20s
 
 Recall from earlier in this tutorial that the Cloud Deploy configuration was structured to contain configuration specific to each Target.
 
-<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/test/target.yaml">Click here to review target.yaml for the `test` Target.</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/test/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `test` Target.</walkthrough-editor-open-file>
 
 Notice at the bottom of the file that this overlay includes setting the value of the `TARGET` environment variable to `test`.
 
@@ -458,7 +455,7 @@ leeroy-web-profiles-5498c5b7fd-czvm8   1/1     Running   0          20s
 
 Notice that in the `staging` environment, two instances of the `leeroy-app-profiles` pod should be running.
 
-<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/staging/target.yaml">Click here to review target.yaml for the `staging` Target.</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/staging/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `staging` Target.</walkthrough-editor-open-file>
 
 Notice at the bottom of the file that this overlay includes setting the value of the `TARGET` environment variable to `staging`, as well as setting the number of replicas of the app to 2.
 
@@ -580,7 +577,7 @@ leeroy-web-profiles-8448cd558f-mhzgd   1/1     Running   0          107s
 
 Notice that in the `prod` environment, three instances of the `leeroy-app-profiles` pod should be running.
 
-<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/prod/target.yaml">Click here to review target.yaml for the `prod` Target.</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/prod/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `prod` Target.</walkthrough-editor-open-file>
 
 Notice at the bottom of the file that this overlay includes setting the value of the `TARGET` environment variable to `prod`, as well as setting the number of replicas of the app to 3.
 

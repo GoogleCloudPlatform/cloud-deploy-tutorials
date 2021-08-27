@@ -10,7 +10,7 @@ This repository contains content and functionality to help you try out the Cloud
 
 1. Click the graphic below. This will open up and configure your Cloud Shell environment.
 
-[![Open ](images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/clouddeploy-preview/r/clouddeploy-tutorials&cloudshell_git_branch=release-1.7&cloudshell_workspace=.&cloudshell_tutorial=walkthroughs/cloud_deploy_e2e_gke/cloud_deploy_e2e_gke.md)
+[![Open ](images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://source.developers.google.com/p/clouddeploy-preview/r/clouddeploy-tutorials&cloudshell_git_branch=release-1.8&cloudshell_workspace=.&cloudshell_tutorial=walkthroughs/cloud_deploy_e2e_gke/cloud_deploy_e2e_gke.md)
 
 ### Issues accessing the tutorial
 

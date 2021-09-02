@@ -1,20 +1,20 @@
 <walkthrough-author
-    tutorialname="Cloud Deploy Tutorial"
+    tutorialname="Google Cloud Deploy Tutorial"
     repositoryUrl="https://clouddeploy.googlesource.com/tutorial"
     >
 </walkthrough-author>
 
-# Cloud Deploy: Preview
+# Google Cloud Deploy: Preview
 
-![Cloud Deploy logo](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png "Cloud Deploy logo")
+![Cloud Deploy logo](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png "Google Cloud Deploy logo")
 
 ## Overview
 This tutorial guides you through setting up and using the Google [Cloud Deploy](https://console.cloud.google.com/deploy) service.
 
-You'll create a GCP Project (or use an existing one if you want), to create a complete **test > staging > production** delivery pipeline using Cloud Deploy.
+You'll create a GCP Project (or use an existing one if you want), to create a complete **test > staging > production** delivery pipeline using Google Cloud Deploy.
 
 ### About Cloud Shell
-This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Cloud Deploy. Cloud Shell is an online development and operations environment, accessible anywhere with your browser.
+This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Google Cloud Deploy. Cloud Shell is an online development and operations environment, accessible anywhere with your browser.
 
 You can manage your resources with its online terminal, preloaded with utilities such as the `gcloud`, `kubectl`, and more. You can also develop, build, debug, and deploy your cloud-based apps using the online [Cloud Shell Editor](https://ide.cloud.google.com/).
 
@@ -83,7 +83,7 @@ If the command succeeds, each cluster will have three nodes and a `RUNNING` stat
 Click **Next** to proceed.
 
 ## Build the Application
-Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
+Google Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
 
 As part of this tutorial, a sample application from the [Skaffold Github repository](https://github.com/GoogleContainerTools/skaffold.git) is available from your Cloud Shell instance, in the `web` directory.
 
@@ -141,7 +141,7 @@ Click **Next** to proceed.
 
 ## Create the delivery pipeline
 
-In this tutorial, you will create a Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`. Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
+In this tutorial, you will create a Google Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`. Google Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/delivery-pipeline.yaml">Click here to view delivery-pipeline.yaml</walkthrough-editor-open-file>
 
@@ -186,11 +186,11 @@ Click **Next** to proceed.
 
 ## Test target
 
-In Cloud Deploy, a _target_ represents a GKE cluster where an application can be deployed as part of a delivery pipeline.
+In Google Cloud Deploy, a _target_ represents a GKE cluster where an application can be deployed as part of a delivery pipeline.
 
 In the tutorial delivery pipeline, the first target is `test`.
 
-You create a `target` by applying a YAML file to Cloud Deploy using `glcoud alpha deploy apply`.
+You create a `target` by applying a YAML file to Google Cloud Deploy using `glcoud alpha deploy apply`.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/target-test.yaml">Click here to view the target-test.yaml</walkthrough-editor-open-file>
 
@@ -284,13 +284,13 @@ targets:
   updateTime: '2021-08-16T14:04:41.360370226Z'
 ```
 
-All Cloud Deploy targets for the delivery pipeline have now been created.
+All Google Cloud Deploy targets for the delivery pipeline have now been created.
 
 Click **Next** to proceed.
 
 ## Create a Release
 
-A Cloud Deploy `release` is a specific version of one or more container images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
+A Google Cloud Deploy `release` is a specific version of one or more container images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
 
 Because this is the first release of your application, name it `web-app-001`.
 
@@ -394,7 +394,7 @@ You can also view [Release details](https://console.cloud.google.com/deploy/deli
 
 When a release is created, it will also be automatically rolled out to the first Target in the pipeline (unless approval is required, which will be covered in a later step of this tutorial).
 
-You can read more about this in the [Cloud Deploy delivery process](https://cloud.google.com/deploy/docs/overview#the_delivery_process) section of the documentation.
+You can read more about this in the [Google Cloud Deploy delivery process](https://cloud.google.com/deploy/docs/overview#the_delivery_process) section of the documentation.
 
 Click **Next** to proceed.
 
@@ -423,7 +423,7 @@ targetId: test
 uid: cccd9525d3a0414fa60b2771036841d9
 ```
 
-Note that the first rollout of a Release will take several minutes, because Cloud Deploy renders the manifests for all Targets when the Release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+Note that the first rollout of a Release will take several minutes, because Google Cloud Deploy renders the manifests for all Targets when the Release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 To confirm your application was deployed to your test GKE cluster, run the following commands in your Cloud Shell:
 
@@ -546,7 +546,7 @@ Click **Next** to proceed.
 
 ## Defining Approvers
 
-Cloud Deploy is designed to integrate with multiple personas within an IT organization. For the product owner or team lead who approves production changes, there's a special IAM Role that can be bound to users and service accounts to give them the capability to approve pipeline promotions.
+Google Cloud Deploy is designed to integrate with multiple personas within an IT organization. For the product owner or team lead who approves production changes, there's a special IAM Role that can be bound to users and service accounts to give them the capability to approve pipeline promotions.
 
 Due to the nature of this one-person tutorial, we're not going to actually use another account to approve the process. **This step is optional and not required for completion of subesequent steps**. But we will walk through creating a service account and binding it to the `clouddeploy.approver` role.
 
@@ -573,7 +573,7 @@ Web-App Pipeline Approver               pipeline-approver@{{project-id}}.iam.gse
 Compute Engine default service account  619472186817-compute@developer.gserviceaccount.com              False
 ```
 
-Service Accounts are used by CI tools like [Cloud Build](https://cloud.google.com/build) and [Jenkins](https://www.jenkins.io/) to interact programatically with GCP. This is a typical workflow for anyone integrating Cloud Deploy into their CI/CD toolchain.
+Service Accounts are used by CI tools like [Cloud Build](https://cloud.google.com/build) and [Jenkins](https://www.jenkins.io/) to interact programatically with GCP. This is a typical workflow for anyone integrating Google Cloud Deploy into their CI/CD toolchain.
 
 ### Add Approval Permissions
 
@@ -636,7 +636,7 @@ kubectx prod
 kubectl get pod -n web-app
 ```
 
-Your Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.
+Your Google Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.
 
 Click **Next** to proceed.
 
@@ -662,7 +662,7 @@ Click **Next** to complete this tutorial.
 
 ## Conclusion
 
-Thank you for taking the time to get to know the Cloud Deploy Preview from Google Cloud!
+Thank you for taking the time to get to know the Google Cloud Deploy Preview from Google Cloud!
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 

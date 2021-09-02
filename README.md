@@ -1,10 +1,10 @@
-# Cloud Deploy Tutorials
+# Google Cloud Deploy Tutorials
 
 Copyright Google LLC 2021
 
 ## Overview
 
-This repository contains content and functionality to help you try out the Cloud Deploy service. Currently, this service is not intended for production workloads -— do not use it for any live applications.
+This repository contains content and functionality to help you try out the Google Cloud Deploy service. Currently, this service is not intended for production workloads -— do not use it for any live applications.
 
 ## Getting Started
 
@@ -14,7 +14,7 @@ This repository contains content and functionality to help you try out the Cloud
 
 ### Issues accessing the tutorial
 
-Please contact the Cloud Deploy tutorial team at clouddeploy-tutorial-team@google.com if you have issues accessing the tutorial using the steps above.
+Please contact the Google Cloud Deploy tutorial team at clouddeploy-tutorial-team@google.com if you have issues accessing the tutorial using the steps above.
 
 **Additional references**
 - User Guide (contact clouddeploy@google.com for link/access)

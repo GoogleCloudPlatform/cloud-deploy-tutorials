@@ -627,3 +627,5 @@ Thank you for taking the time to get to know the Google Cloud Deploy Preview fro
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 
 <walkthrough-inline-feedback></walkthrough-inline-feedback>
+
+You can find additional tutorials for Google Cloud Deploy [here](https://cloud.google.com/deploy/docs/tutorials).

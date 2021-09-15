@@ -13,7 +13,7 @@ This tutorial guides you through creating and using custom Execution Environment
 
 Following on from the Google Cloud Deploy End-to-end tutorial, you will use a **test > staging > production** delivery pipeline to deploy an application that will use custom execution environments for for each target.
 
-Please note that completion of the Google Cloud Deploy End-to-end tutorial is a prerequisite for this tutorial.
+Please note that you must complete the [Google Cloud Deploy Walkthrough]( https://cloud.google.com/deploy/docs/tutorials) before starting this one, and you must run them in the same project.
 
 If you have not done so, please visit [the tutorials page](https://cloud.google.com/deploy/docs/tutorials), complete the Google Cloud Deploy End-to-end tutorial first, then resume this tutorial.
 
@@ -22,9 +22,9 @@ Google Cloud Deploy uses the following defaults when rendering and deploying a w
 
 * The default [Cloud Build worker pool](https://cloud.google.com/build/docs/private-pools/private-pools-overview) is used for Cloud Deploy builds. The default worker pool is a secure hosted environment where each build runs in an isolated worker.
 * The default [GCE Service Account](https://cloud.google.com/deploy/docs/cloud-deploy-service-account#default_service_account) is used to access Cloud Build and your Cloud Deploy targets.
-* Cloud Deploy creates a GCS bucket in the same region as the Cloud Deploy resources. This bucket holds all artifacts by default. It has the the naming syntax of `<location>.deploy-artifacts.<project ID>.appspot.com`.
+* Google Cloud Deploy creates a GCS bucket in the same region as the Cloud Deploy resources. This bucket holds all artifacts by default. It has the the naming syntax of `<location>.deploy-artifacts.<project ID>.appspot.com`.
 
-By using a custom Execution Environment for Cloud Deploy, you can specify values for these options per Target to provide better data and resource separation for your applications. Custom Execution Environments also allow you to render and deploy Cloud Deploy workloads in GCP private networks. In this tutorial we'll create these custom resources and configure Cloud Deploy to use them in a custom Execution Environment.
+In this tutorial we'll create these custom resources and configure Google Cloud Deploy to use them in a custom [Execution Environment](https://cloud.google.com/deploy/docs/execution-environment).
 
 ### About Cloud Shell
 This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Google Cloud Deploy. Cloud Shell is an online development and operations environment, accessible anywhere with your browser.
@@ -91,12 +91,15 @@ Your confirmation will look similar to:
 Created service account [cd-executionuser].
 ```
 
-This service account needs to have the `clouddeploy.jobRunner` IAM role assigned to interact with Cloud Deploy and the `container.developer` role to deploy workloads to the test GKE cluster. We'll do that next. 
+This service account needs to have the `clouddeploy.jobRunner` and `container.developer` IAM roles to interact with Google Cloud Deploy and deploy workloads to GKE. We'll do that next. 
 
 ```bash
 gcloud projects add-iam-policy-binding {{project-id}} \
 --member serviceAccount:cd-executionuser@{{project-id}}.iam.gserviceaccount.com \
 --role roles/clouddeploy.jobRunner \
+
+gcloud projects add-iam-policy-binding {{project-id}} \
+--member serviceAccount:cd-executionuser@{{project-id}}.iam.gserviceaccount.com \
 --role roles/container.developer
 ```
 
@@ -114,11 +117,11 @@ Click **Next** to proceed.
 
 ## Creating a GCS Bucket
 
-In this tutorial we'll send all of the render and deploy artifacts for our `dev` Target to a separate GCS bucket. Optionally you can maintain render and deploy artifacts in different buckets as well. For this tutorial we'll use a single GCS bucket. To create a new bucket, run the following command in Cloud Shell: 
+Execution environments have multiple [configuration options](https://cloud.google.com/deploy/docs/execution-environment#changing_the_storage_location) for artifact storage. In this tutorial we'll store the render and deploy artifacts for our `dev` Target in a separate GCS bucket.  To create a new bucket, run the following command in Cloud Shell: 
 
 ```bash
 
-gsutil mb gs://clouddeploy-test-artifacts
+gsutil mb gs://{{project-id}}-clouddeploy-test-artifacts
 ```
 
 To confirm your bucket was created, run the following command: 
@@ -128,13 +131,15 @@ To confirm your bucket was created, run the following command:
 gsutil ls
 ```
 
-This will list all of the GCS buckets associated with your current project, including the default bucket previously created by Cloud Deploy. Next, you'll create a custom worker pool.
+This will list all of the GCS buckets associated with your current project, including the default bucket previously created by Google Cloud Deploy. Next, you'll create a custom worker pool.
 
 Click **Next** to proceed.
 
-## Creating a Cloud Deploy Private Worker Pool
+## Creating a Google Cloud Deploy Private Worker Pool
 
-Like we mentioned earlier, Cloud Deploy uses Cloud Build to render and deploy releases to targets. [Private Worker Pools](https://cloud.google.com/build/docs/private-pools/) in Cloud Build have many more features and capabilities than we'll cover in this tutorial. To create a custom pool of Cloud Build workers, run the following command: 
+As previously mentioned, Google Cloud Deploy uses Cloud Build to render and deploy releases to targets. In this tutorial, we will use a Cloud Build [Private Worker Pools](https://cloud.google.com/build/docs/private-pools/) to perform these activities.
+
+To create a custom pool of Cloud Build workers, run the following command:
 
 ```bash
 gcloud builds worker-pools create clouddeploy-private --region us-central1
@@ -148,11 +153,11 @@ NAME                 CREATE_TIME                STATE
 clouddeploy-private  2021-09-10T00:40:21+00:00  RUNNING
 ```
 
-With your Private Worker Pool created, you're ready to configure Cloud Deploy to use your custom resources.
+With your Private Worker Pool created, you're ready to configure Google Cloud Deploy to use your custom resources.
 
 Click **Next** to proceed.
 
-## Configuring Cloud Deploy
+## Configuring Google Cloud Deploy
 
 To make use of your custom Execution Environment, open <walkthrough-editor-open-file filePath="clouddeploy-config/target-test.yaml">
 target-test.yaml
@@ -160,7 +165,7 @@ target-test.yaml
 
 Edit `target-test.yaml` to make it look as follows: 
 
-```terminal
+```bash
 apiVersion: deploy.cloud.google.com/v1beta1
 kind: Target
 metadata:
@@ -172,7 +177,7 @@ executionConfigs:
 - privatePool:
     workerPool: projects/{{project-id}}/locations/us-central1/workerPools/clouddeploy-private
     serviceAccount: cd-executionuser@{{project-id}}.iam.gserviceaccount.com
-    artifactStorage: gs://clouddeploy-test-artifacts
+    artifactStorage: gs://{{project-id}}-clouddeploy-test-artifacts
   usages:
   - RENDER
   - DEPLOY
@@ -186,7 +191,7 @@ gcloud alpha deploy apply --file clouddeploy-config/target-test.yaml
 
 To confirm the changes have taken affect, run the following command. You should notice the `privatePool` stanza in the output.
 
-```terminal
+```bash
 gcloud alpha deploy targets describe test --delivery-pipeline=web-app
 ```
 
@@ -196,7 +201,7 @@ Click **Next** to proceed.
 
 ## Testing Your Execution Environment
 
-```terminal
+```bash
 gcloud alpha deploy releases create execution-test-001 --delivery-pipeline web-app --build-artifacts web/artifacts.json --source web/
 ```
 
@@ -211,22 +216,22 @@ Click **Next** to proceed.
 Once the promotion process to the test target begins, you should see content in your custom GCS bucket. Use the `gsutil command` to explore your GCS bucket. 
 
 ```bash
-gs://clouddeploy-test-artifacts
+gsutil ls gs://{{project-id}}-clouddeploy-test-artifacts
 ```
 
 The files and directory names will vary, but you should see something similar to this content: 
 
 ```terminal 
-gs://clouddeploy-test-artifacts/execution-test-001-13698fa76b004da495fab8911917f25c/test/artifacts-3b9337ff-389d-4bb2-93a4-cea598667214.json
-gs://clouddeploy-test-artifacts/execution-test-001-13698fa76b004da495fab8911917f25c/test/manifest.yaml
-gs://clouddeploy-test-artifacts/execution-test-001-13698fa76b004da495fab8911917f25c/test/skaffold.yaml
+gs://{{project-id}}-clouddeploy-test-artifacts/execution-test-001-13698fa76b004da495fab8911917f25c/test/artifacts-3b9337ff-389d-4bb2-93a4-cea598667214.json
+gs://{{project-id}}-clouddeploy-test-artifacts/execution-test-001-13698fa76b004da495fab8911917f25c/test/manifest.yaml
+gs://{{project-id}}-clouddeploy-test-artifacts/execution-test-001-13698fa76b004da495fab8911917f25c/test/skaffold.yaml
 ```
 
 ### Service Account and Private Pool
 
-The [Cloud Build UI](https://pantheon.corp.google.com/cloud-build/builds;region=us-central1) makes it easy to confirm the proper Service Account and Private Pool were used for the Cloud Deploy workflow. Click on your Build > Execution Details and it gives you a complete summary of the resources used for the build process.
+The [Cloud Build UI](https://pantheon.corp.google.com/cloud-build/builds;region=us-central1?project={{project-id}}) makes it easy to confirm the proper Service Account and Private Pool were used for the Google Cloud Deploy workflow. Click on your Build > Execution Details and it gives you a complete summary of the resources used for the build process.
 
-These steps confirm that your new Cloud Deploy release used your custom Execution Environment to deploy resources to your test GKE cluster. 
+These steps confirm that your new Google Cloud Deploy release used your custom Execution Environment to deploy resources to your test GKE cluster. 
 
 Click **Next** to proceed.
 

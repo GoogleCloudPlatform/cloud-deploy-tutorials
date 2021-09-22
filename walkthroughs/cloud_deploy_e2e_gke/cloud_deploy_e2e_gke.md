@@ -148,13 +148,13 @@ In this tutorial, you will create a Google Cloud Deploy [_delivery pipeline_](ht
 The following command creates the `delivery-pipeline` resource using the delivery pipeline YAML file:
 
 ```bash
-gcloud alpha deploy apply --file=clouddeploy-config/delivery-pipeline.yaml
+gcloud beta deploy apply --file=clouddeploy-config/delivery-pipeline.yaml
 ```
 
 Verify the delivery pipeline was created:
 
 ```bash
-gcloud alpha deploy delivery-pipelines describe web-app
+gcloud beta deploy delivery-pipelines describe web-app
 ```
 
 Your output should look like the example below. 
@@ -190,20 +190,20 @@ In Google Cloud Deploy, a _target_ represents a GKE cluster where an application
 
 In the tutorial delivery pipeline, the first target is `test`.
 
-You create a `target` by applying a YAML file to Google Cloud Deploy using `glcoud alpha deploy apply`.
+You create a `target` by applying a YAML file to Google Cloud Deploy using `glcoud beta deploy apply`.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/target-test.yaml">Click here to view the target-test.yaml</walkthrough-editor-open-file>
 
 Create the `test` target:
 
 ```bash
-gcloud alpha deploy apply --file clouddeploy-config/target-test.yaml
+gcloud beta deploy apply --file clouddeploy-config/target-test.yaml
 ```
 
 Verify the `target` was created:
 
 ```bash
-gcloud alpha deploy targets describe test --delivery-pipeline=web-app
+gcloud beta deploy targets describe test --delivery-pipeline=web-app
 ```
 
 The output should look like the example below. Important information in this output is that the Target is recognized as a `gke` `cluster`.
@@ -234,7 +234,7 @@ Start by creating the `staging` target.
 Apply the `staging` target definition:
 
 ```bash
-gcloud alpha deploy apply --file clouddeploy-config/target-staging.yaml
+gcloud beta deploy apply --file clouddeploy-config/target-staging.yaml
 ```
 
 Next you will repeat the process for the `prod` target.
@@ -244,13 +244,13 @@ Next you will repeat the process for the `prod` target.
 Apply the `prod` target definition:
 
 ```bash
-gcloud alpha deploy apply --file clouddeploy-config/target-prod.yaml
+gcloud beta deploy apply --file clouddeploy-config/target-prod.yaml
 ```
 
 Verify both targets for the `web-app` delivery pipeline:
 
 ```bash
-gcloud alpha deploy targets list
+gcloud beta deploy targets list
 ```
 
 The output should look like this, showing all three created Targets, which are used with your `web-app` Delivery Pipeline.
@@ -297,7 +297,7 @@ Because this is the first release of your application, name it `web-app-001`.
 Run the following command to create the release. The `--build-artifacts` parameter references the `artifacts.json` file created by `skaffold` earlier. The `--source` parameter references the application source directory where `skaffold.yaml` can be found.
 
 ```bash
-gcloud alpha deploy releases create web-app-001 --delivery-pipeline web-app --build-artifacts web/artifacts.json --source web/
+gcloud beta deploy releases create web-app-001 --delivery-pipeline web-app --build-artifacts web/artifacts.json --source web/
 ```
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.
@@ -305,7 +305,7 @@ The command above references the delivery pipeline and the container images you 
 To confirm your release has been created run the following command:
 
 ```bash
-gcloud alpha deploy releases list --delivery-pipeline web-app
+gcloud beta deploy releases list --delivery-pipeline web-app
 ```
 
 Your output should look similar to the example below. Important things to note are that the release has been successfully rendered according to the `renderingState` value, as well as the location of the `skaffold` configuration noted by the `skaffoldConfigUri` parameter.
@@ -403,7 +403,7 @@ Click **Next** to proceed.
 With your release created, you can promote your application. When the Release was created in the previous step, it automatically rolled out your application to the initial Target. To confirm your `test` Target has your application deployed, run the following command:
 
 ```bash
-gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+gcloud beta deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
 
 Your output should look similar to the example below. The start and end times for the deploy are noted, as well that it succeeded.
@@ -443,13 +443,13 @@ leeroy-web-5498c5b7fd-czvm8   1/1     Running   0          20s
 To promote your application to your staging Target, run the following command. The optional `--to-target` parameter can specify a Target to promote to. If this option isn't included, the Release is promoted to the next Target in the Delivery Pipeline.
 
 ```bash
-gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001
+gcloud beta deploy releases promote --delivery-pipeline web-app --release web-app-001
 ```
 
 To confirm your application has been promoted to the `staging` Target, run the following command:
 
 ```bash
-gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+gcloud beta deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
 
 Your output should contain a section similar to this:
@@ -497,7 +497,7 @@ Any Target can require an Approval before a Release promotion can occur. This is
 When you created your prod environment, the configuration was in place to require approvals to this Target. To verify this, run this command and look for the `requireApproval` parameter.
 
 ```bash
-gcloud alpha deploy targets describe prod --delivery-pipeline web-app
+gcloud beta deploy targets describe prod --delivery-pipeline web-app
 ```
 
 Your output should look similar to the example below. Unlike the previous targets, the prod Target does require approval per the `requireApproval` parameter.
@@ -518,13 +518,13 @@ Target:
 Go ahead and promote your application to your prod Target with this command
 
 ```bash
-gcloud alpha deploy releases promote --delivery-pipeline web-app --release web-app-001
+gcloud beta deploy releases promote --delivery-pipeline web-app --release web-app-001
 ```
 
 When you look at your rollouts for `web-app-001`, you'll notice that the promotion to prod has a `PENDING_APPROVAL` status.
 
 ```bash
-gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+gcloud beta deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
 
 In the output, note that the `approvalState` is `NEEDS_APPROVAL` and the state is `PENDING_APPROVAL`.
@@ -600,13 +600,13 @@ Click **Next** to proceed.
 To approve your application and promote it to your prod Target, use this command:
 
 ```bash
-gcloud alpha deploy rollouts approve web-app-001-to-prod-0001 --delivery-pipeline web-app --release web-app-001
+gcloud beta deploy rollouts approve web-app-001-to-prod-0001 --delivery-pipeline web-app --release web-app-001
 ```
 
 After a short time, your promotion should complete. To verify this, run the following command:
 
 ```bash
-gcloud alpha deploy rollouts list --delivery-pipeline web-app --release web-app-001
+gcloud beta deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
 
 Your output should look similar to below. 

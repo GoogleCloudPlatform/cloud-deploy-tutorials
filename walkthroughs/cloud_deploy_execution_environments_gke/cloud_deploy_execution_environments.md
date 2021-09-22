@@ -186,13 +186,13 @@ executionConfigs:
 Once edited, apply the changes to your `test` Target with the following command:
 
 ```bash
-gcloud alpha deploy apply --file clouddeploy-config/target-test.yaml
+gcloud beta deploy apply --file clouddeploy-config/target-test.yaml
 ```
 
 To confirm the changes have taken affect, run the following command. You should notice the `privatePool` stanza in the output.
 
 ```bash
-gcloud alpha deploy targets describe test --delivery-pipeline=web-app
+gcloud beta deploy targets describe test --delivery-pipeline=web-app
 ```
 
 Next, we'll create a new release to test the new Execution Environment.
@@ -202,7 +202,7 @@ Click **Next** to proceed.
 ## Testing Your Execution Environment
 
 ```bash
-gcloud alpha deploy releases create execution-test-001 --delivery-pipeline web-app --build-artifacts web/artifacts.json --source web/
+gcloud beta deploy releases create execution-test-001 --delivery-pipeline web-app --build-artifacts web/artifacts.json --source web/
 ```
 
 This will render a new release of the test application and automatically promote it to the test target cluster. 

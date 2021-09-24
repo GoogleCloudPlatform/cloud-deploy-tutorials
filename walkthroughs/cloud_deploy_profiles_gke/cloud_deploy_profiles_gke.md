@@ -602,6 +602,12 @@ Click **Next** to proceed.
 
 ## Cleaning Up
 
+To clean up the pipeline created as part of this tutorial, run the following command:
+
+```bash
+gcloud beta deploy delivery-pipelines delete web-app-profiles --force --quiet
+```
+
 To clean up your GKE Targets and other resources, run the provided cleanup script. If you would like to continue to another tutorial, do not complete this step.
 
 ```bash

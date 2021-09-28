@@ -229,7 +229,7 @@ gs://{{project-id}}-clouddeploy-test-artifacts/execution-test-001-13698fa76b004d
 
 ### Service Account and Private Pool
 
-The [Cloud Build UI](https://pantheon.corp.google.com/cloud-build/builds;region=us-central1?project={{project-id}}) makes it easy to confirm the proper Service Account and Private Pool were used for the Google Cloud Deploy workflow. Click on your Build > Execution Details and it gives you a complete summary of the resources used for the build process.
+The [Cloud Build UI](https://console.cloud.google.com/cloud-build/builds;region=us-central1?project={{project-id}}) makes it easy to confirm the proper Service Account and Private Pool were used for the Google Cloud Deploy workflow. Click on your Build > Execution Details and it gives you a complete summary of the resources used for the build process.
 
 These steps confirm that your new Google Cloud Deploy release used your custom Execution Environment to deploy resources to your test GKE cluster. 
 

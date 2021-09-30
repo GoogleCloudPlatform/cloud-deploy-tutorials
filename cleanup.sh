@@ -17,7 +17,7 @@ PROJECT_ID=$(gcloud config get-value core/project)
 BACKEND=$PROJECT_ID-tf-backend
 
 ROOT_DIR=$(git rev-parse --show-toplevel)
-TF_DIR=$ROOT_DIR/tf
+TF_DIR=$ROOT_DIR/tf/base
 CD_CONFIG_DIR=$ROOT_DIR/clouddeploy-config
 
 cd $TF_DIR

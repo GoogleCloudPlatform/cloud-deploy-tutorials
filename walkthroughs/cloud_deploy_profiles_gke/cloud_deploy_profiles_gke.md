@@ -1,9 +1,3 @@
-<walkthrough-author
-    tutorialname="Google Cloud Deploy Tutorial - Profiles"
-    repositoryUrl="https://clouddeploy.googlesource.com/tutorial"
-    >
-</walkthrough-author>
-
 # Google Cloud Deploy: Preview
 
 ![Google Cloud Deploy logo](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png "Google Cloud Deploy logo")

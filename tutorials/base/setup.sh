@@ -18,14 +18,18 @@
 # Current walkthroughs:
 # e2e - End-to-end (aka primary) walkthrough
 
+TUTORIAL=base
 ROOT_DIR=$(git rev-parse --show-toplevel)
-CD_CONFIG_DIR=$ROOT_DIR/clouddeploy-config
-TF_DIR=$ROOT_DIR/tf/base
+TUTORIAL_DIR=${ROOT_DIR}/tutorials/${TUTORIAL}
+CD_CONFIG_DIR=${TUTORIAL_DIR}/clouddeploy-config
+TF_DIR=${TUTORIAL_DIR}/terraform-config
+KUBERNETES_DIR=${TUTORIAL_DIR}/kubernetes-config
+GCLOUD_CONFIG=clouddeploy
 
 export PROJECT_ID=$(gcloud config get-value core/project)
-BACKEND=$PROJECT_ID-tf-backend
 export REGION=us-central1
-GCLOUD_CONFIG=clouddeploy
+
+BACKEND=${PROJECT_ID}-${TUTORIAL}-tf
 
 manage_apis() {
     # Enables any APIs that we need prior to Terraform being run
@@ -62,7 +66,7 @@ manage_configs() {
 run_terraform() {
     # Terraform workflows
 
-    cd $TF_DIR
+    cd ${TF_DIR}
 
     sed "s/bucket=.*/bucket=\"$BACKEND\"/g" main.template > main.tf
     gsutil mb gs://${BACKEND} || true
@@ -93,13 +97,13 @@ manage_gke_namespaces() {
     # Create a namespace for each tutorial in each cluster
     echo "Creating Kubernetes namespaces"
 
-    cd ${ROOT_DIR}
+    cd ${KUBERNETES_DIR}
 
     CONTEXTS=("test" "staging" "prod")
 
     for CONTEXT in ${CONTEXTS[@]}
     do
-      kubectl --context ${CONTEXT} apply -f kubernetes-config/namespaces/
+      kubectl --context ${CONTEXT} apply -f ${KUBERNETES_DIR}/
     done
 }
 
@@ -114,14 +118,13 @@ e2e_apps() {
     # Any sample application install and configuration for the E2E walkthrough.
 
     echo "Configuring walkthrough applications"
-    cd $ROOT_DIR
+    cd ${CD_CONFIG_DIR}
 
-    for template in $(ls $CD_CONFIG_DIR/*.template); do
+    for template in $(ls *.template); do
     envsubst < ${template} > ${template%.*}
     done
 
-    cp $CD_CONFIG_DIR/skaffold.yaml web/skaffold.yaml
-    cp $CD_CONFIG_DIR/skaffold-profiles.yaml web-profiles/skaffold.yaml
+    cp skaffold.yaml ${TUTORIAL_DIR}/web/skaffold.yaml
 
     git tag -a v1 -m "version 1 release"
 }
@@ -133,4 +136,3 @@ manage_gke_contexts
 manage_gke_namespaces
 configure_git
 e2e_apps
-

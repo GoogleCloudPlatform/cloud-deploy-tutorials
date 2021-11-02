@@ -17,7 +17,7 @@ Estimated Duration:
 
 Click **Start** to proceed.
 
-## Project setup
+## Project and workspace setup
 GCP organizes resources into projects. This allows you to
 collect all of the related resources for a single application in one place.
 
@@ -37,6 +37,22 @@ Once selected, set the same Project in your Cloud Shell `gcloud` configuration w
 gcloud config set project {{project-id}}
 ```
 
+### Clone the tutorial repository
+
+Run the following command to clone the tutorial repository into your Cloud Shell environment:
+
+```bash
+./scripts/clone-tutorial-repo.sh
+```
+
+Next, change into the directory for this tutorial and set your workspace:
+
+```bash
+cd cloud-deploy-tutorials/tutorials/base && cloudshell workspace .
+```
+
+If your Cloud Shell session times out, you can resume the tutorial by reconnecting to Cloud Shell and rerunning the previous command to change into the above directory.
+
 Click **Next** to proceed.
 
 ## Deploy infrastructure
@@ -49,10 +65,10 @@ You'll deploy three GKE clusters with the following names into your `{{project-i
 
 _Note_: If you have an existing GKE cluster in `{{project-id}}` with any of these names, you need to select a different project.
 
-These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`. Next, run `bootstrap.sh` in your Cloud Shell to create the GKE clusters and supporting resources:
+These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`. Next, run `setup.sh` in your Cloud Shell to create the GKE clusters and supporting resources:
 
 ```bash
-./bootstrap.sh
+./setup.sh
 ```
 
 This will take approximately 10 minutes to run.
@@ -77,6 +93,7 @@ If the command succeeds, each cluster will have three nodes and a `RUNNING` stat
 Click **Next** to proceed.
 
 ## Build the Application
+
 Google Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
 
 As part of this tutorial, a sample application from the [Skaffold Github repository](https://github.com/GoogleContainerTools/skaffold.git) is available from your Cloud Shell instance, in the `web` directory.

@@ -57,10 +57,26 @@ Begin by selecting an existing project for this tutorial.
 
 ### Select your Project
 
-Once selected, set the same Project in your Cloud Shell `gcloud` configuration with this command:
+Once selected, set the same project in your Cloud Shell `gcloud` configuration with this command:
 
 ```bash
 gcloud config set project {{project-id}}
+```
+
+### Configure your workspace
+
+Next, change into the directory for this tutorial and set your workspace:
+
+cd ~/cloud-deploy-tutorials/tutorials/profiles && cloudshell workspace .
+
+If your Cloud Shell session times out, you can resume the tutorial by reconnecting to Cloud Shell and rerunning the previous command to change into the above directory.
+
+### Set up this tutorial
+
+Next, run `setup.sh` in your Cloud Shell to configure this tutorial:
+
+```bash
+./setup.sh
 ```
 
 Click **Next** to proceed.

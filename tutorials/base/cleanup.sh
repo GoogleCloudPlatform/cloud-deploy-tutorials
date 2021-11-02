@@ -12,13 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REGION=$(gcloud config get-value compute/region)
-PROJECT_ID=$(gcloud config get-value core/project)
-BACKEND=$PROJECT_ID-tf-backend
-
+TUTORIAL=base
 ROOT_DIR=$(git rev-parse --show-toplevel)
-TF_DIR=$ROOT_DIR/tf/base
-CD_CONFIG_DIR=$ROOT_DIR/clouddeploy-config
+TUTORIAL_DIR=${ROOT_DIR}/tutorials/${TUTORIAL}
+CD_CONFIG_DIR=${TUTORIAL_DIR}/clouddeploy-config
+TF_DIR=${TUTORIAL_DIR}/terraform-config
+KUBERNETES_DIR=${TUTORIAL_DIR}/kubernetes-config
+GCLOUD_CONFIG=clouddeploy
+
+PROJECT_ID=$(gcloud config get-value core/project)
+REGION=$(gcloud config get-value compute/region)
+
+BACKEND=${PROJECT_ID}-${TUTORIAL}-tf
 
 cd $TF_DIR
 terraform destroy -auto-approve -var=project_id=$PROJECT_ID -var=region=$REGION

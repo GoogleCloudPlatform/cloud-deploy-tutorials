@@ -201,7 +201,7 @@ In Google Cloud Deploy, a _target_ represents a GKE cluster where an application
 
 In the tutorial delivery pipeline, the first target is `test`.
 
-You create a `target` by applying a YAML file to Google Cloud Deploy using `glcoud beta deploy apply`.
+You create a `target` by applying a YAML file to Google Cloud Deploy using `gcloud beta deploy apply`.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/target-test.yaml">Click here to view the target-test.yaml</walkthrough-editor-open-file>
 
@@ -663,7 +663,7 @@ This will remove the GCP resources as well as the artifacts on your Cloud Shell 
 
 ### Cleaning up gcloud configurations
 
-When you ran `bootstrap.sh`, a line was added to your Cloud Shell configuration. For users of the `bash` shell, a line was added to `.bashrc` to reference `$HOME/.gcloud` as the directory `glcoud` uses to keep configurations. For people who have customized their Cloud Shell environments to use other shells, the corresponding `rc` was similarly edited.
+When you ran `bootstrap.sh`, a line was added to your Cloud Shell configuration. For users of the `bash` shell, a line was added to `.bashrc` to reference `$HOME/.gcloud` as the directory `gcloud` uses to keep configurations. For people who have customized their Cloud Shell environments to use other shells, the corresponding `rc` was similarly edited.
 
 In the `.gcloud` directory a configuration named `clouddeploy` was also created. This features allows `gcloud` configurations to [persist across Cloud Shell sessions and restarts](https://cloud.google.com/shell/docs/configuring-cloud-shell#gcloud_command-line_tool_preferences).
 

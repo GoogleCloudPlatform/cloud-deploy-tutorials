@@ -19,6 +19,11 @@ locals {
 }
 
 module "cluster-test" {
+
+  depends_on = [
+    module.cloud-deploy
+  ]
+
   source            = "./modules/cluster"
   project_id        = module.project-services.project_id
   name              = "test"
@@ -32,6 +37,9 @@ module "cluster-test" {
 }
 
 module "cluster-staging" {
+  depends_on = [
+    module.cloud-deploy
+  ]
   source            = "./modules/cluster"
   project_id        = module.project-services.project_id
   name              = "staging"
@@ -45,6 +53,9 @@ module "cluster-staging" {
 }
 
 module "cluster-prod" {
+  depends_on = [
+    module.cloud-deploy
+  ]
   source            = "./modules/cluster"
   project_id        = module.project-services.project_id
   name              = "prod"

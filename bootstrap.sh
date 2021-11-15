@@ -32,9 +32,7 @@ manage_apis() {
 
     echo "Enabling GCP APIs, please wait, this may take several minutes..."
     echo "Storage API"...
-    gcloud services enable storage.googleapis.com
-    echo "Compute API"...
-    gcloud services enable compute.googleapis.com
+    gcloud services enable storage.googleapis.com    
     echo "Artifact Registry API"...
     gcloud services enable artifactregistry.googleapis.com
 }
@@ -55,7 +53,8 @@ manage_configs() {
     fi
 
     gcloud config set project ${PROJECT_ID}
-    gcloud config set compute/region ${REGION}
+    echo "Compute API will be enabled by Terraform after necessary org policies are changed for Argolis"...
+    yes n | gcloud config set compute/region ${REGION}
     gcloud config set deploy/region ${REGION}
 }
 

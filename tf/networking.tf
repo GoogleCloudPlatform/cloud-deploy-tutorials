@@ -15,6 +15,9 @@
  */
 
 resource "google_compute_network" "network" {
+  depends_on = [
+    module.cloud-deploy
+  ]
   name                    = "app-network"
   auto_create_subnetworks = false
 }
@@ -27,12 +30,18 @@ resource "google_compute_subnetwork" "subnetwork" {
 }
 
 resource "google_compute_router" "router" {
+  depends_on = [
+    module.cloud-deploy
+  ]    
   name    = "app-router"
   region  = var.region
   network = google_compute_network.network.id
 }
 
 resource "google_compute_router_nat" "nat" {
+  depends_on = [
+    module.cloud-deploy
+  ]
   name                               = "app-router-nat"
   router                             = google_compute_router.router.name
   region                             = google_compute_router.router.region

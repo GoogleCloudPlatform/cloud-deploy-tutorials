@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-resource "google_artifact_registry_repository" "artifact-registry" {
-
-  provider = google-beta
-
-  location      = var.region
-  repository_id = "web-app"
-  description   = "Image registry for tutorial web app"
-  format        = "DOCKER"
+resource "google_service_account" "service_account" {
+  account_id   = "tf-sa-clouddeploy"
+  display_name = "Cloud Deploy tutorial service account"
 }
 
-resource "google_artifact_registry_repository" "artifact-registry-profiles" {
+resource "google_project_iam_member" "jobrunner_binding" {
+  role    = "roles/clouddeploy.jobRunner"
+  member  = "serviceAccount:${google_service_account.service_account.email}"
+}
 
-  provider = google-beta
-
-  location      = var.region
-  repository_id = "web-app-profiles"
-  description   = "Image registry for tutorial web app with Skaffold profiles"
-  format        = "DOCKER"
+resource "google_project_iam_member" "developer_binding" {
+  role    = "roles/container.developer"
+  member  = "serviceAccount:${google_service_account.service_account.email}"
 }

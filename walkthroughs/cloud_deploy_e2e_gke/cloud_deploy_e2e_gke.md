@@ -189,7 +189,6 @@ Delivery Pipeline:
 Targets: []
 ```
 
-You can also see the [details for your delivery pipeline](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app?project={{project-id}}) in the GCP control panel.
 
 Notice the first three lines of the output. Your Delivery Pipeline references three Target environments that haven't been created yet. In the next sections you'll create those Targets.
 
@@ -296,6 +295,8 @@ targets:
 ```
 
 All Google Cloud Deploy targets for the delivery pipeline have now been created.
+
+You can now see the full [details for your delivery pipeline](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app?project={{project-id}}) in the GCP control panel.
 
 Click **Next** to proceed.
 

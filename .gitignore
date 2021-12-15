@@ -9,10 +9,7 @@ crash.log
 # Ignore generated files
 main.tf
 
-# Ignore app code directories
-web/
-web-profiles/
-web-private-targets/
-
 # Ignore generated files
-clouddeploy-config/*.yaml
+**/clouddeploy-config/*.yaml
+artifacts.json
+skaffold.yaml

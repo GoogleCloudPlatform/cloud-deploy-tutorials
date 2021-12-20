@@ -1,13 +1,15 @@
 # Google Cloud Deploy: Preview
 
-![Cloud Deploy logo](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png "Google Cloud Deploy logo")
+![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png)
 
 ## Overview
-This tutorial guides you through setting up and using the Google [Cloud Deploy](https://console.cloud.google.com/deploy) service.
 
-You'll create a GCP Project (or use an existing one if you want), to create a complete **test > staging > production** delivery pipeline using Google Cloud Deploy.
+This interactive tutorial shows you how to set up and use the Google [Cloud Deploy](https://console.cloud.google.com/deploy) service.
+
+You will use a **test > staging > production** delivery pipeline to deploy an application to Google Kubernetes Engine clusters.
 
 ### About Cloud Shell
+
 This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Google Cloud Deploy. Cloud Shell is an online development and operations environment, accessible anywhere with your browser.
 
 You can manage your resources with its online terminal, preloaded with utilities such as the `gcloud`, `kubectl`, and more. You can also develop, build, debug, and deploy your cloud-based apps using the online [Cloud Shell Editor](https://ide.cloud.google.com/).
@@ -18,20 +20,18 @@ Estimated Duration:
 Click **Start** to proceed.
 
 ## Project and workspace setup
-GCP organizes resources into projects. This allows you to
-collect all of the related resources for a single application in one place.
 
-Begin by creating a new project or selecting an existing project for this
-tutorial.
+Google Cloud organizes resources into projects. This allows you to collect all of the related resources for a single application in one place.
+
+Begin by creating a new project or selecting an existing project for this tutorial.
 
 <walkthrough-project-setup billing="true"></walkthrough-project-setup>
 
-For details, see
-[Creating a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project).
+For details, see [Creating a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project).
 
 ### Select your Project
 
-Once selected, set the same Project in your Cloud Shell `gcloud` configuration with this command:
+Once selected, set the project in Cloud Shell:
 
 ```bash
 gcloud config set project {{project-id}}
@@ -53,11 +53,11 @@ cd cloud-deploy-tutorials/tutorials/base && cloudshell workspace .
 
 If your Cloud Shell session times out, you can resume the tutorial by reconnecting to Cloud Shell and rerunning the previous command to change into the above directory.
 
-Click **Next** to proceed.
+To deploy your infrastructure, click **Next** to proceed.
 
 ## Deploy infrastructure
 
-You'll deploy three GKE clusters with the following names into your `{{project-id}}` Project:
+You will deploy three GKE clusters with the following names into your `{{project-id}}` project:
 
 * `test` (often referred to as `dev`)
 * `staging`
@@ -65,7 +65,9 @@ You'll deploy three GKE clusters with the following names into your `{{project-i
 
 _Note_: If you have an existing GKE cluster in `{{project-id}}` with any of these names, you need to select a different project.
 
-These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`. Next, run `setup.sh` in your Cloud Shell to create the GKE clusters and supporting resources:
+These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`.
+
+Run `setup.sh` in your Cloud Shell to create the GKE clusters and supporting resources:
 
 ```bash
 ./setup.sh
@@ -79,7 +81,7 @@ After the script finishes, confirm that your GKE clusters and supporting resourc
 gcloud container clusters list
 ```
 
-Your output should look like this:
+The output is similar to the following:
 
 ```terminal
 NAME     LOCATION     MASTER_VERSION    MASTER_IP       MACHINE_TYPE   NODE_VERSION      NUM_NODES  STATUS
@@ -90,15 +92,15 @@ test     us-central1  1.17.17-gke.2800  35.188.180.217  n1-standard-2  1.17.17-g
 
 If the command succeeds, each cluster will have three nodes and a `RUNNING` status.
 
-Click **Next** to proceed.
+To build the application, click **Next**.
 
-## Build the Application
+## Build the application
 
 Google Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
 
 As part of this tutorial, a sample application from the [Skaffold Github repository](https://github.com/GoogleContainerTools/skaffold.git) is available from your Cloud Shell instance, in the `web` directory.
 
-In this section, you'll build that container image so you can progress it through the `webapp` delivery pipeline.
+In this section, you'll build the application so you can progress it through the `webapp` delivery pipeline.
 
 ### Building with Skaffold
 
@@ -116,11 +118,11 @@ cd web && skaffold build --interactive=false --default-repo $(gcloud config get-
 
 In the next step you will confirm the container images built by `skaffold` were uploaded to the container image registry properly.
 
-Click **Next** to proceed.
+To check the images, click **Next**.
 
 ## Custom container images
 
-When you ran `bootstrap.sh` a repository in [Google Cloud Artifact Registry](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to Artifact Registry, run the following command:
+When you ran `setup.sh` a repository in [Google Cloud Artifact Registry](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to Artifact Registry, run the following command:
 
 ```bash
 gcloud artifacts docker images list $(gcloud config get-value compute/region)-docker.pkg.dev/$(gcloud config get-value project)/web-app --include-tags --format yaml
@@ -144,15 +146,15 @@ updateTime: '2021-08-16T14:01:55.719359Z'
 version: sha256:91161798f2f544cb0a21fc8c6cec3c3f824f46d64de5ce18846f74a9cc730d09
 ```
 
-By default, `skaffold` sets the tag for an image to its related `git` tag if one is available. In this case, a `v1` tag was set on the repository.
+By default, `skaffold` sets the tag for an image to its related `git` tag if one is available. In this case, a `v1` tag was set on the repository, so the images are also tagged as `v1`.
 
 Similar information can be found in the `artifacts.json` file that was created by the `skaffold` command. You'll use that file in an upcoming step. <walkthrough-editor-open-file filePath="web/artifacts.json">Click here to review artifacts.json.</walkthrough-editor-open-file>
 
-Click **Next** to proceed.
+To create the delivery pipeline, click **Next**.
 
 ## Create the delivery pipeline
 
-In this tutorial, you will create a Google Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`. Google Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
+Google Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, these files have been precreated.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/delivery-pipeline.yaml">Click here to view delivery-pipeline.yaml</walkthrough-editor-open-file>
 
@@ -189,10 +191,9 @@ Delivery Pipeline:
 Targets: []
 ```
 
+Notice the first three lines of the output. Your delivery pipeline references three target environments that haven't been created yet. In the next sections you'll create those targets.
 
-Notice the first three lines of the output. Your Delivery Pipeline references three Target environments that haven't been created yet. In the next sections you'll create those Targets.
-
-Click **Next** to proceed.
+To create the targets, click **Next**.
 
 ## Test target
 
@@ -216,7 +217,7 @@ Verify the `target` was created:
 gcloud beta deploy targets describe test --delivery-pipeline=web-app
 ```
 
-The output should look like the example below. Important information in this output is that the Target is recognized as a `gke` `cluster`.
+The output should look like the example below. Important information in this output is that the target is recognized as a GKE cluster.
 
 ```terminal
 Target:
@@ -230,11 +231,12 @@ Target:
   updateTime: '2021-08-16T14:04:03.165134282Z'
 ```
 
-You can also view [details for your Target](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/targets/test?project={{project-id}}) in the GCP control panel.
+You can also view [details for your target](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/targets/test?project={{project-id}}) in the GCP control panel.
 
-Click **Next** to proceed.
+To create additional targets, click **Next**.
 
 ## Create staging and prod targets
+
 In this section, you create targets for the `staging` and `prod` clusters. The process is the same as for the `test` target you just created.
 
 Start by creating the `staging` target.
@@ -263,7 +265,7 @@ Verify both targets for the `web-app` delivery pipeline:
 gcloud beta deploy targets list
 ```
 
-The output should look like this, showing all three created Targets, which are used with your `web-app` Delivery Pipeline.
+The output should look like this, with all three created targets, which are used with your `web-app` delivery pipeline.
 
 ```terminal
 targets:
@@ -298,9 +300,9 @@ All Google Cloud Deploy targets for the delivery pipeline have now been created.
 
 You can now see the full [details for your delivery pipeline](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app?project={{project-id}}) in the GCP control panel.
 
-Click **Next** to proceed.
+To create a release, click **Next**.
 
-## Create a Release
+## Create a release
 
 A Google Cloud Deploy `release` is a specific version of one or more container images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
 
@@ -314,7 +316,7 @@ gcloud beta deploy releases create web-app-001 --delivery-pipeline web-app --bui
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.
 
-To confirm your release has been created run the following command:
+To confirm your release has been created, run the following command:
 
 ```bash
 gcloud beta deploy releases list --delivery-pipeline web-app
@@ -402,17 +404,17 @@ targetSnapshots:
 uid: 6a18d3470ec84da8ac0f74720f9f4513
 ```
 
-You can also view [Release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/releases/web-app-001?project={{project-id}}) in the GCP control panel.
+You can also view [release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app/releases/web-app-001?project={{project-id}}) in the GCP web console.
 
-When a release is created, it will also be automatically rolled out to the first Target in the pipeline (unless approval is required, which will be covered in a later step of this tutorial).
+When a release is created, it will also be automatically rolled out to the first target in the pipeline (unless approval is required, which will be covered in a later step of this tutorial).
 
 You can read more about this in the [Google Cloud Deploy delivery process](https://cloud.google.com/deploy/docs/overview#the_delivery_process) section of the documentation.
 
-Click **Next** to proceed.
+To promote your application, Click **Next**.
 
-## Promoting Applications
+## Promoting the application
 
-With your release created, you can promote your application. When the Release was created in the previous step, it automatically rolled out your application to the initial Target. To confirm your `test` Target has your application deployed, run the following command:
+With your release created, you can promote your application. When the release was created in the previous step, it automatically rolled out your application to the initial target. To confirm your `test` target has your application deployed, run the following command:
 
 ```bash
 gcloud beta deploy rollouts list --delivery-pipeline web-app --release web-app-001
@@ -435,7 +437,7 @@ targetId: test
 uid: cccd9525d3a0414fa60b2771036841d9
 ```
 
-Note that the first rollout of a Release will take several minutes, because Google Cloud Deploy renders the manifests for all Targets when the Release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+Note that the first rollout of a release will take several minutes, because Google Cloud Deploy renders the manifests for all targets when the release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 To confirm your application was deployed to your test GKE cluster, run the following commands in your Cloud Shell:
 
@@ -452,19 +454,19 @@ leeroy-app-7b8d48f794-svl6g   1/1     Running   0          19s
 leeroy-web-5498c5b7fd-czvm8   1/1     Running   0          20s
 ```
 
-To promote your application to your staging Target, run the following command. The optional `--to-target` parameter can specify a Target to promote to. If this option isn't included, the Release is promoted to the next Target in the Delivery Pipeline.
+To promote your application to your staging target, run the following command. The optional `--to-target` parameter can specify a target to promote to. If this option isn't included, the release is promoted to the next target in the delivery pipeline.
 
 ```bash
 gcloud beta deploy releases promote --delivery-pipeline web-app --release web-app-001
 ```
 
-To confirm your application has been promoted to the `staging` Target, run the following command:
+To confirm your application has been promoted to the `staging` target, run the following command:
 
 ```bash
 gcloud beta deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
 
-Your output should contain a section similar to this:
+Your output should contain a section similar to the following:
 
 ```terminal
 ---
@@ -488,7 +490,7 @@ kubectx staging
 kubectl get pods -n web-app
 ```
 
-The output of your `kubectl` command should look similar to the following:
+The output of your `kubectl` command should be similar to the following:
 
 ```terminal
 NAME                          READY   STATUS    RESTARTS   AGE
@@ -496,23 +498,23 @@ leeroy-app-7b8d48f794-svl6g   1/1     Running   0          19s
 leeroy-web-5498c5b7fd-czvm8   1/1     Running   0          20s
 ```
 
-In the next section, you'll look at Targets that require approvals before Promotions can complete.
+In the next section, you'll look at targets that require approvals before promotions can complete.
 
-Click **Next** to proceed.
+To learn more about approvals, click **Next**.
 
 ## Approvals
 
-Any Target can require an Approval before a Release promotion can occur. This is designed to protect production and sensitive Targets from accidentally promoting a release before it's been fully vetted and tested.
+Any target can require an approval before a release promotion can occur. This is designed to protect production and sensitive targets from accidentally promoting a release before it's been fully vetted and tested.
 
-### Requiring Approval for Promotion to a Target
+### Requiring approval for promotion to a target
 
-When you created your prod environment, the configuration was in place to require approvals to this Target. To verify this, run this command and look for the `requireApproval` parameter.
+When you created your prod environment, the configuration was in place to require approvals to this target. To verify this, run this command and look for the `requireApproval` parameter.
 
 ```bash
 gcloud beta deploy targets describe prod --delivery-pipeline web-app
 ```
 
-Your output should look similar to the example below. Unlike the previous targets, the prod Target does require approval per the `requireApproval` parameter.
+Your output should be similar to the example below. Unlike the previous targets, the prod target does require approval per the `requireApproval` parameter.
 
 ```terminal
 Target:
@@ -527,13 +529,13 @@ Target:
   updateTime: '2021-08-16T14:04:41.360370226Z'
 ```
 
-Go ahead and promote your application to your prod Target with this command
+Promote your application to your prod target by running the following command:
 
 ```bash
 gcloud beta deploy releases promote --delivery-pipeline web-app --release web-app-001
 ```
 
-When you look at your rollouts for `web-app-001`, you'll notice that the promotion to prod has a `PENDING_APPROVAL` status.
+Confirm that your rollout for `web-app-001` to prod has a `PENDING_APPROVAL` status by running the following command:
 
 ```bash
 gcloud beta deploy rollouts list --delivery-pipeline web-app --release web-app-001
@@ -552,15 +554,15 @@ targetId: prod
 uid: a5c7d6007fee4d80904d49142581aaa7
 ```
 
-Next, you'll create a user with the proper IAM roles to approve this promotion to your prod Target and make your production push.
+Next, you'll create a user with the proper IAM roles that can approve this promotion to your prod target.
 
-Click **Next** to proceed.
+To create a user that can approve a promotion, click **Next**.
 
-## Defining Approvers
+## Creating an approver
 
 Google Cloud Deploy is designed to integrate with multiple personas within an IT organization. For the product owner or team lead who approves production changes, there's a special IAM Role that can be bound to users and service accounts to give them the capability to approve pipeline promotions.
 
-Due to the nature of this one-person tutorial, we're not going to actually use another account to approve the process. **This step is optional and not required for completion of subesequent steps**. But we will walk through creating a service account and binding it to the `clouddeploy.approver` role.
+Due to the nature of this one-person tutorial, you will not use the separate account to approve the promotion. **This step is optional and not required for completion of subesequent steps**.
 
 First, create a new service account.
 
@@ -568,13 +570,13 @@ First, create a new service account.
 gcloud iam service-accounts create pipeline-approver --display-name 'Web-App Pipeline Approver'
 ```
 
-Confirm your new Service Account was created.
+Confirm your new service account was created.
 
 ```bash
 gcloud iam service-accounts list
 ```
 
-Your output should include your new Approver Service Account as well as Service Accounts for each GKE cluster that were created with the bootstrap process. Note the `EMAIL` address for your new Approver service account. The command in the next step will use this email address.
+The output should include the new approver service account as well as service accounts for each GKE cluster. Note the `EMAIL` address for your new approver service account. The command in the next step will use this email address.
 
 ```terminal
 DISPLAY NAME                            EMAIL                                                           DISABLED
@@ -585,9 +587,9 @@ Web-App Pipeline Approver               pipeline-approver@{{project-id}}.iam.gse
 Compute Engine default service account  619472186817-compute@developer.gserviceaccount.com              False
 ```
 
-Service Accounts are used by CI tools like [Cloud Build](https://cloud.google.com/build) and [Jenkins](https://www.jenkins.io/) to interact programatically with GCP. This is a typical workflow for anyone integrating Google Cloud Deploy into their CI/CD toolchain.
+Service accounts are used by CI tools like [Cloud Build](https://cloud.google.com/build) and [Jenkins](https://www.jenkins.io/) to interact programatically with GCP. This is a typical workflow for anyone integrating Google Cloud Deploy into their CI/CD toolchain.
 
-### Add Approval Permissions
+### Add approval permissions
 
 To bind the `clouddeploy.approver` role to your new Service Account, run this command.
 
@@ -603,13 +605,13 @@ In the long output, you should notice this output.
   role: roles/clouddeploy.approver
 ```
 
-In the next section you'll promote your application to your prod Target.
+In the next section you'll promote your application to your prod target.
 
-Click **Next** to proceed.
+To approve and deploy to production, click **Next**.
 
-## Deploying to Prod
+## Deploying to prod
 
-To approve your application and promote it to your prod Target, use this command:
+To approve your application and promote it to your prod target, run the following command:
 
 ```bash
 gcloud beta deploy rollouts approve web-app-001-to-prod-0001 --delivery-pipeline web-app --release web-app-001
@@ -621,7 +623,7 @@ After a short time, your promotion should complete. To verify this, run the foll
 gcloud beta deploy rollouts list --delivery-pipeline web-app --release web-app-001
 ```
 
-Your output should look similar to below. 
+Your output should look similar to the following:
 
 ```terminal
 ---
@@ -650,11 +652,23 @@ kubectl get pod -n web-app
 
 Your Google Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.
 
-Click **Next** to proceed.
+To clean up, click **Next**.
 
 ## Cleaning Up
 
-To clean up your GKE Targets and other resources, run the provided cleanup script. If you would like to continue to another tutorial, do not run this step, as these resources will be reused.
+To delete the Cloud Deploy pipeline used in this tutorial, run the following command:
+
+```bash
+gcloud beta deploy delivery-pipelines delete web-app --force --quiet
+```
+
+To delete the service account that can be used to approve promotions, run the following command:
+
+```bash
+gcloud iam service-accounts delete pipeline-approver@{{project-id}}.iam.gserviceaccount.com
+```
+
+To clean up your GKE clusters and other resources, run the provided cleanup script. If you would like to continue to another tutorial, do not run this step, as these resources will be reused.
 
 ```bash
 ./cleanup.sh
@@ -662,9 +676,9 @@ To clean up your GKE Targets and other resources, run the provided cleanup scrip
 
 This will remove the GCP resources as well as the artifacts on your Cloud Shell instance. It will take around 10 minutes to complete.
 
-### Cleaning up gcloud configurations
+### Cleaning up `gcloud` configurations
 
-When you ran `bootstrap.sh`, a line was added to your Cloud Shell configuration. For users of the `bash` shell, a line was added to `.bashrc` to reference `$HOME/.gcloud` as the directory `gcloud` uses to keep configurations. For people who have customized their Cloud Shell environments to use other shells, the corresponding `rc` was similarly edited.
+When you ran `setup.sh`, a line was added to your Cloud Shell configuration. For users of the `bash` shell, a line was added to `.bashrc` to reference `$HOME/.gcloud` as the directory `gcloud` uses to keep configurations. For people who have customized their Cloud Shell environments to use other shells, the corresponding `rc` was similarly edited.
 
 In the `.gcloud` directory a configuration named `clouddeploy` was also created. This features allows `gcloud` configurations to [persist across Cloud Shell sessions and restarts](https://cloud.google.com/shell/docs/configuring-cloud-shell#gcloud_command-line_tool_preferences).
 
@@ -680,4 +694,4 @@ Thank you for taking the time to get to know the Google Cloud Deploy Preview fro
 
 <walkthrough-inline-feedback></walkthrough-inline-feedback>
 
-You can find additional tutorials for Google Cloud Deploy [here](https://cloud.google.com/deploy/docs/tutorials).
+You can find additional tutorials for Google Cloud Deploy in [Tutorials](https://cloud.google.com/deploy/docs/tutorials).

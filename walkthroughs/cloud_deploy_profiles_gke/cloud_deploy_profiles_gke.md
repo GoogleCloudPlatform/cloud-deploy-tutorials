@@ -1,17 +1,17 @@
 # Google Cloud Deploy: Preview
 
-![Google Cloud Deploy logo](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png "Google Cloud Deploy logo")
+![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png)
 
 ## Overview
-This tutorial guides you through using Skaffold Profiles with the Google [Cloud Deploy](https://console.cloud.google.com/deploy) service.
 
-Following on from the Google Cloud Deploy End-to-end tutorial, you will use a **test > staging > production** delivery pipeline to deploy an application that is customized for each target.
+This interactive tutorial guides you through using Skaffold Profiles with the Google [Cloud Deploy](https://console.cloud.google.com/deploy) service.
 
-Please note that completion of the Google Cloud Deploy End-to-end tutorial is a prerequisite for this tutorial.
+You will use a **test > staging > production** delivery pipeline to deploy an application that is customized for each target.
 
-If you have not done so, please visit [the tutorials page](https://cloud.google.com/deploy/docs/tutorials), complete the Google Cloud Deploy End-to-end tutorial first, then resume this tutorial.
+Before starting this tutorial, complete the [Google Cloud Deploy Basic walkthrough](https://cloud.google.com/deploy/docs/tutorials). Complete this tutorial in the same Google Cloud project as the walkthrough.
 
 ## About Profiles
+
 A common pattern for building and progressing an application safely and reliably to production is to build the artifact only once, and to use data stored separately to configure the application.
 
 Typically there is a requirement for an application's configuration to vary depending on the environment (***test, staging, production***, and so on) to which it is deployed.
@@ -24,7 +24,7 @@ Examples of these requirements include:
 
 To facilitate this pattern, Google Cloud Deploy integrates with [`Skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset, which includes features to enable these kinds of deploy-time configuration.
 
-Skaffold, in turn, supports the use of multiple underlying tools that enable application manifest templatization and manipulation.
+Skaffold supports the use of multiple underlying tools that enable application manifest templatization and manipulation.
 
 This tutorial uses [Kustomize](https://kustomize.io/), but [Helm](https://helm.sh/) is another example of a tool that is commonly used to templatize and/or manage Kubernetes manifests.
 
@@ -37,6 +37,7 @@ You can read more about these tools via the following links:
 These capabilities are built in to Google Cloud Deploy, which means that you can concentrate on your application configuration.
 
 ### About Cloud Shell
+
 This tutorial uses [Google Cloud Shell](https://cloud.google.com/shell) to configure and interact with Google Cloud Deploy. Cloud Shell is an online development and operations environment, accessible anywhere with your browser.
 
 You can manage your resources with its online terminal, preloaded with utilities such as the `gcloud`, `kubectl`, and more. You can also develop, build, debug, and deploy your cloud-based apps using the online [Cloud Shell Editor](https://ide.cloud.google.com/).
@@ -47,17 +48,18 @@ Estimated Duration:
 Click **Next** to proceed.
 
 ## Project setup
-GCP organizes resources into projects. This allows you to collect all of the related resources for a single application in one place.
+
+Google Cloud organizes resources into projects. This allows you to collect all of the related resources for a single application in one place.
 
 Begin by selecting an existing project for this tutorial.
 
-***This project must be the project you used for the [Google Cloud Deploy End-to-end walkthrough](https://cloud.google.com/deploy/docs/tutorials), because infrastructure and Google Cloud Deploy Targets are reused.***
+***This project must be the project you used for the [Google Cloud Deploy End-to-end walkthrough](https://cloud.google.com/deploy/docs/tutorials), because infrastructure and Google Cloud Deploy targets are reused.***
 
 <walkthrough-project-setup billing="true"></walkthrough-project-setup>
 
-### Select your Project
+### Select your project
 
-Once selected, set the same project in your Cloud Shell `gcloud` configuration with this command:
+Once selected, set the project in Cloud Shell:
 
 ```bash
 gcloud config set project {{project-id}}
@@ -81,7 +83,7 @@ Next, run `setup.sh` in your Cloud Shell to configure this tutorial:
 
 Click **Next** to proceed.
 
-## Check Infrastructure
+## Check infrastructure
 
 First, confirm that your GKE clusters and supporting resources are properly deployed:
 
@@ -98,17 +100,17 @@ staging  us-central1  1.18.20-gke.501  34.134.168.213  n1-standard-2  1.18.20-gk
 test     us-central1  1.18.20-gke.501  35.239.164.76   n1-standard-2  1.18.20-gke.501  3          RUNNING
 ```
 
-If the command succeeds, each cluster will have three nodes and a `RUNNING` status. If you do not see output similar to the above, check that you have selected the correct project.
+If the command succeeds, each cluster will have three nodes and a `RUNNING` status. If you do not see similar output, check that you have selected the correct project.
 
-Click **Next** to proceed.
+To review the application you will deploy, click **Next**.
 
-## Review the Application
+## Review the application
 
 As part of this tutorial, a sample application from the [Skaffold Github repository](https://github.com/GoogleContainerTools/skaffold.git) is available from your Cloud Shell instance, in the `web-profiles` directory. This is similar to the application used in the Google Cloud Deploy End-to-end tutorial, with some modifications that are specific to this tutorial.
 
-### Application Configuration
+### Application configuration
 
-The example application source code is in the `web-profiles` directory of your Cloud Shell instance. It's a simple web app that signs on with a log entry, listens on a port, and provides an HTTP response to each incoming request. The structure of the application and its configuration is as follows:
+The example application source code is in the `web-profiles` directory of your Cloud Shell instance. The application is a simple web app that signs on with a log entry, listens on a port, and provides an HTTP response to each incoming request. The structure of the application and its configuration is as follows:
 
 ```terminal
 web-profiles
@@ -145,11 +147,11 @@ The `web-profiles` directory contains `skaffold.yaml`, which contains directives
 
 <walkthrough-editor-open-file filePath="web-profiles/skaffold.yaml">Click here to review skaffold.yaml.</walkthrough-editor-open-file>
 
-Notice the `profiles` section of this file, which associates a named profile for each target (***test, staging, prod***) with a specific `kustomize` configuration. Each profile refers to the configuration directory that corresponds to each Google Cloud Deploy Target.
+Notice the `profiles` section of this file, which associates a named profile for each target (***test, staging, prod***) with a specific `kustomize` configuration. Each profile refers to the configuration directory that corresponds to each Google Cloud Deploy target.
 
-Click **Next** to proceed.
+To review the application code, click **Next**.
 
-## Application Code
+## Application code
 
 The application provides a simple web service that returns a message that identifies the target to which it has been deployed, as well as logging this information at startup.
 
@@ -157,9 +159,9 @@ The application provides a simple web service that returns a message that identi
 
 Note the calls to `os.Getenv` to retrieve and output the `TARGET` environment variable, which is dynamically supplied in the application manifest when the application is deployed.
 
-Click **Next** to proceed.
+To build the application, click **Next**.
 
-## Build the Application
+## Build the application
 
 In this section, you'll build the application so you can progress it through the `webapp-profiles` delivery pipeline.
 
@@ -203,7 +205,7 @@ Similar information can be found in the `artifacts.json` file that was created b
 
 <walkthrough-editor-open-file filePath="web-profiles/artifacts.json">Click here to review artifacts.json.</walkthrough-editor-open-file>
 
-Click **Next** to proceed.
+To create the delivery pipeline, click **Next**.
 
 ## Create the delivery pipeline
 
@@ -227,7 +229,7 @@ Verify the delivery pipeline was created:
 gcloud beta deploy delivery-pipelines describe web-app-profiles
 ```
 
-Your output should look like the example below. Notice that the targets are reused from the Google Cloud Deploy End-to-end walkthrough, but this Pipeline has a `profile` associated with each `targetID`:
+Your output should look like the example below. Notice that the targets are reused from the Google Cloud Deploy End-to-end walkthrough, but this pipeline has a `profile` associated with each `targetID`:
 
 ```terminal
 Delivery Pipeline:
@@ -256,9 +258,9 @@ Targets:
 
 You can also see the [details for your delivery pipeline](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app-profiles?project={{project-id}}) in the GCP control panel.
 
-Click **Next** to proceed.
+To create a release, click **Next**.
 
-## Create a Release
+## Create a release
 
 A Google Cloud Deploy `release` is a specific version of one or more container images associated with a specific delivery pipeline. Once a release is created, it can be promoted through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `Skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
 
@@ -351,13 +353,13 @@ targetSnapshots:
 uid: 6b6bde86e2b1450cb1a8b5fa5f9d7606
 ```
 
-You can also view [Release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app-profiles/releases/web-app-profiles-001?project={{project-id}}) in the GCP control panel.
+You can also view [release details](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app-profiles/releases/web-app-profiles-001?project={{project-id}}) in the GCP control panel.
 
-Click **Next** to proceed.
+To confirm the rollout, click **Next**.
 
-## Confirming Rollout
+## Confirm the rollout
 
-When the Release was created in the previous step, it automatically rolled out your application to the initial Target. To confirm your `test` Target has your application deployed, run the following command:
+When the release was created in the previous step, it automatically rolled out your application to the initial target. To confirm your `test` target has your application deployed, run the following command:
 
 ```bash
 gcloud beta deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
@@ -380,7 +382,7 @@ targetId: test
 uid: 810fa2e785164f87852893d24bdb0b1f
 ```
 
-Note that the first rollout of a Release will take several minutes, because Google Cloud Deploy renders the manifests for all Targets when the Release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+Note that the first rollout of a release will take several minutes, because Google Cloud Deploy renders the manifests for all targets when the release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 To confirm your application was deployed to your test GKE cluster, run the following commands in your Cloud Shell:
 
@@ -396,13 +398,13 @@ leeroy-app-profiles-7b8d48f794-svl6g   1/1     Running   0          19s
 leeroy-web-profiles-5498c5b7fd-czvm8   1/1     Running   0          20s
 ```
 
-Recall from earlier in this tutorial that the Google Cloud Deploy configuration was structured to contain configuration specific to each Target.
+Recall from earlier in this tutorial that the Google Cloud Deploy configuration was structured to contain configuration specific to each target.
 
-<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/test/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `test` Target.</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/test/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `test` target.</walkthrough-editor-open-file>
 
 Notice at the bottom of the file that this overlay includes setting the value of the `TARGET` environment variable to `test`.
 
-To confirm that your application configuration has been specialized for the `test` Target, run the following commands in your Cloud Shell:
+To confirm that your application configuration has been specialized for the `test` target, run the following commands in your Cloud Shell:
 
 ```bash
 kubectx test && kubectl logs -l app=leeroy-app-profiles -n web-app-profiles
@@ -417,15 +419,17 @@ Switched to context "test".
 
 Click **Next** to proceed.
 
-## Promoting Applications
+To promote the application, click **Next**.
 
-To promote your application to your staging Target, run the following command. The optional `--to-target` parameter can specify a Target to promote to. If this option isn't included, the Release is promoted to the next Target in the Delivery Pipeline.
+## Promote the application
+
+To promote your application to your staging target, run the following command. The optional `--to-target` parameter can specify a target to promote to. If this option isn't included, the release is promoted to the next target in the Delivery pipeline.
 
 ```bash
 gcloud beta deploy releases promote --delivery-pipeline web-app-profiles --release web-app-profiles-001
 ```
 
-To confirm your application has been promoted to the `staging` Target, run the following command:
+To confirm your application has been promoted to the `staging` target, run the following command:
 
 ```bash
 gcloud beta deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
@@ -465,11 +469,11 @@ leeroy-web-profiles-5498c5b7fd-czvm8   1/1     Running   0          20s
 
 Notice that in the `staging` environment, two instances of the `leeroy-app-profiles` pod should be running.
 
-<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/staging/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `staging` Target.</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/staging/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `staging` target.</walkthrough-editor-open-file>
 
 Notice at the bottom of the file that this overlay includes setting the value of the `TARGET` environment variable to `staging`, as well as setting the number of replicas of the app to 2.
 
-To confirm that your application configuration has been specialized for the `staging` Target, run the following commands in your Cloud Shell:
+To confirm that your application configuration has been specialized for the `staging` target, run the following commands in your Cloud Shell:
 
 ```bash
 kubectx staging && kubectl logs -l app=leeroy-app-profiles -n web-app-profiles
@@ -483,17 +487,17 @@ Switched to context "staging".
 2021/08/16 14:24:28 leeroy app server ready, runnning in target: staging
 ```
 
-Click **Next** to proceed.
+To learn more about approvals, click **Next**.
 
 ## Approvals
 
-When you created your Google Cloud Deploy Pipeline, the configuration was in place to require approvals to this Target. To verify this, run this command and look for the `requireApproval` parameter.
+When you created your Google Cloud Deploy pipeline, the configuration was in place to require approvals to this target. To verify this, run this command and look for the `requireApproval` parameter.
 
 ```bash
 gcloud beta deploy targets describe prod --delivery-pipeline web-app-profiles
 ```
 
-Your output should look similar to the example below. Unlike the previous targets, the prod Target does require approval per the `requireApproval` parameter.
+Your output should look similar to the example below. Unlike the previous targets, the prod target does require approval per the `requireApproval` parameter.
 
 ```terminal
 Target:
@@ -508,7 +512,7 @@ Target:
   updateTime: '2021-08-16T14:04:41.360370226Z'
 ```
 
-Go ahead and promote your application to your prod Target with this command:
+Promote your application to your prod target with this command:
 
 ```bash
 gcloud beta deploy releases promote --delivery-pipeline web-app-profiles --release web-app-profiles-001
@@ -533,11 +537,11 @@ targetId: prod
 uid: 86ac0b70bcdc4599a49eeddcfb41ef3e
 ```
 
-Click **Next** to proceed.
+To deploy to prod, click **Next**.
 
-## Deploying to Prod
+## Deploying to prod
 
-To approve your application and promote it to your prod Target, use this command:
+To approve your application and promote it to your prod target, use this command:
 
 ```bash
 gcloud beta deploy rollouts approve web-app-profiles-001-to-prod-0001 --delivery-pipeline web-app-profiles --release web-app-profiles-001
@@ -587,11 +591,11 @@ leeroy-web-profiles-8448cd558f-mhzgd   1/1     Running   0          107s
 
 Notice that in the `prod` environment, three instances of the `leeroy-app-profiles` pod should be running.
 
-<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/prod/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `prod` Target.</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="web-profiles/leeroy-app-profiles/kubernetes/prod/target.yaml">Click here to review the Kustomize rendering overlay `target.yaml` for the `prod` target.</walkthrough-editor-open-file>
 
 Notice at the bottom of the file that this overlay includes setting the value of the `TARGET` environment variable to `prod`, as well as setting the number of replicas of the app to 3.
 
-To confirm that your application configuration has been specialized for the `prod` Target, run the following commands in your Cloud Shell:
+To confirm that your application configuration has been specialized for the `prod` target, run the following commands in your Cloud Shell:
 
 ```bash
 kubectx prod && kubectl logs -l app=leeroy-app-profiles -n web-app-profiles
@@ -606,11 +610,15 @@ Switched to context "prod".
 2021/08/16 14:28:55 leeroy app server ready, runnning in target: prod
 ```
 
-Your Google Cloud Deploy per-Target configuration worked, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.
+### 🎉 Success
 
-Click **Next** to proceed.
+Your Google Cloud Deploy per-target configuration worked, and your application is now deployed to your prod GKE cluster.
 
-## Cleaning Up
+To learn about next steps, click **Next**.
+
+## Next steps
+
+### Delete the pipeline
 
 To clean up the pipeline created as part of this tutorial, run the following command:
 
@@ -618,7 +626,9 @@ To clean up the pipeline created as part of this tutorial, run the following com
 gcloud beta deploy delivery-pipelines delete web-app-profiles --force --quiet
 ```
 
-To clean up your GKE Targets and other resources, run the provided cleanup script. If you would like to continue to another tutorial, do not complete this step.
+### Delete the pipeline
+
+To clean up your GKE targets and other resources, run the provided cleanup script. If you would like to continue to another tutorial, do not complete this step.
 
 ```bash
 ./cleanup.sh
@@ -644,4 +654,4 @@ Thank you for taking the time to get to know the Google Cloud Deploy Preview fro
 
 <walkthrough-inline-feedback></walkthrough-inline-feedback>
 
-You can find additional tutorials for Google Cloud Deploy [here](https://cloud.google.com/deploy/docs/tutorials).
+You can find additional tutorials for Google Cloud Deploy in [Tutorials](https://cloud.google.com/deploy/docs/tutorials).

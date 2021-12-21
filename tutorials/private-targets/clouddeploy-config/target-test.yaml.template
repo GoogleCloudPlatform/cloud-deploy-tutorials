@@ -18,7 +18,7 @@ metadata:
   name: test-private
 description: test cluster
 gke:
-  cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/test
+  cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/test-private
 executionConfigs:
 - privatePool:
     workerPool: projects/${PROJECT_ID}/locations/${REGION}/workerPools/private-pool

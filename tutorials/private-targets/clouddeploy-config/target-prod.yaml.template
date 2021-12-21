@@ -19,7 +19,7 @@ metadata:
 description: prod cluster
 requireApproval: true
 gke:
-  cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/prod
+  cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/prod-private
 executionConfigs:
 - privatePool:
     workerPool: projects/${PROJECT_ID}/locations/${REGION}/workerPools/private-pool

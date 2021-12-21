@@ -84,10 +84,32 @@ gcloud container clusters list
 The output is similar to the following:
 
 ```terminal
-NAME     LOCATION     MASTER_VERSION    MASTER_IP       MACHINE_TYPE   NODE_VERSION      NUM_NODES  STATUS
-prod     us-central1  1.17.17-gke.2800  35.194.37.64    n1-standard-2  1.17.17-gke.2800  3          RUNNING
-staging  us-central1  1.17.17-gke.2800  35.232.139.69   n1-standard-2  1.17.17-gke.2800  3          RUNNING
-test     us-central1  1.17.17-gke.2800  35.188.180.217  n1-standard-2  1.17.17-gke.2800  3          RUNNING
+NAME: prod
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 34.134.12.248
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
+
+NAME: staging
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 35.193.89.33
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
+
+NAME: test
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 104.197.215.105
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
 ```
 
 If the command succeeds, each cluster will have three nodes and a `RUNNING` status.
@@ -348,7 +370,7 @@ etag: fc081ad5de12a888
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001
 renderEndTime: '2021-08-16T14:05:55.992810Z'
 renderStartTime: '2021-08-16T14:05:21.803045346Z'
-renderState: SUCCESS
+renderState: SUCCEEDED
 renderingBuild: projects/123320843249/locations/us-central1/builds/d9a52630-d06a-4485-90b0-391f84b16b86
 skaffoldConfigUri: gs://{{project-id}}_clouddeploy/source/1629122719.128778-7891f1bb5957480d8e974b9f99905896.tgz
 skaffoldVersion: 1.24.0
@@ -432,12 +454,12 @@ deployingBuild: projects/123320843249/locations/us-central1/builds/4815b788-ec5e
 enqueueTime: '2021-08-16T14:06:21.760830Z'
 etag: 5cb7b6c342b5f29b
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-test-0001
-state: SUCCESS
+state: SUCCEEDED
 targetId: test
 uid: cccd9525d3a0414fa60b2771036841d9
 ```
 
-Note that the first rollout of a release will take several minutes, because Google Cloud Deploy renders the manifests for all targets when the release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+Note that the first rollout of a release will take several minutes, because Google Cloud Deploy renders the manifests for all targets when the release is created. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 To confirm your application was deployed to your test GKE cluster, run the following commands in your Cloud Shell:
 
@@ -477,11 +499,11 @@ deployStartTime: '2021-08-16T14:09:50.199876916Z'
 deployingBuild: projects/123320843249/locations/us-central1/builds/47218238-c661-466e-9005-cde9ffa6bbf1
 etag: 6e25ab47add1d6ee
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-staging-0001
-state: SUCCESS
+state: SUCCEEDED
 targetId: staging
 uid: b24b5f42db524fe4b0513c2f930e8196
 ```
-The rollout may take several minutes. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+The rollout may take several minutes. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 To confirm your application was deployed to your staging GKE cluster, run the following commands in your Cloud Shell:
 
@@ -579,12 +601,25 @@ gcloud iam service-accounts list
 The output should include the new approver service account as well as service accounts for each GKE cluster. Note the `EMAIL` address for your new approver service account. The command in the next step will use this email address.
 
 ```terminal
-DISPLAY NAME                            EMAIL                                                           DISABLED
-Cluster Service Account for test        tf-sa-test@{{project-id}}.iam.gserviceaccount.com         False
-Cluster Service Account for prod        tf-sa-prod@{{project-id}}.iam.gserviceaccount.com         False
-Cluster Service Account for staging     tf-sa-staging@{{project-id}}.iam.gserviceaccount.com      False
-Web-App Pipeline Approver               pipeline-approver@{{project-id}}.iam.gserviceaccount.com  False
-Compute Engine default service account  619472186817-compute@developer.gserviceaccount.com              False
+DISPLAY NAME: Cluster Service Account for prod
+EMAIL: tf-sa-prod@{{project-id}}.iam.gserviceaccount.com
+DISABLED: False
+
+DISPLAY NAME: Compute Engine default service account
+EMAIL: 845727232773-compute@developer.gserviceaccount.com
+DISABLED: False
+
+DISPLAY NAME: Cluster Service Account for staging
+EMAIL: tf-sa-staging@{{project-id}}.iam.gserviceaccount.com
+DISABLED: False
+
+DISPLAY NAME: Web-App Pipeline Approver
+EMAIL: pipeline-approver@{{project-id}}.iam.gserviceaccount.com
+DISABLED: False
+
+DISPLAY NAME: Cluster Service Account for test
+EMAIL: tf-sa-test@{{project-id}}.iam.gserviceaccount.com
+DISABLED: False
 ```
 
 Service accounts are used by CI tools like [Cloud Build](https://cloud.google.com/build) and [Jenkins](https://www.jenkins.io/) to interact programatically with GCP. This is a typical workflow for anyone integrating Google Cloud Deploy into their CI/CD toolchain.
@@ -636,12 +671,12 @@ deployingBuild: projects/123320843249/locations/us-central1/builds/b4b1636d-8fc2
 enqueueTime: '2021-08-16T14:12:53.289467Z'
 etag: b129bfd02c374040
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app/releases/web-app-001/rollouts/web-app-001-to-prod-0001
-state: SUCCESS
+state: SUCCEEDED
 targetId: prod
 uid: a5c7d6007fee4d80904d49142581aaa7
 ```
 
-The rollout may take several minutes. If you do not see `state: SUCCESS` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+The rollout may take several minutes. If you do not see `state: SUCCEEDED` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 You can also confirm your `prod` GKE cluster has your apps deployed:
 

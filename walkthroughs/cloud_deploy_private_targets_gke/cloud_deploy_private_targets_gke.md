@@ -61,9 +61,9 @@ To deploy your infrastructure, click **Next** to proceed.
 
 You will deploy three private GKE clusters with the following names into your `{{project-id}}` Project:
 
-* `test` (often referred to as `dev`)
-* `staging`
-* `prod`
+* `test-private` (often referred to as `dev`)
+* `staging-private`
+* `prod-private`
 
 _Note_: If you have an existing GKE cluster in `{{project-id}}` with any of these names, you need to select a different project.
 
@@ -86,10 +86,32 @@ gcloud container clusters list
 The output is similar to the following:
 
 ```terminal
-NAME     LOCATION     MASTER_VERSION    MASTER_IP       MACHINE_TYPE   NODE_VERSION      NUM_NODES  STATUS
-prod     us-central1  1.17.17-gke.2800  35.194.37.64    n1-standard-2  1.17.17-gke.2800  3          RUNNING
-staging  us-central1  1.17.17-gke.2800  35.232.139.69   n1-standard-2  1.17.17-gke.2800  3          RUNNING
-test     us-central1  1.17.17-gke.2800  35.188.180.217  n1-standard-2  1.17.17-gke.2800  3          RUNNING
+NAME: prod-private
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 172.16.2.2
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
+
+NAME: staging-private
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 172.16.1.2
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
+
+NAME: test-private
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 172.16.0.2
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
 ```
 
 If the command succeeds, each cluster will have three nodes and a `RUNNING` status.
@@ -106,7 +128,7 @@ In this section, you'll build the application so you can progress it through the
 
 ### Building with skaffold
 
-The example application source code is in the `web-private-targets` directory of your Cloud Shell instance. It's a simple web app that listens to a port, provides an HTTP response code and adds a log entry. You may have deployed this application as part of another Cloud Deploy tutorial.
+The example application source code is in the `web-private-targets` directory of your Cloud Shell instance. It's a simple web app that listens on a port, provides an HTTP response code and adds a log entry. You may have deployed this application as part of another Cloud Deploy tutorial.
 
 The `web-private-targets` directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application. This configuration uses the [Cloud Build](https://cloud.google.com/build) service to build the container images for your applications.
 
@@ -225,18 +247,19 @@ The output should look like the example below. Important information in this out
 Target:
   createTime: '2021-11-26T16:46:34.750867784Z'
   description: test cluster
-  etag: 9cfbf9ee2ef2a38b
+  etag: dd42420ce14fadf1
   executionConfigs:
   - privatePool:
+      serviceAccount: tf-sa-clouddeploy@{{project-id}}.iam.gserviceaccount.com
       workerPool: projects/{{project-id}}/locations/us-central1/workerPools/private-pool
     usages:
     - RENDER
     - DEPLOY
   gke:
-    cluster: projects/{{project-id}}/locations/us-central1/clusters/test
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/test-private
   name: projects/{{project-id}}/locations/us-central1/targets/test-private
   uid: 8387e458c08648a6a74b3f54e99e543a
-  updateTime: '2021-11-26T16:46:34.838965285Z'
+  updateTime: '2021-12-21T17:47:04.012763324Z'
 ```
 
 You can also view [details for your target](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app-private-targets/targets/test?project={{project-id}}) in the GCP control panel.
@@ -279,47 +302,50 @@ The output should look like this, showing all three created targets, which are u
 targets:
 - createTime: '2021-11-26T16:50:31.969162571Z'
   description: staging cluster
-  etag: 35421504f2300713
+  etag: 708a22bd10b4cc4d
   executionConfigs:
   - privatePool:
+      serviceAccount: tf-sa-clouddeploy@{{project-id}}.iam.gserviceaccount.com
       workerPool: projects/{{project-id}}/locations/us-central1/workerPools/private-pool
     usages:
     - RENDER
     - DEPLOY
   gke:
-    cluster: projects/{{project-id}}/locations/us-central1/clusters/staging
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/staging-private
   name: projects/{{project-id}}/locations/us-central1/targets/staging-private
   uid: d1902f295f584ee2b9eb867d4d874d44
-  updateTime: '2021-11-26T16:50:32.340724144Z'
+  updateTime: '2021-12-21T17:50:29.752049439Z'
 - createTime: '2021-11-26T16:50:58.855561690Z'
   description: prod cluster
-  etag: 63ad42d05b3bbd2d
+  etag: b3282fd4e1165eef
   executionConfigs:
   - privatePool:
+      serviceAccount: tf-sa-clouddeploy@{{project-id}}.iam.gserviceaccount.com
       workerPool: projects/{{project-id}}/locations/us-central1/workerPools/private-pool
     usages:
     - RENDER
     - DEPLOY
   gke:
-    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod-private
   name: projects/{{project-id}}/locations/us-central1/targets/prod-private
   requireApproval: true
   uid: 4abbaace846c49e09a37e762fd2da7fb
-  updateTime: '2021-11-26T16:50:58.926184337Z'
+  updateTime: '2021-12-21T17:50:44.936226312Z'
 - createTime: '2021-11-26T16:46:34.750867784Z'
   description: test cluster
-  etag: 9cfbf9ee2ef2a38b
+  etag: dd42420ce14fadf1
   executionConfigs:
   - privatePool:
+      serviceAccount: tf-sa-clouddeploy@{{project-id}}.iam.gserviceaccount.com
       workerPool: projects/{{project-id}}/locations/us-central1/workerPools/private-pool
     usages:
     - RENDER
     - DEPLOY
   gke:
-    cluster: projects/{{project-id}}/locations/us-central1/clusters/test
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/test-private
   name: projects/{{project-id}}/locations/us-central1/targets/test-private
   uid: 8387e458c08648a6a74b3f54e99e543a
-  updateTime: '2021-11-26T16:46:34.838965285Z'
+  updateTime: '2021-12-21T17:47:04.012763324Z'
 ```
 
 All Google Cloud Deploy targets for the delivery pipeline have now been created.
@@ -412,7 +438,7 @@ targetSnapshots:
     - RENDER
     - DEPLOY
   gke:
-    cluster: projects/{{project-id}}/locations/us-central1/clusters/test
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/test-private
   name: projects/205061390868/locations/us-central1/targets/test-private
   uid: 8387e458c08648a6a74b3f54e99e543a
   updateTime: '2021-11-26T17:54:39.819010Z'
@@ -427,7 +453,7 @@ targetSnapshots:
     - RENDER
     - DEPLOY
   gke:
-    cluster: projects/{{project-id}}/locations/us-central1/clusters/staging
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/staging-private
   name: projects/205061390868/locations/us-central1/targets/staging-private
   uid: d1902f295f584ee2b9eb867d4d874d44
   updateTime: '2021-11-26T17:54:54.865241Z'
@@ -442,7 +468,7 @@ targetSnapshots:
     - RENDER
     - DEPLOY
   gke:
-    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod-private
   name: projects/205061390868/locations/us-central1/targets/prod-private
   requireApproval: true
   uid: 4abbaace846c49e09a37e762fd2da7fb
@@ -553,7 +579,7 @@ Target:
     - RENDER
     - DEPLOY
   gke:
-    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod
+    cluster: projects/{{project-id}}/locations/us-central1/clusters/prod-private
   name: projects/{{project-id}}/locations/us-central1/targets/prod-private
   requireApproval: true
   uid: 4abbaace846c49e09a37e762fd2da7fb

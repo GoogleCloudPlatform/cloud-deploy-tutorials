@@ -15,8 +15,8 @@
  */
 
 resource "google_service_account" "service_account" {
-  account_id   = "tf-sa-${var.name}"
-  display_name = "Cluster Service Account for ${var.name}"
+  account_id   = "tf-sa-${var.name}-private"
+  display_name = "Cloud Deploy tutorial cluster service account for ${var.name}"
 }
 
 resource "google_project_iam_member" "cluster_iam_logginglogwriter" {

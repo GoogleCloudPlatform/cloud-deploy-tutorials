@@ -18,7 +18,7 @@ metadata:
   name: staging-private
 description: staging cluster
 gke:
-  cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/staging
+  cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/staging-private
 executionConfigs:
 - privatePool:
     workerPool: projects/${PROJECT_ID}/locations/${REGION}/workerPools/private-pool

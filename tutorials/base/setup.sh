@@ -81,15 +81,15 @@ manage_gke_contexts() {
 
     echo "Setting GKE contexts"
     gcloud container clusters get-credentials test --region ${REGION}
-    kubectl config delete-context test
+    kubectl config delete-context test > /dev/null 2>&1
     kubectl config rename-context gke_${PROJECT_ID}_${REGION}_test test
 
     gcloud container clusters get-credentials staging --region ${REGION}
-    kubectl config delete-context staging
+    kubectl config delete-context staging > /dev/null 2>&1
     kubectl config rename-context gke_${PROJECT_ID}_${REGION}_staging staging
 
     gcloud container clusters get-credentials prod --region ${REGION}
-    kubectl config delete-context prod
+    kubectl config delete-context prod > /dev/null 2>&1
     kubectl config rename-context gke_${PROJECT_ID}_${REGION}_prod prod
 }
 

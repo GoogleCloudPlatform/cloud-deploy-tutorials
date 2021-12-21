@@ -69,7 +69,9 @@ gcloud config set project {{project-id}}
 
 Next, change into the directory for this tutorial and set your workspace:
 
+```bash
 cd ~/cloud-deploy-tutorials/tutorials/profiles && cloudshell workspace .
+```
 
 If your Cloud Shell session times out, you can resume the tutorial by reconnecting to Cloud Shell and rerunning the previous command to change into the above directory.
 
@@ -94,10 +96,32 @@ gcloud container clusters list
 Your output should look like this:
 
 ```terminal
-NAME     LOCATION     MASTER_VERSION   MASTER_IP       MACHINE_TYPE   NODE_VERSION     NUM_NODES  STATUS
-prod     us-central1  1.18.20-gke.501  34.68.73.47     n1-standard-2  1.18.20-gke.501  3          RUNNING
-staging  us-central1  1.18.20-gke.501  34.134.168.213  n1-standard-2  1.18.20-gke.501  3          RUNNING
-test     us-central1  1.18.20-gke.501  35.239.164.76   n1-standard-2  1.18.20-gke.501  3          RUNNING
+NAME: prod
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 34.134.12.248
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
+
+NAME: staging
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 35.193.89.33
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
+
+NAME: test
+LOCATION: us-central1
+MASTER_VERSION: 1.20.11-gke.1300
+MASTER_IP: 104.197.215.105
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.20.11-gke.1300
+NUM_NODES: 3
+STATUS: RUNNING
 ```
 
 If the command succeeds, each cluster will have three nodes and a `RUNNING` status. If you do not see similar output, check that you have selected the correct project.
@@ -209,7 +233,7 @@ To create the delivery pipeline, click **Next**.
 
 ## Create the delivery pipeline
 
-In this tutorial, you will create a new Google Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`, with specialized configuration for each.
+In this tutorial, you will create a new Google Cloud Deploy delivery pipeline that progresses a web application through three _targets_: `test`, `staging`, and `prod`, with specialized configuration for each.
 
 Google Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. You will reuse the target resources created in the pre-required [Google Cloud Deploy End-to-end walkthrough](https://cloud.google.com/deploy/docs/tutorials) tutorial.
 
@@ -377,12 +401,12 @@ deployingBuild: projects/123320843249/locations/us-central1/builds/1cca90d5-5fc9
 enqueueTime: '2021-08-16T14:20:24.273685Z'
 etag: 33ea01f8f51ea172
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles/releases/web-app-profiles-001/rollouts/web-app-profiles-001-to-test-0001
-state: SUCCESS
+state: SUCCEEDED
 targetId: test
 uid: 810fa2e785164f87852893d24bdb0b1f
 ```
 
-Note that the first rollout of a release will take several minutes, because Google Cloud Deploy renders the manifests for all targets when the release is created. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+Note that the first rollout of a release will take several minutes, because Google Cloud Deploy renders the manifests for all targets when the release is created. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 To confirm your application was deployed to your test GKE cluster, run the following commands in your Cloud Shell:
 
@@ -417,8 +441,6 @@ Switched to context "test".
 2021/08/16 14:20:38 leeroy app server ready, runnning in target: test
 ```
 
-Click **Next** to proceed.
-
 To promote the application, click **Next**.
 
 ## Promote the application
@@ -446,11 +468,11 @@ deployStartTime: '2021-08-16T14:24:14.426966091Z'
 deployingBuild: projects/123320843249/locations/us-central1/builds/6cd8d985-594c-4185-9749-3a34ea541e6d
 etag: ee723ed51ea90de6
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles/releases/web-app-profiles-001/rollouts/web-app-profiles-001-to-staging-0001
-state: SUCCESS
+state: SUCCEEDED
 targetId: staging
 uid: 448812a75ae04038ba2193220a74f1c7
 ```
-The rollout may take several minutes. If you do not see _state: SUCCESS_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+The rollout may take several minutes. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 To confirm your application was deployed to your staging GKE cluster, run the following commands in your Cloud Shell:
 
@@ -566,12 +588,12 @@ deployingBuild: projects/123320843249/locations/us-central1/builds/398729bb-c9d1
 enqueueTime: '2021-08-16T14:28:41.030182Z'
 etag: 8da9404a9b4005a1
 name: projects/{{project-id}}/locations/us-central1/deliveryPipelines/web-app-profiles/releases/web-app-profiles-001/rollouts/web-app-profiles-001-to-prod-0001
-state: SUCCESS
+state: SUCCEEDED
 targetId: prod
 uid: 86ac0b70bcdc4599a49eeddcfb41ef3e
 ```
 
-The rollout may take several minutes. If you do not see `state: SUCCESS` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+The rollout may take several minutes. If you do not see `state: SUCCEEDED` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
 You can also confirm your `prod` GKE cluster has your apps deployed:
 
@@ -626,9 +648,9 @@ To clean up the pipeline created as part of this tutorial, run the following com
 gcloud beta deploy delivery-pipelines delete web-app-profiles --force --quiet
 ```
 
-### Delete the pipeline
+### Clean up other resources
 
-To clean up your GKE targets and other resources, run the provided cleanup script. If you would like to continue to another tutorial, do not complete this step.
+To clean up your GKE targets and other resources, run the provided cleanup script. If you would like to continue to the execution environments tutorial, do not complete this step.
 
 ```bash
 ./cleanup.sh

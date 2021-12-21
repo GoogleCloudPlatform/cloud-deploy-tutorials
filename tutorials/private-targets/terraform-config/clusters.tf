@@ -21,7 +21,7 @@ locals {
 module "cluster-test" {
   source            = "./modules/cluster"
   project_id        = module.project-services.project_id
-  name              = "test"
+  name              = "test-private"
   region            = var.region
   network           = google_compute_network.network_gke.name
   subnetwork        = google_compute_subnetwork.subnetwork_gke_test.name
@@ -34,7 +34,7 @@ module "cluster-test" {
 module "cluster-staging" {
   source            = "./modules/cluster"
   project_id        = module.project-services.project_id
-  name              = "staging"
+  name              = "staging-private"
   region            = var.region
   network           = google_compute_network.network_gke.name
   subnetwork        = google_compute_subnetwork.subnetwork_gke_staging.name
@@ -47,7 +47,7 @@ module "cluster-staging" {
 module "cluster-prod" {
   source            = "./modules/cluster"
   project_id        = module.project-services.project_id
-  name              = "prod"
+  name              = "prod-private"
   region            = var.region
   network           = google_compute_network.network_gke.name
   subnetwork        = google_compute_subnetwork.subnetwork_gke_prod.name

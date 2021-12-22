@@ -219,7 +219,7 @@ Notice the first three lines of the output. Your delivery pipeline references th
 
 To create the targets, click **Next**.
 
-## Test target
+## Create the test target
 
 In Google Cloud Deploy, a _target_ represents a GKE cluster where an application can be deployed as part of a delivery pipeline.
 
@@ -368,6 +368,12 @@ gcloud beta deploy releases create web-app-001 --delivery-pipeline web-app-priva
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.
 
+The next task is to confirm that the release was sucessfully created.
+
+To confirm the release, click **Next**.
+
+## Confirm the release
+
 To confirm your release has been created, run the following command:
 
 ```bash
@@ -484,9 +490,9 @@ You can read more about this in the [Google Cloud Deploy delivery process](https
 
 To promote your application, Click **Next**.
 
-## Promoting the application
+## Confirm the rollout
 
-With your release created, you can promote your application. When the release was created in the previous step, it automatically rolled out your application to the initial target. To confirm your `test` target has your application deployed, run the following command:
+When the release was created in the previous step, it automatically rolled out your application to the initial target. To confirm your `test` target has your application deployed, run the following command:
 
 ```bash
 gcloud beta deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
@@ -511,9 +517,17 @@ uid: 07d1fff4358a4494ad3b5436a1ce20bd
 
 Note that the first rollout of a release will take several minutes, because Google Cloud Deploy renders the manifests for all targets when the release is created. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
-To confirm your application was deployed to your test GKE cluster, run the following commands in your Cloud Shell:
+To confirm that your rollout was successful, you will need to use the GKE Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
 
-**TODO**
+[Click here to visit the GKE Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
+
+You should see that the application has been deployed to the **test-private** cluster, as shown in the following image:
+
+![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets/images/test.png)
+
+To promote your application to the next target, click **Next**
+
+## Promote the application
 
 To promote your application to your staging target, run the following command. The optional `--to-target` parameter can specify a target to promote to. If this option isn't included, the release is promoted to the next target in the delivery pipeline.
 
@@ -544,11 +558,17 @@ uid: 72688b8aafd1433d894392ffd19e9e20
 ```
 The rollout may take several minutes. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
-To confirm your application was deployed to your staging GKE cluster, run the following commands in your Cloud Shell:
+To confirm that your rollout was successful, you will need to use the GKE Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
 
-**TODO**
+[Click here to visit the GKE Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
 
-In the next section, you'll look at targets that require approvals before promotions can complete.
+You should see that the application has now been deployed to the **staging-private** cluster, as shown in the following image:
+
+![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets/images/staging.png)
+
+You can click the **Cluster** column heading to sort the entries by cluster.
+
+In the next section, you'll learn about targets that require approvals before promotions can complete.
 
 To learn more about approvals, click **Next**.
 
@@ -556,7 +576,7 @@ To learn more about approvals, click **Next**.
 
 Any target can require an approval before a release promotion can occur. This is designed to protect production and sensitive targets from accidentally promoting a release before it's been fully vetted and tested.
 
-### Requiring approval for promotion to a target
+### Require approval for promotion to a target
 
 When you created your prod environment, the configuration was in place to require approvals to this target. To verify this, run this command and look for the `requireApproval` parameter.
 
@@ -671,11 +691,19 @@ uid: 07d1fff4358a4494ad3b5436a1ce20bd
 
 The rollout may take several minutes. If you do not see `state: SUCCEEDED` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
-**TODO**
+To confirm that your rollout was successful, you will need to use the GKE Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
+
+[Click here to visit the GKE Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
+
+You should see that the application has now been deployed to the **prod-private** cluster, as shown in the following image:
+
+![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets/images/prod.png)
+
+You can click the **Cluster** column heading to sort the entries by cluster.
 
 ### 🎉 Success
 
-Your Google Cloud Deploy workflow approval worked, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.
+Your Google Cloud Deploy workflow approval was successful, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.
 
 To learn about next steps, click **Next**.
 

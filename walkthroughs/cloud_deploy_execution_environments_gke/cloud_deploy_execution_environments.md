@@ -96,7 +96,7 @@ This service account needs to have the `clouddeploy.jobRunner` and `container.de
 ```bash
 gcloud projects add-iam-policy-binding {{project-id}} \
 --member serviceAccount:cd-executionuser@{{project-id}}.iam.gserviceaccount.com \
---role roles/clouddeploy.jobRunner \
+--role roles/clouddeploy.jobRunner 
 
 gcloud projects add-iam-policy-binding {{project-id}} \
 --member serviceAccount:cd-executionuser@{{project-id}}.iam.gserviceaccount.com \

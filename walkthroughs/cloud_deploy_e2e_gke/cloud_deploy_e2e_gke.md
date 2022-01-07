@@ -42,7 +42,7 @@ gcloud config set project {{project-id}}
 Run the following command to clone the tutorial repository into your Cloud Shell environment:
 
 ```bash
-./scripts/clone-tutorial-repo.sh
+git clone https://github.com/GoogleCloudPlatform/cloud-deploy-tutorials
 ```
 
 Next, change into the directory for this tutorial and set your workspace:

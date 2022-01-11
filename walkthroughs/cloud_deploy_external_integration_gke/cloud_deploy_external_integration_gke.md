@@ -1,3 +1,11 @@
+<walkthrough-metadata>
+  <meta name="title" content="Cloud Deploy External Integration Tutorial" />
+  <meta name="description" content="How to integrate with Google Cloud Deploy" />
+  <meta name="component_id" content="1036688" />
+  <meta name="keywords" content="Deploy, pipeline, Kubernetes, integration, Pub/Sub" />
+  <meta name="unlisted" content="true" />
+</walkthrough-metadata>
+
 # Google Cloud Deploy: Preview
 
 ![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_external_integration_gke/images/cloud-deploy-logo-centered.png)

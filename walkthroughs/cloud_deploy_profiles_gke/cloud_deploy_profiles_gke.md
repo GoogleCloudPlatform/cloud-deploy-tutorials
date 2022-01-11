@@ -1,3 +1,11 @@
+<walkthrough-metadata>
+  <meta name="title" content="Cloud Deploy Profiles Tutorial" />
+  <meta name="description" content="How to use Skaffold profiles with Google Cloud Deploy" />
+  <meta name="component_id" content="1036688" />
+  <meta name="keywords" content="Deploy, pipeline, Kubernetes, GKE, profiles" />
+  <meta name="unlisted" content="true" />
+</walkthrough-metadata>
+
 # Google Cloud Deploy: Preview
 
 ![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png)

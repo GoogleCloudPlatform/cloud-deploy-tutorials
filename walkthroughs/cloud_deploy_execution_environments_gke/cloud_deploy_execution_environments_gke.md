@@ -24,7 +24,7 @@ Google Cloud Deploy uses the following defaults when rendering and deploying a w
 
 * The default [Cloud Build worker pool](https://cloud.google.com/build/docs/private-pools/private-pools-overview) is used for Cloud Deploy builds. The default worker pool is a secure hosted environment where each build runs in an isolated worker.
 * The default [GCE Service Account](https://cloud.google.com/deploy/docs/cloud-deploy-service-account#default_service_account) is used to access Cloud Build and your Cloud Deploy targets.
-* Google Cloud Deploy creates a Cloud Storage bucket in the same region as the Cloud Deploy resources. This bucket holds all artifacts by default. It has the the naming syntax of `<LOCATION>.deploy-artifacts.<PROJECT_ID>.appspot.com`.
+* Google Cloud Deploy creates a Cloud Storage bucket in the same region as the Cloud Deploy resources. This bucket holds all artifacts by default. It has the naming syntax of `<LOCATION>.deploy-artifacts.<PROJECT_ID>.appspot.com`.
 
 In this tutorial you'll create these custom resources and configure Google Cloud Deploy to use them in a custom [execution environment](https://cloud.google.com/deploy/docs/execution-environment).
 

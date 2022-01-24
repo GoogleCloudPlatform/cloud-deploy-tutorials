@@ -140,13 +140,17 @@ To begin listening for Google Cloud Deploy events, click **Next**.
 
 ## Listen for Google Cloud Deploy events
 
-This walkthrough includes a small Python application named <walkthrough-editor-open-file filePath="tutorials/external-integration/listener.py">
+This walkthrough includes a small Python application named <walkthrough-editor-open-file filePath="listener.py">
 listener.py
 </walkthrough-editor-open-file>. Before you run `listener.py` you need to satisfy a few dependencies.
 
 ### Open a new Cloud Shell tab
 
-In your Cloud Shell window, click the plus icon <walkthrough-spotlight-pointer spotlightId="cloud-shell-add-tab-button">plus icon</walkthrough-spotlight-pointer> to open a second shell session in a new tab. Switch over to your newly created tab for the next commands.
+In your Cloud Shell window, click the plus icon <walkthrough-spotlight-pointer spotlightId="cloud-shell-add-tab-button">plus icon</walkthrough-spotlight-pointer> to open a second shell session in a new tab. Switch over to your newly created tab for the next commands. Next, change to the same working directory as your first shell. 
+
+```bash
+cd ~/cloud-deploy-tutorials/tutorials/external-integration
+```
 
 ### Set Project ID
 

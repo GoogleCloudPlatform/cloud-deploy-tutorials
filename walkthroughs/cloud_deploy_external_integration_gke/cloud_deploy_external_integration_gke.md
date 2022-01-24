@@ -124,7 +124,7 @@ gcloud pubsub topics create clouddeploy-approvals
 
 ### Confirm topic creation
 
-To confirm these topics have been created, navigate to the [Pub/Sub Topics page](https://pantheon.corp.google.com/cloudpubsub/topic/list?project={{project-id}}). You should see all three topics created.
+To confirm these topics have been created, navigate to the [Pub/Sub Topics page](https://console.cloud.google.com/cloudpubsub/topic/list?project={{project-id}}). You should see all three topics created.
 
 These are the topics that Google Cloud Deploy will use to publish events. Pub/Sub topics are accessed through a subscription. You will use the `clouddeploy-operations` topic, so that topic will need a corresponding subscription.
 

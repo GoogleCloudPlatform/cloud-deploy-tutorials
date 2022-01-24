@@ -246,7 +246,7 @@ Click **Next** to proceed.
 
 To create a new Cloud Deploy pipeline, run the following command:
 
-``bash
+```bash
 gcloud beta deploy apply --file=clouddeploy-config/delivery-pipeline-exec-envs.yaml
 ```
 

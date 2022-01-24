@@ -397,9 +397,8 @@ These steps confirm that your new Google Cloud Deploy release used your custom e
 
 Run the following command to view the application pods running in the `test` cluster:
 
-``bash
-kubectx test
-kubectl get pods -n web-app-exec-envs
+```bash
+kubectx test && kubectl get pods -n web-app-exec-envs
 ```
 
 ### 🎉 Success

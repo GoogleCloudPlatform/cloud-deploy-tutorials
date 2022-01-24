@@ -136,7 +136,7 @@ The example application source code is in the `web-private-targets` directory of
 
 The `web-private-targets` directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application. This configuration uses the [Cloud Build](https://cloud.google.com/build) service to build the container images for your applications.
 
-<walkthrough-editor-open-file filePath="web/skaffold.yaml">Click here to review skaffold.yaml.</walkthrough-editor-open-file>
+<walkthrough-editor-open-file filePath="web-private-targets/skaffold.yaml">Click here to review skaffold.yaml.</walkthrough-editor-open-file>
 
 When deployed, the container images are named `leeroy-web` and `leeroy-app`. To create these container images, run the following command:
 
@@ -266,7 +266,7 @@ Target:
   updateTime: '2021-12-21T17:47:04.012763324Z'
 ```
 
-You can also view [details for your target](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app-private-targets/targets/test?project={{project-id}}) in the GCP control panel.
+You can also view [details for your target](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app-private-targets/targets/test-private?project={{project-id}}) in the GCP control panel.
 
 To create additional targets, click **Next**.
 
@@ -526,7 +526,7 @@ To confirm that your rollout was successful, use the GKE Web Console. Because th
 
 You should see that the application has been deployed to the **test-private** cluster, as shown in the following image:
 
-![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets/images/test.png)
+![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets_gke/images/test.png)
 
 To promote your application to the next target, click **Next**
 
@@ -567,7 +567,7 @@ To confirm that your rollout was successful, you will need to use the GKE Web Co
 
 You should see that the application has now been deployed to the **staging-private** cluster, as shown in the following image:
 
-![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets/images/staging.png)
+![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets_gke/images/staging.png)
 
 You can click the **Cluster** column heading to sort the entries by cluster.
 
@@ -700,7 +700,7 @@ To confirm that your rollout was successful, you will need to use the GKE Web Co
 
 You should see that the application has now been deployed to the **prod-private** cluster, as shown in the following image:
 
-![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets/images/prod.png)
+![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_private_targets_gke/images/prod.png)
 
 You can click the **Cluster** column heading to sort the entries by cluster.
 

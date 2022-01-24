@@ -6,20 +6,19 @@
   <meta name="unlisted" content="true" />
 </walkthrough-metadata>
 
-# {{deploy_name}}: Preview
+# Google Cloud Deploy: Preview
 
 ![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png)
 
-This tutorial shows you how to set up and use [{{deploy_name}}](https://console.cloud.google.com/deploy) to deploy to [private {{gke_name}} clusters](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters).
+This tutorial shows you how to set up and use [Google Cloud Deploy](https://console.cloud.google.com/deploy) to deploy to [private GKE clusters](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters).
 
 You use a **test > staging > production** delivery pipeline to deploy an application to private targets.
 
-You can use [{{builder_name}} Private Pools](https://cloud.google.com/build/docs/private-pools/private-pools-overview) to configure {{deploy_name}} to deploy to your {{gke_name}} clusters even if the clusters are only accessible from within your {{vpc_name_first_mention}}.
+You can use [Cloud Build Private Pools](https://cloud.google.com/build/docs/private-pools/private-pools-overview) to configure Google Cloud Deploy to deploy to your GKE clusters even if the clusters are only accessible from within your Virtual Private Cloud (VPC).
 
-### About {{shell_name}}
+### About Cloud Shell
 
-To complete this tutorial, you use [{{shell_name}}](https://cloud.google.com/shell) to configure and interact with {{deploy_name}}. {{shell_name}} is an online development and operations environment, accessible anywhere with your browser.
-
+To complete this tutorial, you use [Cloud Shell](https://cloud.google.com/shell) to configure and interact with Google Cloud Deploy. Cloud Shell is an online development and operations environment, accessible anywhere with your browser.
 
 Estimated Duration:
 <walkthrough-tutorial-duration duration="45"></walkthrough-tutorial-duration>
@@ -36,9 +35,9 @@ Begin by creating a new project or selecting an existing project for this tutori
 
 For details, see [Creating a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project).
 
-### Select your project in {{shell_name}}
+### Select your project in Cloud Shell
 
-Set the project in {{shell_name}}:
+Set the project in Cloud Shell:
 
 ```bash
 gcloud config set project {{project-id}}
@@ -46,7 +45,7 @@ gcloud config set project {{project-id}}
 
 ### Clone the tutorial repository
 
-Run the following command to clone the tutorial repository into your {{shell_name}} environment:
+Run the following command to clone the tutorial repository into your Cloud Shell environment:
 
 ```bash
 git clone https://github.com/GoogleCloudPlatform/cloud-deploy-tutorials
@@ -58,23 +57,23 @@ Change to the directory for this tutorial and set your workspace:
 cd cloud-deploy-tutorials/tutorials/private-targets && cloudshell workspace .
 ```
 
-If your {{shell_name}} session times out, you can resume the tutorial by reconnecting to {{shell_name}} and rerunning the previous command to change into the above directory.
+If your Cloud Shell session times out, you can resume the tutorial by reconnecting to Cloud Shell and rerunning the previous command to change into the above directory.
 
 To deploy your infrastructure, click **Next** to proceed.
 
 ## Deploy infrastructure
 
-You deploy three private {{gke_name}} clusters with the following names into your `{{project-id}}` Project:
+You deploy three private GKE clusters with the following names into your `{{project-id}}` Project:
 
 * `test-private` (often referred to as `dev`)
 * `staging-private`
 * `prod-private`
 
-_Note_: If you have an existing {{gke_name}} cluster in `{{project-id}}` with any of these names, select a different project.
+_Note_: If you have an existing GKE cluster in `{{project-id}}` with any of these names, select a different project.
 
-These {{gke_name}} clusters are deployed into a Virtual Private Cloud in `{{project-id}}`.
+These GKE clusters are deployed into a Virtual Private Cloud in `{{project-id}}`.
 
-Run `setup.sh` in your {{shell_name}} to create the {{gke_name}} clusters and supporting resources:
+Run `setup.sh` in your Cloud Shell to create the GKE clusters and supporting resources:
 
 ```bash
 ./setup.sh
@@ -82,7 +81,7 @@ Run `setup.sh` in your {{shell_name}} to create the {{gke_name}} clusters and su
 
 This will take approximately 10 minutes to run.
 
-After the script finishes, confirm that your {{gke_name}} clusters and supporting resources are properly deployed:
+After the script finishes, confirm that your GKE clusters and supporting resources are properly deployed:
 
 ```bash
 gcloud container clusters list
@@ -125,15 +124,15 @@ Click **Next** to proceed.
 
 ## Build the application
 
-{{deploy_name}} integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
+Google Cloud Deploy integrates with [`skaffold`](https://skaffold.dev/), a leading open-source continuous-development toolset.
 
-A sample application from the [Skaffold Github repository](https://github.com/GoogleContainerTools/skaffold.git) is available from your {{shell_name}} instance, in the `web-private-targets` directory.
+A sample application from the [Skaffold Github repository](https://github.com/GoogleContainerTools/skaffold.git) is available from your Cloud Shell instance, in the `web-private-targets` directory.
 
 In this section, you build the application so you can progress it through the `webapp-private-targets` delivery pipeline.
 
 ### Building with skaffold
 
-The example application source code is in the `web-private-targets` directory of your {{shell_name}} instance. It's a simple web app that listens on a port, provides an HTTP response code and adds a log entry. 
+The example application source code is in the `web-private-targets` directory of your Cloud Shell instance. It's a simple web app that listens on a port, provides an HTTP response code and adds a log entry. 
 
 The `web-private-targets` directory contains `skaffold.yaml`, which contains instructions for `skaffold` to build a container image for your application. This configuration uses the [Cloud Build](https://cloud.google.com/build) service to build the container images for your applications.
 
@@ -151,7 +150,7 @@ To check the images, click **Next**.
 
 ## Custom container images
 
-When you ran `bootstrap.sh` a repository in [{{gcp_name}} {{ar_name}}](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to {{ar_name}}, run the following command:
+When you ran `bootstrap.sh` a repository in [Artifact Registry](https://cloud.google.com/artifact-registry) was created to serve the images. The previous command referenced the repository with the `--default-repo` parameter. To confirm the images were successfully pushed to Artifact Registry, run the following command:
 
 ```bash
 gcloud artifacts docker images list $(gcloud config get-value compute/region)-docker.pkg.dev/$(gcloud config get-value project)/web-app-private-targets --include-tags --format yaml
@@ -183,7 +182,7 @@ To create the delivery pipeline, click **Next**.
 
 ## Create the delivery pipeline
 
-Next, you create a {{deploy_name}} [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`. {{deploy_name}} uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
+Next, you create a Google Cloud Deploy [_delivery pipeline_](https://console.cloud.google.com/deploy/delivery-pipelines?project={{project-id}}) that progresses a web application through three _targets_: `test`, `staging`, and `prod`. Google Cloud Deploy uses YAML files to define `delivery-pipeline` and `target` resources. For this tutorial, we have pre-created these files in the repository you cloned in Step 2.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/delivery-pipeline.yaml">Click here to view delivery-pipeline.yaml</walkthrough-editor-open-file>
 
@@ -226,11 +225,11 @@ To create the targets, click **Next**.
 
 ## Create the test target
 
-In {{deploy_name}}, a _target_ represents a {{gke_name}} cluster where an application can be deployed as part of a delivery pipeline.
+In Google Cloud Deploy, a _target_ represents a GKE cluster where an application can be deployed as part of a delivery pipeline.
 
 In the tutorial delivery pipeline, the first target is `test`.
 
-You create a `target` by applying a YAML file to {{deploy_name}} using `gcloud beta deploy apply`.
+You create a `target` by applying a YAML file to Google Cloud Deploy using `gcloud beta deploy apply`.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/target-test.yaml">Click here to view the file target-test.yaml</walkthrough-editor-open-file>
 
@@ -353,7 +352,7 @@ targets:
   updateTime: '2021-12-21T17:47:04.012763324Z'
 ```
 
-All {{deploy_name}} targets for the delivery pipeline have now been created.
+All Google Cloud Deploy targets for the delivery pipeline have now been created.
 
 You can also see the [details for your delivery pipeline](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/web-app-private-targets?project={{project-id}}) in the GCP control panel.
 
@@ -361,7 +360,7 @@ To create a release, click **Next**.
 
 ## Create a release
 
-A {{deploy_name}} `release` is a specific version of one or more container images associated with a specific delivery pipeline. After you create a release, you can promote it through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
+A Google Cloud Deploy `release` is a specific version of one or more container images associated with a specific delivery pipeline. After you create a release, you can promote it through multiple targets (the _promotion sequence_). Additionally, creating a release renders your application using `skaffold` and saves the output as a point-in-time reference that's used for the duration of that release.
 
 Because this is the first release of your application, name it `web-app-001`.
 
@@ -490,7 +489,7 @@ You can also view [release details](https://console.cloud.google.com/deploy/deli
 
 When a release is created, it will also be automatically rolled out to the first target in the pipeline (unless approval is required, which will be covered in a later step of this tutorial).
 
-For details, see the [{{deploy_name}} delivery process](https://cloud.google.com/deploy/docs/overview#the_delivery_process) section of the documentation.
+For details, see the [Google Cloud Deploy delivery process](https://cloud.google.com/deploy/docs/overview#the_delivery_process) section of the documentation.
 
 To promote your application, Click **Next**.
 
@@ -519,11 +518,11 @@ targetId: test-private
 uid: 07d1fff4358a4494ad3b5436a1ce20bd
 ```
 
-Note that the first rollout of a release takes several minutes, because {{deploy_name}} renders the manifests for all targets when the release is created. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
+Note that the first rollout of a release takes several minutes, because Google Cloud Deploy renders the manifests for all targets when the release is created. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
-To confirm that your rollout was successful, use the {{gke_name}} Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
+To confirm that your rollout was successful, use the GKE Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
 
-[Click here to visit the {{gke_name}} Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
+[Click here to visit the GKE Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
 
 You should see that the application has been deployed to the **test-private** cluster, as shown in the following image:
 
@@ -562,9 +561,9 @@ uid: 72688b8aafd1433d894392ffd19e9e20
 ```
 The rollout may take several minutes. If you do not see _state: SUCCEEDED_ in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
-To confirm that your rollout was successful, you will need to use the {{gke_name}} Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
+To confirm that your rollout was successful, you will need to use the GKE Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
 
-[Click here to visit the {{gke_name}} Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
+[Click here to visit the GKE Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
 
 You should see that the application has now been deployed to the **staging-private** cluster, as shown in the following image:
 
@@ -695,9 +694,9 @@ uid: 07d1fff4358a4494ad3b5436a1ce20bd
 
 The rollout may take several minutes. If you do not see `state: SUCCEEDED` in the output from the previous command, please wait and periodically re-run the command until the rollout completes.
 
-To confirm that your rollout was successful, you will need to use the {{gke_name}} Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
+To confirm that your rollout was successful, you will need to use the GKE Web Console. Because the target clusters have private Kubernetes API endpoints, you can cannot connect to them directly.
 
-[Click here to visit the {{gke_name}} Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
+[Click here to visit the GKE Workloads page in the GCP Web Console.](https://console.cloud.google.com/kubernetes/workload/overview?project={{project-id}})
 
 You should see that the application has now been deployed to the **prod-private** cluster, as shown in the following image:
 
@@ -707,7 +706,7 @@ You can click the **Cluster** column heading to sort the entries by cluster.
 
 ### 🎉 Success
 
-Your {{deploy_name}} workflow approval was successful, and your application is now deployed to your prod {{gke_name}} cluster. In the next section you'll clean up the resources you've created for this tutorial.
+Your Google Cloud Deploy workflow approval was successful, and your application is now deployed to your prod GKE cluster. In the next section you'll clean up the resources you've created for this tutorial.
 
 To learn about next steps, click **Next**.
 
@@ -715,7 +714,7 @@ To learn about next steps, click **Next**.
 
 ### Delete the pipeline
 
-To delete the {{deploy_name}} pipeline used in this tutorial, run the following command:
+To delete the Google Cloud Deploy pipeline used in this tutorial, run the following command:
 
 ```bash
 gcloud beta deploy delivery-pipelines delete web-app-private-targets --force --quiet
@@ -723,7 +722,7 @@ gcloud beta deploy delivery-pipelines delete web-app-private-targets --force --q
 
 ### Delete the targets
 
-To delete the {{deploy_name}} targets, run the following commands:
+To delete the Google Cloud Deploy targets, run the following commands:
 
 ```bash
 gcloud beta deploy targets delete test-private
@@ -733,19 +732,19 @@ gcloud beta deploy targets delete prod-private
 
 ### Delete the target infrastructure and other resources
 
-To clean up your {{gke_name}} clusters and other resources, run the provided cleanup script.
+To clean up your GKE clusters and other resources, run the provided cleanup script.
 
 ```bash
 ./cleanup.sh
 ```
 
-This script removes the Google Cloud resources and the artifacts in your {{shell_name}} instance. The script takes around 10 minutes to complete.
+This script removes the Google Cloud resources and the artifacts in your Cloud Shell instance. The script takes around 10 minutes to complete.
 
 ### Clean up gcloud configurations
 
-When you ran `bootstrap.sh`, a line was added to your {{shell_name}} configuration. For users of the `bash` shell, a line was added to `.bashrc` to reference `$HOME/.gcloud` as the directory `gcloud` uses to keep configurations. For people who have customized their {{shell_name}} environments to use other shells, the corresponding `rc` was similarly edited.
+When you ran `bootstrap.sh`, a line was added to your Cloud Shell configuration. For users of the `bash` shell, a line was added to `.bashrc` to reference `$HOME/.gcloud` as the directory `gcloud` uses to keep configurations. For people who have customized their Cloud Shell environments to use other shells, the corresponding `rc` was similarly edited.
 
-In the `.gcloud` directory a configuration named `clouddeploy` was also created. This features allows `gcloud` configurations to [persist across {{shell_name}} sessions and restarts](https://cloud.google.com/shell/docs/configuring-cloud-shell#gcloud_command-line_tool_preferences).
+In the `.gcloud` directory a configuration named `clouddeploy` was also created. This features allows `gcloud` configurations to [persist across Cloud Shell sessions and restarts](https://cloud.google.com/shell/docs/configuring-cloud-shell#gcloud_command-line_tool_preferences).
 
 To remove this configuration, remove the line from your `rc` file and delete the `$HOME/.gcloud` directory.
 
@@ -753,10 +752,10 @@ Click **Next** to complete this tutorial.
 
 ## Conclusion
 
-Thank you for taking the time to get to know the {{deploy_name}} Preview from Google Cloud!
+Thank you for taking the time to get to know the Google Cloud Deploy Preview from Google Cloud!
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 
 <walkthrough-inline-feedback></walkthrough-inline-feedback>
 
-You can find additional tutorials for {{deploy_name}} in [Tutorials](https://cloud.google.com/deploy/docs/tutorials).
+You can find additional tutorials for Google Cloud Deploy in [Tutorials](https://cloud.google.com/deploy/docs/tutorials).

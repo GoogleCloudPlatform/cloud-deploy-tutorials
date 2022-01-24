@@ -6,7 +6,7 @@
   <meta name="unlisted" content="true" />
 </walkthrough-metadata>
 
-# Google Cloud Deploy: Preview
+# Google Cloud Deploy
 
 ![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_external_integration_gke/images/cloud-deploy-logo-centered.png)
 

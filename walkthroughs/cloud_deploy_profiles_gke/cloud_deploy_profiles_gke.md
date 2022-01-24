@@ -6,7 +6,7 @@
   <meta name="unlisted" content="true" />
 </walkthrough-metadata>
 
-# Google Cloud Deploy: Preview
+# Google Cloud Deploy
 
 ![](https://walkthroughs.googleusercontent.com/content/cloud_deploy_e2e_gke/images/cloud-deploy-logo-centered.png)
 
@@ -678,7 +678,7 @@ Click **Next** to complete this tutorial.
 
 ## Conclusion
 
-Thank you for taking the time to get to know the Google Cloud Deploy Preview from Google Cloud!
+Thank you for taking the time to get to know the Google Cloud Deploy from Google Cloud!
 
 <walkthrough-conclusion-trophy></walkthrough-conclusion-trophy>
 

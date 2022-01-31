@@ -195,7 +195,7 @@ To test the integration between Google Cloud Deploy and the `listener.py` applic
 Create a new delivery pipeline using the following command in Cloud Shell:
 
 ```bash
-gcloud beta deploy apply --file=./delivery-pipeline-pubsub.yaml
+gcloud deploy apply --file=./delivery-pipeline-pubsub.yaml
 ```
 
 You should quickly see confirmation that the delivery pipeline was created, similar to the following output:
@@ -207,7 +207,7 @@ Waiting for the operation on resource projects/{{project-id}}/locations/us-centr
 Verify the delivery pipeline was created:
 
 ```bash
-gcloud beta deploy delivery-pipelines describe pubsub-test
+gcloud deploy delivery-pipelines describe pubsub-test
 ```
 
 Your output should look like the following. Notice that the targets are not yet created.
@@ -263,7 +263,7 @@ To learn about next steps, click **Next**.
 To clean up the pipeline created as part of this tutorial, run the following command:
 
 ```bash
-gcloud beta deploy delivery-pipelines delete pubsub-test --force --quiet
+gcloud deploy delivery-pipelines delete pubsub-test --force --quiet
 ```
 
 ### Clean up other resources

@@ -247,13 +247,13 @@ Click **Next** to proceed.
 To create a new Cloud Deploy pipeline, run the following command:
 
 ```bash
-gcloud beta deploy apply --file=clouddeploy-config/delivery-pipeline-exec-envs.yaml
+gcloud deploy apply --file=clouddeploy-config/delivery-pipeline-exec-envs.yaml
 ```
 
 Verify the delivery pipeline was created:
 
 ```bash
-gcloud beta deploy delivery-pipelines describe web-app-exec-envs
+gcloud deploy delivery-pipelines describe web-app-exec-envs
 ```
 
 Your output should look like the example below. Notice that the targets are not yet created.
@@ -310,25 +310,25 @@ Notice the references to the custom `workerPool`, `serviceAccount` and `artifact
 Run the following command to create the `test` target and associate it with the pipeline:
 
 ```bash
-gcloud beta deploy apply --file clouddeploy-config/target-test-exec-envs.yaml
+gcloud deploy apply --file clouddeploy-config/target-test-exec-envs.yaml
 ```
 
 Run the following command to create the `staging` target:
 
 ```bash
-gcloud beta deploy apply --file clouddeploy-config/target-staging-exec-envs.yaml
+gcloud deploy apply --file clouddeploy-config/target-staging-exec-envs.yaml
 ```
 
 Finally, create the `prod` target:
 
 ```bash
-gcloud beta deploy apply --file clouddeploy-config/target-prod-exec-envs.yaml
+gcloud deploy apply --file clouddeploy-config/target-prod-exec-envs.yaml
 ```
 
 To confirm that Cloud Deploy is configured, run the following command. You should see the references to your custom resources in the output.
 
 ```bash
-gcloud beta deploy targets describe test-exec-envs --delivery-pipeline=web-app-exec-envs
+gcloud deploy targets describe test-exec-envs --delivery-pipeline=web-app-exec-envs
 ```
 
 To create a new release to test the new execution environment, click **Next**.
@@ -338,7 +338,7 @@ To create a new release to test the new execution environment, click **Next**.
 Run the following command to render a new release of the test application and automatically promote it to the `test` target cluster:
 
 ```bash
-gcloud beta deploy releases create execution-test-001 --delivery-pipeline web-app-exec-envs --build-artifacts web-exec-envs/artifacts.json --source web-exec-envs/
+gcloud deploy releases create execution-test-001 --delivery-pipeline web-app-exec-envs --build-artifacts web-exec-envs/artifacts.json --source web-exec-envs/
 ```
 
 To confirm that the test worked, click **Next**.
@@ -421,7 +421,7 @@ in this tutorial. This also deletes all underlying resources.
 To delete the pipeline used in this tutorial, run the following command:
 
 ```bash
-gcloud beta deploy delivery-pipelines delete web-app-exec-envs --force --quiet
+gcloud deploy delivery-pipelines delete web-app-exec-envs --force --quiet
 ```
 
 ### Delete the Cloud Build private worker pool

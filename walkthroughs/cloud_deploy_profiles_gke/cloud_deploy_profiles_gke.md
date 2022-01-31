@@ -252,13 +252,13 @@ Note that this file associates each target in the pipeline with a profile of the
 The following command creates the `delivery-pipeline-profiles` resource using the delivery pipeline YAML file:
 
 ```bash
-gcloud beta deploy apply --file=clouddeploy-config/delivery-pipeline-profiles.yaml
+gcloud deploy apply --file=clouddeploy-config/delivery-pipeline-profiles.yaml
 ```
 
 Verify the delivery pipeline was created:
 
 ```bash
-gcloud beta deploy delivery-pipelines describe web-app-profiles
+gcloud deploy delivery-pipelines describe web-app-profiles
 ```
 
 Your output should look like the example below. Notice that the targets are reused from the Google Cloud Deploy End-to-end walkthrough, but this pipeline has a `profile` associated with each `targetID`:
@@ -301,7 +301,7 @@ Because this is the first release of your application, name it `web-app-profiles
 Run the following command to create the release. The `--build-artifacts` parameter references the `artifacts.json` file created by `skaffold` earlier. The `--source` parameter references the application source directory where `skaffold.yaml` can be found.
 
 ```bash
-gcloud beta deploy releases create web-app-profiles-001 --delivery-pipeline web-app-profiles --build-artifacts web-profiles/artifacts.json --source web-profiles/
+gcloud deploy releases create web-app-profiles-001 --delivery-pipeline web-app-profiles --build-artifacts web-profiles/artifacts.json --source web-profiles/
 ```
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.
@@ -309,7 +309,7 @@ The command above references the delivery pipeline and the container images you 
 To confirm your release has been created run the following command:
 
 ```bash
-gcloud beta deploy releases list --delivery-pipeline web-app-profiles
+gcloud deploy releases list --delivery-pipeline web-app-profiles
 ```
 
 Your output should look similar to the example below. Important things to note are that the release has been successfully rendered according to the `renderState` value, as well as the location of the `skaffold` configuration noted by the `skaffoldConfigUri` parameter.
@@ -394,7 +394,7 @@ To confirm the rollout, click **Next**.
 When the release was created in the previous step, it automatically rolled out your application to the initial target. To confirm your `test` target has your application deployed, run the following command:
 
 ```bash
-gcloud beta deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
+gcloud deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
 ```
 
 Your output should look similar to the example below. The start and end times for the deploy are noted, as well that it succeeded.
@@ -456,13 +456,13 @@ To promote the application, click **Next**.
 To promote your application to your staging target, run the following command. The optional `--to-target` parameter can specify a target to promote to. If this option isn't included, the release is promoted to the next target in the Delivery pipeline.
 
 ```bash
-gcloud beta deploy releases promote --delivery-pipeline web-app-profiles --release web-app-profiles-001
+gcloud deploy releases promote --delivery-pipeline web-app-profiles --release web-app-profiles-001
 ```
 
 To confirm your application has been promoted to the `staging` target, run the following command:
 
 ```bash
-gcloud beta deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
+gcloud deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
 ```
 
 Your output should contain a section similar to this:
@@ -524,7 +524,7 @@ To learn more about approvals, click **Next**.
 When you created your Google Cloud Deploy pipeline, the configuration was in place to require approvals to this target. To verify this, run this command and look for the `requireApproval` parameter.
 
 ```bash
-gcloud beta deploy targets describe prod --delivery-pipeline web-app-profiles
+gcloud deploy targets describe prod --delivery-pipeline web-app-profiles
 ```
 
 Your output should look similar to the example below. Unlike the previous targets, the prod target does require approval per the `requireApproval` parameter.
@@ -545,13 +545,13 @@ Target:
 Promote your application to your prod target with this command:
 
 ```bash
-gcloud beta deploy releases promote --delivery-pipeline web-app-profiles --release web-app-profiles-001
+gcloud deploy releases promote --delivery-pipeline web-app-profiles --release web-app-profiles-001
 ```
 
 When you look at your rollouts for `web-app-profiles-001`, you'll notice that the promotion to prod has a `PENDING_APPROVAL` status.
 
 ```bash
-gcloud beta deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
+gcloud deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
 ```
 
 In the output, note that the `approvalState` is `NEEDS_APPROVAL` and the state is `PENDING_APPROVAL`.
@@ -574,13 +574,13 @@ To deploy to prod, click **Next**.
 To approve your application and promote it to your prod target, use this command:
 
 ```bash
-gcloud beta deploy rollouts approve web-app-profiles-001-to-prod-0001 --delivery-pipeline web-app-profiles --release web-app-profiles-001
+gcloud deploy rollouts approve web-app-profiles-001-to-prod-0001 --delivery-pipeline web-app-profiles --release web-app-profiles-001
 ```
 
 After a short time, your promotion should complete. To verify this, run the following command:
 
 ```bash
-gcloud beta deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
+gcloud deploy rollouts list --delivery-pipeline web-app-profiles --release web-app-profiles-001
 ```
 
 Your output should contain output similar to the following:
@@ -653,7 +653,7 @@ To learn about next steps, click **Next**.
 To clean up the pipeline created as part of this tutorial, run the following command:
 
 ```bash
-gcloud beta deploy delivery-pipelines delete web-app-profiles --force --quiet
+gcloud deploy delivery-pipelines delete web-app-profiles --force --quiet
 ```
 
 ### Clean up other resources

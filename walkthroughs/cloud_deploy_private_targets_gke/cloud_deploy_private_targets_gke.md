@@ -189,13 +189,13 @@ Next, you create a Google Cloud Deploy [_delivery pipeline_](https://console.clo
 The following command creates the `delivery-pipeline` resource using the delivery pipeline YAML file:
 
 ```bash
-gcloud beta deploy apply --file=clouddeploy-config/delivery-pipeline.yaml
+gcloud deploy apply --file=clouddeploy-config/delivery-pipeline.yaml
 ```
 
 Verify the delivery pipeline was created:
 
 ```bash
-gcloud beta deploy delivery-pipelines describe web-app-private-targets
+gcloud deploy delivery-pipelines describe web-app-private-targets
 ```
 
 Your output should look like the example below.
@@ -229,20 +229,20 @@ In Google Cloud Deploy, a _target_ represents a GKE cluster where an application
 
 In the tutorial delivery pipeline, the first target is `test`.
 
-You create a `target` by applying a YAML file to Google Cloud Deploy using `gcloud beta deploy apply`.
+You create a `target` by applying a YAML file to Google Cloud Deploy using `gcloud deploy apply`.
 
 <walkthrough-editor-open-file filePath="clouddeploy-config/target-test.yaml">Click here to view the file target-test.yaml</walkthrough-editor-open-file>
 
 Create the `test` target:
 
 ```bash
-gcloud beta deploy apply --file clouddeploy-config/target-test.yaml
+gcloud deploy apply --file clouddeploy-config/target-test.yaml
 ```
 
 Verify the `target` was created:
 
 ```bash
-gcloud beta deploy targets describe test-private --delivery-pipeline=web-app-private-clusters
+gcloud deploy targets describe test-private --delivery-pipeline=web-app-private-clusters
 ```
 
 The output should look like the example below. Important information in this output is that the target is recognized as a `gke` `cluster`.
@@ -281,7 +281,7 @@ Start by creating the `staging` target.
 Apply the `staging` target definition:
 
 ```bash
-gcloud beta deploy apply --file clouddeploy-config/target-staging.yaml
+gcloud deploy apply --file clouddeploy-config/target-staging.yaml
 ```
 
 Next you repeat the process for the `prod` target.
@@ -291,13 +291,13 @@ Next you repeat the process for the `prod` target.
 Apply the `prod` target definition:
 
 ```bash
-gcloud beta deploy apply --file clouddeploy-config/target-prod.yaml
+gcloud deploy apply --file clouddeploy-config/target-prod.yaml
 ```
 
 Verify both targets for the `web-app` delivery pipeline:
 
 ```bash
-gcloud beta deploy targets list
+gcloud deploy targets list
 ```
 
 The output should look like this, showing all three created targets, which are used with your `web-app` delivery pipeline.
@@ -366,7 +366,7 @@ Because this is the first release of your application, name it `web-app-001`.
 
 Run the following command to create the release. The `--build-artifacts` parameter references the `artifacts.json` file created by `skaffold` earlier. The `--source` parameter references the application source directory that contains `skaffold.yaml`.
 ```bash
-gcloud beta deploy releases create web-app-001 --delivery-pipeline web-app-private-targets --build-artifacts web-private-targets/artifacts.json --source web-private-targets/
+gcloud deploy releases create web-app-001 --delivery-pipeline web-app-private-targets --build-artifacts web-private-targets/artifacts.json --source web-private-targets/
 ```
 
 The command above references the delivery pipeline and the container images you created earlier in this tutorial.
@@ -380,7 +380,7 @@ To confirm the release, click **Next**.
 To confirm your release has been created, run the following command:
 
 ```bash
-gcloud beta deploy releases list --delivery-pipeline web-app-private-targets
+gcloud deploy releases list --delivery-pipeline web-app-private-targets
 ```
 
 Your output should look similar to the example below. Note that the release has been successfully rendered according to the `renderingState` value, as well as the location of the `skaffold` configuration noted by the `skaffoldConfigUri` parameter.
@@ -498,7 +498,7 @@ To promote your application, Click **Next**.
 When the release was created in the previous step, it automatically rolled out your application to the initial target. To confirm your `test` target has your application deployed, run the following command:
 
 ```bash
-gcloud beta deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
+gcloud deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
 ```
 
 Your output should look similar to the example below. The start and end times for the deploy are noted, as well that it succeeded.
@@ -535,13 +535,13 @@ To promote your application to the next target, click **Next**
 To promote your application to your staging target, run the following command. The optional `--to-target` parameter can specify a target to promote to. If this option isn't included, the release is promoted to the next target in the delivery pipeline.
 
 ```bash
-gcloud beta deploy releases promote --delivery-pipeline web-app-private-targets --release web-app-001
+gcloud deploy releases promote --delivery-pipeline web-app-private-targets --release web-app-001
 ```
 
 To confirm your application has been promoted to the `staging` target, run the following command:
 
 ```bash
-gcloud beta deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
+gcloud deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
 ```
 
 Your output should contain a section similar to this:
@@ -584,7 +584,7 @@ Any target can require an approval before a release promotion can occur. This is
 When you created your prod environment, the configuration was in place to require approvals to this target. To verify this, run this command and look for the `requireApproval` parameter.
 
 ```bash
-gcloud beta deploy targets describe prod-private --delivery-pipeline web-app-private-targets
+gcloud deploy targets describe prod-private --delivery-pipeline web-app-private-targets
 ```
 
 Your output should look similar to the example below. Unlike the previous targets, the prod target does require approval per the `requireApproval` parameter.
@@ -612,13 +612,13 @@ Target:
 Run the following command to promote your application to your prod target:
 
 ```bash
-gcloud beta deploy releases promote --delivery-pipeline web-app-private-targets --release web-app-001
+gcloud deploy releases promote --delivery-pipeline web-app-private-targets --release web-app-001
 ```
 
 When you look at your rollouts for `web-app-001`, you'll notice that the promotion to prod has a `PENDING_APPROVAL` status. Run the following command:
 
 ```bash
-gcloud beta deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
+gcloud deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
 ```
 
 In the output, note that the `approvalState` is `NEEDS_APPROVAL` and the state is `PENDING_APPROVAL`.
@@ -642,13 +642,13 @@ To approve and deploy to production, click **Next**.
 To approve your application and promote it to your prod target, use this command:
 
 ```bash
-gcloud beta deploy rollouts approve web-app-001-to-prod-private-0001 --delivery-pipeline web-app-private-targets --release web-app-001
+gcloud deploy rollouts approve web-app-001-to-prod-private-0001 --delivery-pipeline web-app-private-targets --release web-app-001
 ```
 
 After a short time, your promotion should complete. To verify this, run the following command:
 
 ```bash
-gcloud beta deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
+gcloud deploy rollouts list --delivery-pipeline web-app-private-targets --release web-app-001
 ```
 
 Your output should look similar to the following:
@@ -717,7 +717,7 @@ To learn about next steps, click **Next**.
 To delete the Google Cloud Deploy pipeline used in this tutorial, run the following command:
 
 ```bash
-gcloud beta deploy delivery-pipelines delete web-app-private-targets --force --quiet
+gcloud deploy delivery-pipelines delete web-app-private-targets --force --quiet
 ```
 
 ### Delete the targets
@@ -725,9 +725,9 @@ gcloud beta deploy delivery-pipelines delete web-app-private-targets --force --q
 To delete the Google Cloud Deploy targets, run the following commands:
 
 ```bash
-gcloud beta deploy targets delete test-private
-gcloud beta deploy targets delete staging-private
-gcloud beta deploy targets delete prod-private
+gcloud deploy targets delete test-private
+gcloud deploy targets delete staging-private
+gcloud deploy targets delete prod-private
 ```
 
 ### Delete the target infrastructure and other resources

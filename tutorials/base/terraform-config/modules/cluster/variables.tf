@@ -65,7 +65,7 @@ variable "minimum_node_pool_instances" {
 variable "maximum_node_pool_instances" {
   type        = number
   description = "Maximum number of node-pool instances to scale to"
-  default     = 3
+  default     = 1
 }
 
 variable "release_channel" {

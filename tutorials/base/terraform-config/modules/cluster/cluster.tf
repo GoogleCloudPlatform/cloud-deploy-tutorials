@@ -84,6 +84,7 @@ module "delivery_platform_cluster" {
       max_count       = var.maximum_node_pool_instances
       auto_upgrade    = true
       service_account = google_service_account.service_account.email
+      preemptible     = true
     },
   ]
 

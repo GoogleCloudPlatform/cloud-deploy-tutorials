@@ -48,7 +48,7 @@ variable "ip_range_services" {
 
 variable "machine_type" {
   description = "Type of node to use to run the cluster"
-  default     = "n1-standard-2"
+  default     = "e2-medium"
 }
 
 variable "gke_kubernetes_version" {

@@ -26,7 +26,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	log.Printf("leeroy app server ready, runnning in target: %s", os.Getenv("TARGET"))
+	log.Printf("leeroy app server ready, running in target: %s", os.Getenv("TARGET"))
 	http.HandleFunc("/", handler)
 	http.ListenAndServe(":50051", nil)
 }

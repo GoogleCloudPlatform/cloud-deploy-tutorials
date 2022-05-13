@@ -4,7 +4,9 @@ Copyright Google LLC 2021
 
 ## Overview
 
-This repository contains content and functionality to help you try out the Google Cloud Deploy service. Currently, this service is not intended for production workloads -— do not use it for any live applications.
+This repository contains code and configuration to help you try out the [Google Cloud Deploy](https://cloud.google.com/deploy) service.
+
+Please note that the content of this repository is for example use only.
 
 ## Getting Started
 

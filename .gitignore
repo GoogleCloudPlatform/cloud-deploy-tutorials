@@ -11,5 +11,6 @@ main.tf
 
 # Ignore generated files
 **/clouddeploy-config/*.yaml
+tutorials/e2e-cr/app-config/*.yaml
 artifacts.json
 skaffold.yaml

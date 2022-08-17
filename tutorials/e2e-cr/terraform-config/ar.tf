@@ -19,7 +19,7 @@ resource "google_artifact_registry_repository" "artifact-registry" {
   provider = google-beta
 
   location      = var.region
-  repository_id = "tutorial-e2e-cr"
+  repository_id = "hello-app"
   description   = "Image registry for Cloud Deploy -> Cloud Run tutorial"
   format        = "DOCKER"
 }

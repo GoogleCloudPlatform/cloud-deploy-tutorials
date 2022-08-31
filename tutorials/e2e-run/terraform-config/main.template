@@ -17,7 +17,7 @@
 terraform {
   backend "gcs" {
     bucket="{{BACKEND_BUCKET}}"
-    prefix="e2e-cr"
+    prefix="e2e-run"
   }
   required_providers {
     google = {

@@ -45,6 +45,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if name == "" {
 		name = "World"
 	}
-	fmt.Fprintf(w, "Hello %s! 🎉\n", name)
+	fmt.Fprintf(w, "\nHello %s! 🎉\n\n", name)
 	log.Printf("Sent response, customization was '%s'", name)
 }

@@ -24,8 +24,7 @@ build:
     projectId: ${PROJECT_ID}
 deploy:
   cloudrun:
-    region: unused
-    projectid: unused
+    region: ${REGION}
 profiles:
   - name: test
     manifests:

@@ -22,5 +22,8 @@ spec:
       containers:
       - name: hello-app
         image: hello-app
+        env:
+          - name: NAME
+            value: "Staging"
   scaling:
     maxInstanceCount: 10

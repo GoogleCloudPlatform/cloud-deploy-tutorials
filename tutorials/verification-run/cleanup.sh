@@ -32,6 +32,6 @@ cd ${ROOT_DIR}
 gsutil rm -r gs://$BACKEND/
 
 rm -rf $TF_DIR/.terraform
-rm -f $TF_DIR/main.tf
-rm -f $TF_DIR/terraform.tfstat*
-rm -f $TF_DIR/terraform.tfplan
+rm -rf $TF_DIR/main.tf
+rm -rf $TF_DIR/terraform.tfstat*
+rm -rf $TF_DIR/terraform.tfplan

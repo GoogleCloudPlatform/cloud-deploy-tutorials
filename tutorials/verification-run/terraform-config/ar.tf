@@ -19,7 +19,7 @@ resource "google_artifact_registry_repository" "artifact-registry" {
   provider = google-beta
 
   location      = var.region
-  repository_id = "tutorial-deploy-verification-cr"
+  repository_id = "hello-app-verification"
   description   = "Image registry for Cloud Deploy Deployment Verification tutorial"
   format        = "DOCKER"
 }

@@ -19,6 +19,7 @@
 TUTORIAL=verification-cr
 ROOT_DIR=$(git rev-parse --show-toplevel)
 TUTORIAL_DIR=${ROOT_DIR}/tutorials/${TUTORIAL}
+APP_CONFIG_DIR=${TUTORIAL_DIR}/app-config
 CD_CONFIG_DIR=${TUTORIAL_DIR}/clouddeploy-config
 TF_DIR=${TUTORIAL_DIR}/terraform-config
 GCLOUD_CONFIG=clouddeploy
@@ -86,13 +87,16 @@ verification_apps() {
     # Any sample application install and configuration for the verification walkthrough.
 
     echo "Configuring walkthrough applications"
-    cd ${CD_CONFIG_DIR}
 
+    cd ${CD_CONFIG_DIR}
     for template in $(ls *.template); do
-    envsubst < ${template} > ${template%.*}
+        envsubst < ${template} > ${template%.*}
     done
 
-    cp skaffold.yaml ${TUTORIAL_DIR}/web/skaffold.yaml
+    cd ${APP_CONFIG_DIR}
+    for template in $(ls *.template); do
+        envsubst < ${template} > ${template%.*}
+    done
 
     git tag -a v1 -m "version 1 release"
 }

@@ -26,4 +26,4 @@ spec:
           - name: NAME
             value: "Test"
   scaling:
-    maxInstanceCount: 10
+    maxInstanceCount: '10'

@@ -26,4 +26,4 @@ spec:
           - name: NAME
             value: "Staging"
   scaling:
-    maxInstanceCount: 10
+    maxInstanceCount: '10'

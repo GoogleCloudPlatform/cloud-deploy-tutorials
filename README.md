@@ -10,4 +10,4 @@ Please note that the content of this repository is for example use only.
 
 ## Getting Started
 
-To learn more and get started with the tutorials in this repository, please see the official [Google Cloud Deploy documentation](https://cloud.google.com/deploy/docs/tutorials).
+To learn more and get started with the tutorials in this repository, please see the official [Google Cloud Deploy documentation](https://cloud.google.com/deploy/docs/overview).

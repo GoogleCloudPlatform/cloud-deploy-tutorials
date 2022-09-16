@@ -16,7 +16,7 @@
 # Walkthrough-specific functions begin with the abbreviation for
 # that walkthrough
 
-TUTORIAL=verification-cr
+TUTORIAL=verification-run
 ROOT_DIR=$(git rev-parse --show-toplevel)
 TUTORIAL_DIR=${ROOT_DIR}/tutorials/${TUTORIAL}
 APP_CONFIG_DIR=${TUTORIAL_DIR}/app-config

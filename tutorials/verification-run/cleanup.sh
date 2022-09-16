@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TUTORIAL=verification-cr
+TUTORIAL=verification-run
 ROOT_DIR=$(git rev-parse --show-toplevel)
 TUTORIAL_DIR=${ROOT_DIR}/tutorials/${TUTORIAL}
 CD_CONFIG_DIR=${TUTORIAL_DIR}/clouddeploy-config

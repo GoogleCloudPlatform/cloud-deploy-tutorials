@@ -60,4 +60,4 @@ profiles:
         name: hello-verify
         image: hello-verify
         command: ["/verify.sh"]
-        args: ["hell-app-prod", "${PROJECT_ID}", "${REGION}" ]
+        args: ["hello-app-prod", "${PROJECT_ID}", "${REGION}" ]

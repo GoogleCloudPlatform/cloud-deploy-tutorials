@@ -30,13 +30,32 @@ gcloud config set core/project ${PROJECT_ID}
 gcloud config set run/region ${REGION}
 
 URL=$(gcloud run services describe ${SERVICE_NAME} --format='value(status.url)')
-AUTH=$(gcloud auth print-identity-token)
+
+status=$?
+
+if [ "$status" -eq 0 ]; then
+    echo "Retrieved service endpoint ${URL} for ${SERVICE_NAME}"
+  else
+    echo "Failed to retrieve service endpoint for ${SERVICE_NAME}"
+    exit $status
+fi
+
+AUTH=$(gcloud auth print-identity-token --include-email --audiences ${URL} --impersonate-service-account cd-dv-tutorial-sa@${PROJECT_ID}.iam.gserviceaccount.com --quiet)
+
+status=$?
+
+if [ "$status" -eq 0 ]; then
+    echo "Retrieved identity token for ${SERVICE_NAME}"
+  else
+    echo "Failed to retrieve identity token for ${SERVICE_NAME}"
+    exit $status
+fi
 
 curl -sSH "Authorization: Bearer ${AUTH}" "${URL}"
 
 status=$?
 
-if [ "$?" -eq 0 ]; then
+if [ "$status" -eq 0 ]; then
     echo "Service ${SERVICE_NAME} successfully verified"
   else
     echo "Service ${SERVICE_NAME} failed verification"

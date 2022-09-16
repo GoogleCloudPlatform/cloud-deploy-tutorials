@@ -19,3 +19,9 @@ metadata:
 description: Production target
 run:
   location: projects/${PROJECT_ID}/locations/${REGION}
+executionConfigs:
+- usages:
+  - RENDER
+  - DEPLOY
+  - VERIFY
+  serviceAccount: cd-dv-tutorial-sa@${PROJECT_ID}.iam.gserviceaccount.com

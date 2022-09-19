@@ -51,7 +51,7 @@ if [ "$status" -eq 0 ]; then
     exit $status
 fi
 
-curl -sSH "Authorization: Bearer ${AUTH}" "${URL}"
+curl --fail --show-error --silent --header "Authorization: Bearer ${AUTH}" "${URL}"
 
 status=$?
 

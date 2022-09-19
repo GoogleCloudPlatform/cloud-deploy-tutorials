@@ -42,9 +42,13 @@ func main() {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	name := os.Getenv("NAME")
-	if name == "" {
-		name = "World"
+
+	switch name {
+	case "Test", "Staging", "Prod":
+		fmt.Fprintf(w, "Hello %s! 🎉\n", name)
+	default:
+		http.Error(w, "Configuration must match target name (Test, Staging, Prod)", 400)
 	}
-	fmt.Fprintf(w, "Hello %s! 🎉\n", name)
-	log.Printf("Sent response, customization was '%s'", name)
+
+	log.Printf("Sent response, target was '%s'", name)
 }

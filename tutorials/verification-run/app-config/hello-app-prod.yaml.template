@@ -18,6 +18,9 @@ metadata:
   name: hello-app-prod
 spec:
   template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
     spec:
       containers:
       - name: hello-app
@@ -25,5 +28,3 @@ spec:
         env:
           - name: NAME
             value: "Test"
-  scaling:
-    maxInstanceCount: '10'

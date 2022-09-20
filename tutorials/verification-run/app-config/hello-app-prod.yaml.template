@@ -27,4 +27,4 @@ spec:
         image: hello-app
         env:
           - name: NAME
-            value: "Test"
+            value: "Prod"

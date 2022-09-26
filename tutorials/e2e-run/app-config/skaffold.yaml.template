@@ -23,8 +23,7 @@ build:
   googleCloudBuild:
     projectId: ${PROJECT_ID}
 deploy:
-  cloudrun:
-    region: ${REGION}
+  cloudrun: {}
 profiles:
   - name: test
     manifests:

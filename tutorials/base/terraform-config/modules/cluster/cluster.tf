@@ -20,33 +20,38 @@ resource "google_service_account" "service_account" {
 }
 
 resource "google_project_iam_member" "cluster_iam_logginglogwriter" {
-  role   = "roles/logging.logWriter"
-  member = "serviceAccount:${google_service_account.service_account.email}"
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.service_account.email}"
 }
 
 resource "google_project_iam_member" "cluster_iam_monitoringmetricwriter" {
-  role   = "roles/monitoring.metricWriter"
-  member = "serviceAccount:${google_service_account.service_account.email}"
+  project = var.project_id
+  role    = "roles/monitoring.metricWriter"
+  member  = "serviceAccount:${google_service_account.service_account.email}"
 }
 
 resource "google_project_iam_member" "cluster_iam_monitoringviewer" {
-  role   = "roles/monitoring.viewer"
-  member = "serviceAccount:${google_service_account.service_account.email}"
+  project = var.project_id
+  role    = "roles/monitoring.viewer"
+  member  = "serviceAccount:${google_service_account.service_account.email}"
 }
 
 resource "google_project_iam_member" "cluster_iam_resourcemetadatawriter" {
-  role   = "roles/stackdriver.resourceMetadata.writer"
-  member = "serviceAccount:${google_service_account.service_account.email}"
+  project = var.project_id
+  role    = "roles/stackdriver.resourceMetadata.writer"
+  member  = "serviceAccount:${google_service_account.service_account.email}"
 }
 
 resource "google_project_iam_member" "cluster_iam_artifactregistryreader" {
-  role   = "roles/artifactregistry.reader"
-  member = "serviceAccount:${google_service_account.service_account.email}"
+  project = var.project_id
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${google_service_account.service_account.email}"
 }
 
 module "delivery_platform_cluster" {
   source                 = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
-  version                = "13.0.0"
+  version                = "25.0.0"
   project_id             = var.project_id
   name                   = var.name
   region                 = var.region

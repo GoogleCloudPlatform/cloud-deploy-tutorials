@@ -20,11 +20,13 @@ resource "google_service_account" "service_account" {
 }
 
 resource "google_project_iam_member" "jobrunner_binding" {
+  project = var.project_id
   role    = "roles/clouddeploy.jobRunner"
   member  = "serviceAccount:${google_service_account.service_account.email}"
 }
 
 resource "google_project_iam_member" "developer_binding" {
+  project = var.project_id
   role    = "roles/container.developer"
   member  = "serviceAccount:${google_service_account.service_account.email}"
 }

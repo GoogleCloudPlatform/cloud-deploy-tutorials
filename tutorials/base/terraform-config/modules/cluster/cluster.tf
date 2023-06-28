@@ -64,6 +64,7 @@ module "delivery_platform_cluster" {
   release_channel        = var.release_channel
   regional               = true
   enable_private_nodes   = true
+  enable_shielded_nodes  = true
 
   enable_binary_authorization = false
 
@@ -83,12 +84,13 @@ module "delivery_platform_cluster" {
 
   node_pools = [
     {
-      name            = "app-pool"
-      machine_type    = var.machine_type
-      min_count       = var.minimum_node_pool_instances
-      max_count       = var.maximum_node_pool_instances
-      auto_upgrade    = true
-      service_account = google_service_account.service_account.email
+      name               = "app-pool"
+      machine_type       = var.machine_type
+      min_count          = var.minimum_node_pool_instances
+      max_count          = var.maximum_node_pool_instances
+      auto_upgrade       = true
+      enable_secure_boot = true
+      service_account    = google_service_account.service_account.email
     },
   ]
 

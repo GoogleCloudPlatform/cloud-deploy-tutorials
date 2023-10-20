@@ -19,3 +19,8 @@ metadata:
 description: test cluster
 gke:
   cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/test
+executionConfigs:
+- usages:
+  - RENDER
+  - DEPLOY
+  serviceAccount: cd-tut-deploy-sa@${PROJECT_ID}.iam.gserviceaccount.com

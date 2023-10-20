@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-data "google_compute_default_service_account" "default" {
+resource "google_service_account" "compute_service_account" {
+  project      = var.project_id
+  account_id   = "cd-dv-tut-run-sa"
+  display_name = "Cloud Deploy Deployment Verification tutorial run service account"
 }
 
 resource "google_service_account" "service_account" {
@@ -66,8 +69,7 @@ resource "google_service_account_iam_member" "sa_account_token" {
 }
 
 resource "google_service_account_iam_member" "sa_account_compute_user" {
-  service_account_id = data.google_compute_default_service_account.default.name
+  service_account_id = google_service_account.compute_service_account.name
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.service_account.email}"
 }
-

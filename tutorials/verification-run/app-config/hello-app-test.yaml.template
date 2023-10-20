@@ -22,6 +22,7 @@ spec:
       annotations:
         autoscaling.knative.dev/maxScale: "1"
     spec:
+      serviceAccountName: cd-dv-tut-run-sa@${PROJECT_ID}.iam.gserviceaccount.com
       containers:
       - name: hello-app
         image: hello-app

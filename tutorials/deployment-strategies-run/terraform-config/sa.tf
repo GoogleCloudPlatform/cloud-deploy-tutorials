@@ -20,12 +20,6 @@ resource "google_service_account" "compute_service_account" {
   display_name = "Cloud Deploy Deployment Strategies tutorial run service account"
 }
 
-resource "google_service_account" "build_service_account" {
-  project      = var.project_id
-  account_id   = "cd-ds-tut-build-sa"
-  display_name = "Cloud Deploy Deployment Strategies tutorial build service account"
-}
-
 resource "google_service_account" "deploy_service_account" {
   project      = var.project_id
   account_id   = "cd-ds-tut-deploy-sa"
@@ -39,19 +33,6 @@ resource "google_project_iam_member" "compute_sa_logginglogwriter" {
   member  = "serviceAccount:${google_service_account.compute_service_account.email}"
 }
 
-# Permissions for Cloud Build service account
-resource "google_project_iam_member" "build_sa_logginglogwriter" {
-  project = var.project_id
-  role    = "roles/logging.logWriter"
-  member  = "serviceAccount:${google_service_account.build_service_account.email}"
-}
-
-resource "google_project_iam_member" "build_sa_cloudbuild" {
-  project = var.project_id
-  role    = "roles/cloudbuild.serviceAgent"
-  member  = "serviceAccount:${google_service_account.build_service_account.email}"
-}
-
 # Permissions for Cloud Deploy service account
 resource "google_project_iam_member" "deploy_sa_clouddeployjobrunner" {
   project = var.project_id
@@ -63,7 +44,6 @@ resource "google_project_iam_member" "deploy_sa_logginglogwriter" {
   project = var.project_id
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.deploy_service_account.email}"
-
 }
 
 resource "google_project_iam_member" "deploy_sa_rundeveloper" {

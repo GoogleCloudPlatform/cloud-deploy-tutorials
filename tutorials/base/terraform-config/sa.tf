@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,18 @@
 
 resource "google_service_account" "deploy_service_account" {
   project      = var.project_id
-  account_id   = "cd-tut-private-deploy-sa"
+  account_id   = "cd-tut-deploy-sa"
   display_name = "Cloud Deploy Deployment Strategies tutorial deploy service account"
 }
 
-resource "google_project_iam_member" "jobrunner_binding" {
+# Permissions for Cloud Deploy service account
+resource "google_project_iam_member" "deploy_sa_clouddeploy_jobrunner" {
   project = var.project_id
   role    = "roles/clouddeploy.jobRunner"
   member  = "serviceAccount:${google_service_account.deploy_service_account.email}"
 }
 
-resource "google_project_iam_member" "developer_binding" {
+resource "google_project_iam_member" "deploy_sa_container_developer" {
   project = var.project_id
   role    = "roles/container.developer"
   member  = "serviceAccount:${google_service_account.deploy_service_account.email}"

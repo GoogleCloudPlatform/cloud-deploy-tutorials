@@ -22,7 +22,7 @@ gke:
 executionConfigs:
 - privatePool:
     workerPool: projects/${PROJECT_ID}/locations/${REGION}/workerPools/private-pool
-    serviceAccount: tf-sa-clouddeploy@${PROJECT_ID}.iam.gserviceaccount.com
+    serviceAccount: cd-tut-private-deploy-sa@${PROJECT_ID}.iam.gserviceaccount.com
   usages:
   - RENDER
   - DEPLOY

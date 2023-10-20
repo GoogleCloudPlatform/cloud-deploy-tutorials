@@ -16,14 +16,14 @@
 
 resource "google_service_account" "compute_service_account" {
   project      = var.project_id
-  account_id   = "cd-dh-tut-run-sa"
-  display_name = "Cloud Deploy Deploy Hooks tutorial run service account"
+  account_id   = "cd-tut-run-sa"
+  display_name = "Cloud Deploy Deployment Strategies tutorial run service account"
 }
 
 resource "google_service_account" "deploy_service_account" {
   project      = var.project_id
-  account_id   = "cd-dh-tut-deploy-sa"
-  display_name = "Cloud Deploy Deploy Hooks tutorial deploy service account"
+  account_id   = "cd-tut-run-deploy-sa"
+  display_name = "Cloud Deploy Deployment Strategies tutorial deploy service account"
 }
 
 # Permissions for Cloud Run (compute) service account
@@ -37,19 +37,6 @@ resource "google_project_iam_member" "compute_sa_logginglogwriter" {
 resource "google_project_iam_member" "deploy_sa_clouddeployjobrunner" {
   project = var.project_id
   role    = "roles/clouddeploy.jobRunner"
-  member  = "serviceAccount:${google_service_account.deploy_service_account.email}"
-}
-
-# Permissions for Cloud Deploy service account to insert data into BQ
-resource "google_project_iam_member" "deploy_sa_clouddeploybqeditor" {
-  project = var.project_id
-  role    = "roles/bigquery.dataEditor"
-  member  = "serviceAccount:${google_service_account.deploy_service_account.email}"
-}
-
-resource "google_project_iam_member" "deploy_sa_logginglogwriter" {
-  project = var.project_id
-  role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.deploy_service_account.email}"
 }
 

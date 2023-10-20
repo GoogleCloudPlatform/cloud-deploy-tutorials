@@ -20,3 +20,8 @@ description: prod cluster
 requireApproval: true
 gke:
   cluster: projects/${PROJECT_ID}/locations/${REGION}/clusters/prod
+executionConfigs:
+- usages:
+  - RENDER
+  - DEPLOY
+  serviceAccount: cd-tut-deploy-sa@${PROJECT_ID}.iam.gserviceaccount.com

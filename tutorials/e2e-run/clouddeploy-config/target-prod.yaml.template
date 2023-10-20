@@ -20,3 +20,8 @@ description: Production target
 requireApproval: true
 run:
   location: projects/${PROJECT_ID}/locations/${REGION}
+executionConfigs:
+- usages:
+  - RENDER
+  - DEPLOY
+  serviceAccount: cd-tut-run-deploy-sa@${PROJECT_ID}.iam.gserviceaccount.com

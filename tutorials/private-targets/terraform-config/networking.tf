@@ -88,7 +88,7 @@ resource "google_compute_router" "router_gcb" {
 
 module "gke_vpn" {
   source           = "terraform-google-modules/vpn/google//modules/vpn_ha"
-  version          = "2.4.0"
+  version          = "4.0.0"
   name             = "gke-to-gcb-vpn"
   project_id       = var.project_id
   region           = var.region
@@ -125,7 +125,7 @@ module "gke_vpn" {
 
 module "gcb_vpn" {
   source           = "terraform-google-modules/vpn/google//modules/vpn_ha"
-  version          = "2.4.0"
+  version          = "4.0.0"
   name             = "gcb-to-gke-vpn"
   project_id       = var.project_id
   region           = var.region

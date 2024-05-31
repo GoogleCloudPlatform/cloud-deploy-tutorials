@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.19 AS builder
+FROM golang:1.22 AS builder
 WORKDIR /go/src/demo
 COPY . .
 RUN CGO_ENABLED=0 go build -o /go/bin/demo

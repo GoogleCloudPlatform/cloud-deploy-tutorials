@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.12.9-alpine3.10 as builder
+FROM golang:1.13.11-alpine3.10 as builder
 COPY web.go .
 RUN go build -o /web .
 

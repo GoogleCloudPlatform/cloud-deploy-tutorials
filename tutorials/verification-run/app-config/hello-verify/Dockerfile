@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 FROM docker:20.10.24 as static-docker-source
-FROM alpine:3.20
+FROM alpine:3.15
 ARG CLOUD_SDK_VERSION=400.0.0
 ENV CLOUD_SDK_VERSION=$CLOUD_SDK_VERSION
 ENV PATH /google-cloud-sdk/bin:$PATH

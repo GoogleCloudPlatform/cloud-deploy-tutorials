@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: skaffold/v3alpha1
+apiVersion: skaffold/v3
 kind: Config
 metadata:
   name: hello-app
@@ -24,6 +24,7 @@ build:
       context: hello-verify
   googleCloudBuild:
     projectId: ${PROJECT_ID}
+    serviceAccount: projects/${PROJECT_ID}/serviceAccounts/cd-dv-tut-run-build-sa@${PROJECT_ID}.iam.gserviceaccount.com
 deploy:
   cloudrun: {}
 profiles:

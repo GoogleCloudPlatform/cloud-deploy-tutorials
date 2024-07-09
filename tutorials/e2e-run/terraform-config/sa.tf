@@ -14,26 +14,40 @@
  * limitations under the License.
  */
 
-resource "google_service_account" "compute_service_account" {
+# Cloud Build service account
+
+resource "google_service_account" "build_service_account" {
   project      = var.project_id
-  account_id   = "cd-tut-run-sa"
-  display_name = "Cloud Deploy Deployment Strategies tutorial run service account"
+  account_id   = "cd-tut-run-build-sa"
+  display_name = "Cloud Deploy tutorial Cloud Build service account"
 }
+
+resource "google_project_iam_member" "build_sa_iam_storageadmin" {
+  project = var.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+resource "google_project_iam_member" "build_sa_iam_logginglogwriter" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+resource "google_project_iam_member" "build_sa_iam_artifactwriter" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+# Cloud Deploy service account
 
 resource "google_service_account" "deploy_service_account" {
   project      = var.project_id
   account_id   = "cd-tut-run-deploy-sa"
-  display_name = "Cloud Deploy Deployment Strategies tutorial deploy service account"
+  display_name = "Cloud Deploy tutorial deploy service account"
 }
 
-# Permissions for Cloud Run (compute) service account
-resource "google_project_iam_member" "compute_sa_logginglogwriter" {
-  project = var.project_id
-  role    = "roles/logging.logWriter"
-  member  = "serviceAccount:${google_service_account.compute_service_account.email}"
-}
-
-# Permissions for Cloud Deploy service account
 resource "google_project_iam_member" "deploy_sa_clouddeployjobrunner" {
   project = var.project_id
   role    = "roles/clouddeploy.jobRunner"
@@ -50,4 +64,18 @@ resource "google_service_account_iam_member" "deploy_sa_actas" {
   service_account_id = google_service_account.compute_service_account.name
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.deploy_service_account.email}"
+}
+
+# Cloud Run service account
+
+resource "google_service_account" "compute_service_account" {
+  project      = var.project_id
+  account_id   = "cd-tut-run-sa"
+  display_name = "Cloud Deploy Deployment Strategies tutorial run service account"
+}
+
+resource "google_project_iam_member" "compute_sa_logginglogwriter" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.compute_service_account.email}"
 }

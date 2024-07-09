@@ -14,33 +14,40 @@
  * limitations under the License.
  */
 
+ # Cloud Build service account
+
+resource "google_service_account" "build_service_account" {
+  project      = var.project_id
+  account_id   = "cd-dh-tut-run-build-sa"
+  display_name = "Cloud Deploy Deploy Hooks tutorial Cloud Build service account"
+}
+
+resource "google_project_iam_member" "build_sa_iam_storageadmin" {
+  project = var.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+resource "google_project_iam_member" "build_sa_iam_logginglogwriter" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+resource "google_project_iam_member" "build_sa_iam_artifactwriter" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+# Cloud Deploy service account
+
 resource "google_service_account" "compute_service_account" {
   project      = var.project_id
   account_id   = "cd-dh-tut-run-sa"
   display_name = "Cloud Deploy Deploy Hooks tutorial run service account"
 }
 
-resource "google_service_account" "deploy_service_account" {
-  project      = var.project_id
-  account_id   = "cd-dh-tut-deploy-sa"
-  display_name = "Cloud Deploy Deploy Hooks tutorial deploy service account"
-}
-
-# Permissions for Cloud Run (compute) service account
-resource "google_project_iam_member" "compute_sa_logginglogwriter" {
-  project = var.project_id
-  role    = "roles/logging.logWriter"
-  member  = "serviceAccount:${google_service_account.compute_service_account.email}"
-}
-
-# Permissions for Cloud Deploy service account
-resource "google_project_iam_member" "deploy_sa_clouddeployjobrunner" {
-  project = var.project_id
-  role    = "roles/clouddeploy.jobRunner"
-  member  = "serviceAccount:${google_service_account.deploy_service_account.email}"
-}
-
-# Permissions for Cloud Deploy service account to insert data into BQ
 resource "google_project_iam_member" "deploy_sa_clouddeploybqeditor" {
   project = var.project_id
   role    = "roles/bigquery.dataEditor"
@@ -63,4 +70,24 @@ resource "google_service_account_iam_member" "deploy_sa_actas" {
   service_account_id = google_service_account.compute_service_account.name
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.deploy_service_account.email}"
+}
+
+resource "google_project_iam_member" "deploy_sa_clouddeployjobrunner" {
+  project = var.project_id
+  role    = "roles/clouddeploy.jobRunner"
+  member  = "serviceAccount:${google_service_account.deploy_service_account.email}"
+}
+
+# Permissions for Cloud Run (compute) service account
+
+resource "google_service_account" "deploy_service_account" {
+  project      = var.project_id
+  account_id   = "cd-dh-tut-deploy-sa"
+  display_name = "Cloud Deploy Deploy Hooks tutorial deploy service account"
+}
+
+resource "google_project_iam_member" "compute_sa_logginglogwriter" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.compute_service_account.email}"
 }

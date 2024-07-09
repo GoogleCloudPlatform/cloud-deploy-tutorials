@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+# Cloud Deploy service account
+
 resource "google_service_account" "deploy_service_account" {
   project      = var.project_id
   account_id   = "cd-tut-deploy-sa"
-  display_name = "Cloud Deploy Deployment Strategies tutorial deploy service account"
+  display_name = "Cloud Deploy tutorial deploy service account"
 }
 
-# Permissions for Cloud Deploy service account
 resource "google_project_iam_member" "deploy_sa_clouddeploy_jobrunner" {
   project = var.project_id
   role    = "roles/clouddeploy.jobRunner"
@@ -31,4 +32,30 @@ resource "google_project_iam_member" "deploy_sa_container_developer" {
   project = var.project_id
   role    = "roles/container.developer"
   member  = "serviceAccount:${google_service_account.deploy_service_account.email}"
+}
+
+# Cloud Build service account
+
+resource "google_service_account" "build_service_account" {
+  project      = var.project_id
+  account_id   = "cd-tut-build-sa"
+  display_name = "Cloud Deploy tutorial Cloud Build service account"
+}
+
+resource "google_project_iam_member" "build_sa_iam_storageadmin" {
+  project = var.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+resource "google_project_iam_member" "build_sa_iam_logginglogwriter" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+resource "google_project_iam_member" "build_sa_iam_artifactwriter" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
 }

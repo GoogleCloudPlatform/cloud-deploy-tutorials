@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: skaffold/v2beta7
+apiVersion: skaffold/v3
 kind: Config
 build:
   artifacts:
@@ -22,11 +22,13 @@ build:
       context: leeroy-app
   googleCloudBuild:
     projectId: ${PROJECT_ID}
+    serviceAccount: projects/${PROJECT_ID}/serviceAccounts/cd-tut-build-sa@${PROJECT_ID}.iam.gserviceaccount.com
+manifests:
+  rawYaml:
+    - leeroy-web/kubernetes/*
+    - leeroy-app/kubernetes/*
 deploy:
   kubectl:
-    manifests:
-      - leeroy-web/kubernetes/*
-      - leeroy-app/kubernetes/*
 portForward:
   - resourceType: deployment
     resourceName: leeroy-web

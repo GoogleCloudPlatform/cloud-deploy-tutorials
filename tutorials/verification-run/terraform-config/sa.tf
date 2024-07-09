@@ -14,11 +14,33 @@
  * limitations under the License.
  */
 
-resource "google_service_account" "compute_service_account" {
+ # Cloud Build service account
+
+resource "google_service_account" "build_service_account" {
   project      = var.project_id
-  account_id   = "cd-dv-tut-run-sa"
-  display_name = "Cloud Deploy Deployment Verification tutorial run service account"
+  account_id   = "cd-dv-tut-run-build-sa"
+  display_name = "Cloud Deploy Deployment Verification tutorial Cloud Build service account"
 }
+
+resource "google_project_iam_member" "build_sa_iam_storageadmin" {
+  project = var.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+resource "google_project_iam_member" "build_sa_iam_logginglogwriter" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+resource "google_project_iam_member" "build_sa_iam_artifactwriter" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.build_service_account.email}"
+}
+
+# Cloud Deploy service account
 
 resource "google_service_account" "service_account" {
   project      = var.project_id
@@ -72,4 +94,18 @@ resource "google_service_account_iam_member" "sa_account_compute_user" {
   service_account_id = google_service_account.compute_service_account.name
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.service_account.email}"
+}
+
+# Cloud Run service account
+
+resource "google_service_account" "compute_service_account" {
+  project      = var.project_id
+  account_id   = "cd-dv-tut-run-sa"
+  display_name = "Cloud Deploy Deployment Verification tutorial run service account"
+}
+
+resource "google_project_iam_member" "compute_sa_logginglogwriter" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.compute_service_account.email}"
 }

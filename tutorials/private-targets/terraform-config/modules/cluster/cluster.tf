@@ -51,7 +51,7 @@ resource "google_project_iam_member" "cluster_iam_artifactregistryreader" {
 
 module "delivery_platform_cluster" {
   source                  = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
-  version                 = "25.0.0"
+  version                 = "35.0.1"
   project_id              = var.project_id
   name                    = var.name
   region                  = var.region

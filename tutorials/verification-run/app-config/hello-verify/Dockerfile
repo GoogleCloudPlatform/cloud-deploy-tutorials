@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM docker:26.1.3 as static-docker-source
+FROM docker:27.5.1 as static-docker-source
 FROM alpine:3.15
 ARG CLOUD_SDK_VERSION=400.0.0
 ENV CLOUD_SDK_VERSION=$CLOUD_SDK_VERSION

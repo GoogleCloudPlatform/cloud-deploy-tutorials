@@ -6,6 +6,8 @@ Copyright Google LLC 2021
 
 This repository contains code and configuration to help you try out the [Google Cloud Deploy](https://cloud.google.com/deploy) service.
 
+To use these tutorials, please [choose one of the tutorials from the list](https://cloud.google.com/deploy/docs/tutorials), and follow the instructions.
+
 Please note that the content of this repository is for example use only.
 
 ## Getting Started

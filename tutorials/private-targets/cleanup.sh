@@ -32,7 +32,7 @@ cd $TF_DIR
 terraform destroy -auto-approve -var=project_id=$PROJECT_ID -var=region=$REGION
 cd $ROOT_DIR
 
-gsutil rm -r gs://$BACKEND/
+gcloud storage rm --recursive gs://$BACKEND/
 
 rm -rf $TF_DIR/.terraform
 rm -rf $TF_DIR/main.tf

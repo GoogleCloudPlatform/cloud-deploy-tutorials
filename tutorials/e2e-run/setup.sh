@@ -66,7 +66,7 @@ run_terraform() {
     cd ${TF_DIR}
 
     sed "s/bucket=.*/bucket=\"$BACKEND\"/g" main.template > main.tf
-    gsutil mb gs://${BACKEND} || true
+    gcloud storage buckets create gs://${BACKEND} || true
 
     terraform init
     terraform plan -out=terraform.tfplan -var="project_id=${PROJECT_ID}" -var="region=${REGION}"

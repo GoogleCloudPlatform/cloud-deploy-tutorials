@@ -27,7 +27,7 @@ GCLOUD_CONFIG=clouddeploy
 export PROJECT_ID=$(gcloud config get-value core/project)
 export REGION=us-central1
 
-BACKEND=${PROJECT_ID}-${TUTORIAL}-tf export
+BACKEND=${PROJECT_ID}-${TUTORIAL}-tf
 
 manage_apis() {
     # Enables any APIs that we need prior to Terraform being run

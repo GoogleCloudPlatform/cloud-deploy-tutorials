@@ -23,6 +23,7 @@ build:
   googleCloudBuild:
     projectId: ${PROJECT_ID}
     serviceAccount: projects/${PROJECT_ID}/serviceAccounts/cd-tut-build-sa@${PROJECT_ID}.iam.gserviceaccount.com
+    bucket: gs://${BACKEND}
 manifests:
   rawYaml:
     - leeroy-web/kubernetes/*

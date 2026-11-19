@@ -18,6 +18,9 @@
 # Current walkthroughs:
 # e2e - End-to-end (aka primary) walkthrough
 
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../lib/tf-backend.sh" || { echo "ERROR: could not load tutorials/lib/tf-backend.sh" >&2; exit 1; }
+
+
 TUTORIAL=base
 ROOT_DIR=$(git rev-parse --show-toplevel)
 TUTORIAL_DIR=${ROOT_DIR}/tutorials/${TUTORIAL}
@@ -67,7 +70,7 @@ run_terraform() {
     cd ${TF_DIR}
 
     sed "s/bucket=.*/bucket=\"$BACKEND\"/g" main.template > main.tf
-    gcloud storage buckets create gs://${BACKEND} || true
+    tf_backend_ensure "${BACKEND}" "${PROJECT_ID}"
 
     terraform init
     terraform plan -out=terraform.tfplan  -var="project_id=$PROJECT_ID" -var="region=$REGION"

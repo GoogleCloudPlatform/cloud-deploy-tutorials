@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../lib/tf-backend.sh" || { echo "ERROR: could not load tutorials/lib/tf-backend.sh" >&2; exit 1; }
+
+
 TUTORIAL=verification-run
 ROOT_DIR=$(git rev-parse --show-toplevel)
 TUTORIAL_DIR=${ROOT_DIR}/tutorials/${TUTORIAL}
@@ -25,11 +28,11 @@ REGION=$(gcloud config get-value compute/region)
 BACKEND=${PROJECT_ID}-${TUTORIAL}-tf
 
 cd ${TF_DIR}
-terraform destroy -auto-approve -var=project_id=${PROJECT_ID} -var=region=${REGION}
+if tf_backend_usable "${BACKEND}" "${PROJECT_ID}"; then terraform destroy -auto-approve -var=project_id=${PROJECT_ID} -var=region=${REGION}; fi
 
 cd ${ROOT_DIR}
 
-gcloud storage rm --recursive gs://$BACKEND/
+if tf_backend_usable "${BACKEND}" "${PROJECT_ID}"; then gcloud storage rm --recursive gs://$BACKEND/; fi
 
 rm -rf $TF_DIR/.terraform
 rm -rf $TF_DIR/main.tf
